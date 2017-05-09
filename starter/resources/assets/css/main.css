@@ -1,0 +1,32 @@
+
+#page-header {
+	padding: 4px;	
+	padding: 16px;
+	border-bottom: 1px solid rgb(239, 239, 239);
+}
+
+#page-menu {
+	background-color: rgb(239, 239, 239);
+}
+
+#page-body {
+	padding: 32px;
+	width:auto;
+	position: relative;
+	background-color: #fafafa;
+}
+
+@media screen and (min-width:1000px) {
+	
+	#page-body {
+		max-width: 1000px;
+		left: 50%;
+		margin-left: -500px;
+	}
+	
+	
+}
+
+#page-footer {
+	
+}

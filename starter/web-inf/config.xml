@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<application>
+<about>
+	<name>Le nom de l'application</name>
+	<author>L'auteur</author>
+	<version>1.0</version>
+	<description></description>
+</about>
+<config>
+	<application run="0" lang="fr" />
+	<connectors>
+		<!-- <connector name="db" type="dbi" dsn="mysqli://root:@localhost:/nombd" autoconnect="1" />  -->
+		<!-- <connector name="mail" type="mail" from="no-reply@admin.fr" />  -->
+	</connectors>
+	<properties>
+	</properties>
+</config>
+<plugins />
+</application>

@@ -1,0 +1,14 @@
+<h2>Votre profil</h2>
+<p>
+Modifier les informations suivantes pour mettre à jour les informations de votre profil
+</p>
+<br />
+<form role="form" class="form-horizontal" novalidate>
+	<div data-bind="template: { name: 'ui-field-template', data: inputName }"></div>
+	<div data-bind="template: { name: 'ui-field-template', data: inputFirstName }"></div>
+	<div data-bind="template: { name: 'ui-field-template', data: inputEmail }"></div>
+	<div class="form-submit clearfix">
+		<button class="col-xs-12 col-sm-auto pull-right" data-bind="click: function() { onSubmitHandler() }">Enregistrer</button>
+	</div>
+</form>
+<script src="{$pageSrc}assets/js/main.js"></script>

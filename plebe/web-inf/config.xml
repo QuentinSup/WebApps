@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<application>
+<about>
+	<name>Plebe</name>
+	<author>Quentin Supernant</author>
+	<version>1.0</version>
+	<description></description>
+</about>
+<config>
+	<application ns="plebe" run="0" lang="fr" />
+	<connectors>
+		<connector name="db" type="dbi" dsn="mysqli://root:@localhost:/plebe" autoconnect="1" />
+		<connector name="mail" type="mail" from="no-reply@plebe.fr" />
+		<!-- <connector name="gapiclient" type="gapiclient" /> -->
+	</connectors>	
+	<properties>
+		<property name="rss_limit">50</property>	
+		<property name="meta.title">Plebe.fr</property>
+		<property name="meta.description">Partagez vos articles en toute simplicité</property>
+		<property name="meta.author">Quentin Supernant</property>
+		<property name="meta.keywords">share,partage,article,publication,reseaux,sociaux,social,plebe,plebs,tribune</property>
+		<property name="cgu_uri">http://plebe.fr/?article/DeTGbCiCo0LY4xx</property>
+		<property name="mentions_uri">http://plebe.fr/?article/VF1lVSkTVZqNz4x</property>
+		<property name="words_per_minutes">300</property>
+	</properties>
+</config>
+<plugins />
+</application>

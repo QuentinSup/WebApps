@@ -1,0 +1,15 @@
+<h2 data-bind="html: oName()"></h2>
+<div class="row">
+	<div class="col-sm-6"><div class="strong ro-label" data-bind="i18n: 'profil.whois.email'"></div></div>
+	<div class="col-sm-6"><div class="ro-input" data-bind="html: oEmail()"></div></div>
+</div>
+<div class="row">
+	<div class="col-sm-6"><div class="strong ro-label" data-bind="i18n: 'profil.whois.adress'"></div></div>
+	<div class="col-sm-6"><div class="ro-input" data-bind="html: oAdr1()"></div></div>
+	<div class="col-sm-6"><div class="strong ro-label"></div></div>
+	<div class="col-sm-6"><div class="ro-input" data-bind="html: oAdr2() || '&nbsp;'"></div></div>
+	<div class="col-sm-6"><div class="strong ro-label"></div></div>
+	<div class="col-sm-1"><div class="ro-input" data-bind="html: oPostalCode()"></div></div>
+	<div class="col-sm-5"><div class="ro-input" data-bind="html: oCity()"></div></div>
+</div>
+<script src="{$pageSrc}assets/js/main.js"></script>

@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss version="2.0">
+	<channel>
+		<title>{$title}</title>
+		<description>{$description}</description>
+		<link>{$link}</link>
+		<pubDate>{$pubDate}</pubDate>
+	</channel>
+	{foreach $items as $item}
+	<item>
+		<guid>{$item.ref}</guid>
+		<title>{$item.shortTitle}</title>
+		<description>
+			<![CDATA[{$item.catchPhrase}]]>
+			<![CDATA[{$item.text}]]>
+		</description>
+		<author>{$item.author}</author>
+		<link>{$item.link}</link>
+		<pubDate>{$item.pubDate}</pubDate>
+	</item>
+	{/foreach}
+</rss>

@@ -1,0 +1,118 @@
+<div class="article-links" style="padding:2em;">
+	{if $isAdmin}
+	<div class="container">
+	{if $data.state eq "1"}
+	<p>Votre publication est désormais disponible à tous.</p><br />
+	Utilisez le lien suivant pour le partager : <a href="{$data.userLink}">{$data.userLink}</a><br />
+	Utilisez le lien suivant pour l'éditer : <a href="{$data.adminLink}">{$data.adminLink}</a>
+	{else}
+	<p>Votre publication est enregistrée en tant que brouillon est n'est pas accessible à tous.</p><br />
+	Utilisez le lien suivant pour l'éditer : <a href="{$data.adminLink}">{$data.adminLink}"</a>
+	<p>
+	<b>Attention : </b>il s'agit d'un lien d'administration : <b>ne partagez pas ce lien</b> !
+	</p>
+	{/if}
+	</div>
+	{/if}
+</div>
+<section id="article" class="section">
+	<div class="col-lg-6 col-lg-offset-3">
+		<div class="article-body">
+		{if !$data || ($data.state neq "1" && !$isAdmin)}
+		La publication recherchée n'existe pas ou n'est plus disponible.
+		{else}
+		<div class="icon-wrap"><img src="./assets/img/plebe_card.png" alt="article" /></div>
+		{if $data && $data.state eq "1"}
+		<div>
+			<button class="shareit btn btn-primary">
+				Partager le contenu
+			</button>
+		</div>
+		{/if}
+		{if $data.times2read}
+			<span class="glyphicon glyphicon-time" title="Temps de lecture estimé" style="font-size: 0.9em;"></span>
+			{if $data.times2read < 1}
+			<span style="color: gray; font-size: 0.9em;">Moins de 1 minute</span>
+			{else}
+			<span style="color: gray; font-size: 0.9em;">{$data.times2read|string_format:"%d"} minute(s)</span>
+			{/if}
+		{/if}
+		<br />{$data.ddc|date_format:"%A, %B %e, %Y"} 
+		<br /><br />
+		<div>
+			<h4 class="title">{$data.shortTitle|escape}</h4>
+			<hr />
+			{if $data.catchPhrase} 
+			<p class="big strong">{$data.catchPhrase|escape}</p>
+			<hr />
+			{/if}
+			<article class="article-big" style="text-align:left;">
+				<p>	
+				{$data.text}
+				</p>
+			</article>
+			<p class="author text-right">
+				{if $data.author}
+				<i>{$data.author|escape}</i>
+				{/if}
+			</p>
+		</div>
+		</div>
+	</div>
+	{/if}
+</section>
+{if $data && $data.state eq "1"}
+<section class="bg-info">
+	<div>
+		<div class="container" style="padding:2em;">
+			<button class="shareit btn btn-primary">
+				Partager le contenu
+			</button>
+		</div>
+	</div>
+</section>
+
+<script>
+	
+	$(document).ready(function() {
+		
+		$('.shareit').hideshare({
+			link: "{$baseUri}/?/article/{$data.contextual_link}",           // Link to URL defaults to document.URL
+			media: "",          								// Link to image file defaults to null
+			facebook: true,     // Turns on Facebook sharing
+			twitter: true,      // Turns on Twitter sharing
+			pinterest: true,    // Turns on Pinterest sharing
+			googleplus: true,   // Turns on Google Plus sharing
+			linkedin: true,     // Turns on LinkedIn sharing
+			position: "bottom", // Options: Top, Bottom, Left, Right
+			speed: 50           // Speed of transition
+		});
+		
+		$('#article').verbatim({
+			 animated: true,
+			 animationSpeed: 2000,
+			 highlightParent: false,
+			 uri: "{$baseUri}/?/article/{$data.contextual_link}",
+			 highlightColor: 'rgb(134, 21, 210)'
+		});
+				
+	});
+	
+</script>
+{if !$isAdmin}
+<script>	
+	$(document).ready(function() {
+		setTimeout(function() {
+			
+			$.ajax({
+				url: "{$baseUri}/?/api/article/{$data.ref}/reads",
+				type: 'PUT',
+				data: {}
+			  });
+
+		}, 5000);
+	});
+</script>	 
+{/if}
+
+{/if}

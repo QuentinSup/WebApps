@@ -1,0 +1,8 @@
+<!-- ko if: $data.currentScreen() -->
+<div class="sequences clearfix" data-bind="css: { 'form-checked': $data.currentScreen().isSubmited() }, css: 'screen-' + $data.currentScreen().id ">
+	<div data-bind="animate: { animation: $data.currentAnimation(), duration: $data.transitionDelay - 1 }, with: $data.currentScreen()">
+		<div class="current-sequence"
+				data-bind="template: { 'name': $data.templateName, 'data': $data, 'afterRender': function() { $parent.afterRender(); } }"></div>
+		</div>
+</div>
+<!-- /ko -->

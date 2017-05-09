@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<application>
+<about>
+	<name>Template</name>
+	<author>Quentin Supernant</author>
+	<version>1.0</version>
+	<description></description>
+</about>
+<config>
+	<application run="0" lang="fr" />
+	<connectors>
+		<connector name="db" type="dbi" dsn="mysqli://dbo589431597:oPeN1982!@db589431597.db.1and1.com:/db589431597" autoconnect="1" />
+		<connector name="mail" type="mail" from="no-reply@template.fr" />
+	</connectors>	
+</config>
+<plugins />
+</application>

@@ -1,0 +1,57 @@
+<div class="page clearfix">
+	<div class="head">
+		<h1><img src="{$host}assets/images/logo.png" style="width:45px" alt="KeepInTouch" />&nbsp;Keep'In Touche</h1>
+	</div>
+	<div class="body-head">
+		<h2>Valider mes coordonnées</h2>
+		<h3>Bonjour {$name},</h3>
+		<p>
+		<span class="text-sublime">{$sender_name}</span> souhaite vérifier vos coordonnées. Renseigner les champs avec vos coordonnées à jour, puis cliquer sur "Mettre à jour" pour lui communiquer les informations.<br />
+		Seul <span class="text-sublime">{$sender_name}</span> pourra consulter ses informations.
+		</p>
+	</div>
+	<div class="request-message">
+		<pre>{$message}</pre>
+	</div>
+	<div class="body">
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+				<form novalidate>
+					<!-- ko if: showEmail() -->
+					<div class="row">
+						<!-- ko template: { name: 'ui-field-template-row', data: AdrEmail } --><!-- /ko -->
+					</div>
+					<!-- /ko -->
+					<!-- ko if: showAdress() -->
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="responsive-image">
+								<img src="{$host}assets/images/adress.jpg" alt="Adresse postale" />
+							</div>
+						</div>
+						<div class="col-sm-8">
+						<!-- ko template: { name: 'ui-field-template-row', data: AdrPostalLigne1 } --><!-- /ko -->
+						<!-- ko template: { name: 'ui-field-template-row', data: AdrPostalLigne2 } --><!-- /ko -->
+						<div class="row">
+							<div class="col-sm-4">
+							<!-- ko template: { name: 'ui-field-template-row', data: AdrPostalCdPost } --><!-- /ko -->
+							</div>
+							<div class="col-sm-7 col-sm-offset-1">
+							<!-- ko template: { name: 'ui-field-template-row', data: AdrPostalVille } --><!-- /ko -->
+							</div>
+						</div>
+						</div>
+					</div>
+					<!-- /ko -->
+					<div class="form-submit text-right">
+						<button data-bind="click: function() { onSubmit(); }">Mettre à jour</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script id="request_content" type="text/javascript">
+	var request_id= "{$request_id}";
+	var request_content = {$request_content};
+</script>

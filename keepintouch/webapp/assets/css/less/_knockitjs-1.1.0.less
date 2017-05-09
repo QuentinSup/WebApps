@@ -1,0 +1,2026 @@
+.appearance(@v) {
+	 appearance: @v;
+    -moz-appearance: @v;
+    -webkit-appearance: @v;
+}
+
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
+
+
+.gradient(@color: #F5F5F5, @start: #EEE, @stop: #FFF) {
+  background: @color;
+  background: -webkit-gradient(linear,
+                               left bottom,
+                               left top,
+                               color-stop(0, @start),
+                               color-stop(1, @stop));
+  background: -ms-linear-gradient(bottom,
+                                  @start,
+                                  @stop);
+  background: -moz-linear-gradient(center bottom,
+                                   @start 0%,
+                                   @stop 100%);
+  background: -o-linear-gradient(@stop,
+                                 @start);
+  filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@stop,@start));
+}
+.bw-gradient(@color: #F5F5F5, @start: 0, @stop: 255) {
+  background: @color;
+  background: -webkit-gradient(linear,
+                               left bottom,
+                               left top,
+                               color-stop(0, rgb(@start,@start,@start)),
+                               color-stop(1, rgb(@stop,@stop,@stop)));
+  background: -ms-linear-gradient(bottom,
+                                  rgb(@start,@start,@start) 0%,
+                                  rgb(@stop,@stop,@stop) 100%);
+  background: -moz-linear-gradient(center bottom,
+                                   rgb(@start,@start,@start) 0%,
+                                   rgb(@stop,@stop,@stop) 100%);
+  background: -o-linear-gradient(rgb(@stop,@stop,@stop),
+                                 rgb(@start,@start,@start));
+  filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",rgb(@stop,@stop,@stop),rgb(@start,@start,@start)));
+}
+
+.bg-color(...) {
+	background-color: @arguments;
+	background-image: none;
+	filter: none;
+}
+
+
+.bordered(@top-color: #EEE, @right-color: #EEE, @bottom-color: #EEE, @left-color: #EEE) {
+  border-top: solid 1px @top-color;
+  border-left: solid 1px @left-color;
+  border-right: solid 1px @right-color;
+  border-bottom: solid 1px @bottom-color;
+}
+.drop-shadow(@x-axis: 0, @y-axis: 1px, @blur: 2px, @alpha: 0.1) {
+  -webkit-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+  -moz-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+  box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+}
+.rounded(@radius: 2px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  border-radius: @radius;
+}
+.border-radius(@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
+  -webkit-border-top-right-radius: @topright;
+  -webkit-border-bottom-right-radius: @bottomright;
+  -webkit-border-bottom-left-radius: @bottomleft;
+  -webkit-border-top-left-radius: @topleft;
+  -moz-border-radius-topright: @topright;
+  -moz-border-radius-bottomright: @bottomright;
+  -moz-border-radius-bottomleft: @bottomleft;
+  -moz-border-radius-topleft: @topleft;
+  border-top-right-radius: @topright;
+  border-bottom-right-radius: @bottomright;
+  border-bottom-left-radius: @bottomleft;
+  border-top-left-radius: @topleft;
+  .background-clip(padding-box);
+}
+.opacity(@opacity: 0.5) {
+  -moz-opacity: @opacity;
+  -khtml-opacity: @opacity;
+  -webkit-opacity: @opacity;
+  opacity: @opacity;
+  @opperc: @opacity * 100;
+  -ms-filter: ~"progid:DXImageTransform.Microsoft.Alpha(opacity=@{opperc})";
+  filter: ~"alpha(opacity=@{opperc})";
+}
+.transition-duration(@duration: 0.2s) {
+  -moz-transition-duration: @duration;
+  -webkit-transition-duration: @duration;
+  -o-transition-duration: @duration;
+  transition-duration: @duration;
+}
+.transform(...) {
+  -webkit-transform: @arguments;
+  -moz-transform: @arguments;
+  -o-transform: @arguments;
+  -ms-transform: @arguments;
+  transform: @arguments;
+}
+.rotation(@deg:5deg){
+  .transform(rotate(@deg));
+}
+.scale(@ratio:1.5){
+  .transform(scale(@ratio));
+}
+.transition(...) {
+  -webkit-transition: @arguments;
+  -moz-transition: @arguments;
+  -o-transition: @arguments;
+  transition: @arguments;
+}
+.text-shadow(@horizontal:0px, @vertical:0px, @blur:2px, @alpha: 0.5) {
+  -webkit-text-shadow: @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+  -moz-text-shadow: @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+  text-shadow: @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+}
+.inner-shadow(@horizontal:0, @vertical:1px, @blur:2px, @alpha: 0.4) {
+  -webkit-box-shadow: inset @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+  -moz-box-shadow: inset @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+  box-shadow: inset @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+}
+.box-shadow(@arguments) {
+  -webkit-box-shadow: @arguments;
+  -moz-box-shadow: @arguments;
+  box-shadow: @arguments;
+}
+.box-sizing(@sizing: border-box) {
+  -ms-box-sizing: @sizing;
+  -moz-box-sizing: @sizing;
+  -webkit-box-sizing: @sizing;
+  box-sizing: @sizing;
+}
+.user-select(@argument: none) {
+  -webkit-user-select: @argument;
+  -moz-user-select: @argument;
+  -ms-user-select: @argument;
+  user-select: @argument;
+}
+.columns(@colwidth: 250px, @colcount: 0, @colgap: 50px, @columnRuleColor: #EEE, @columnRuleStyle: solid, @columnRuleWidth: 1px) {
+  -moz-column-width: @colwidth;
+  -moz-column-count: @colcount;
+  -moz-column-gap: @colgap;
+  -moz-column-rule-color: @columnRuleColor;
+  -moz-column-rule-style: @columnRuleStyle;
+  -moz-column-rule-width: @columnRuleWidth;
+  -webkit-column-width: @colwidth;
+  -webkit-column-count: @colcount;
+  -webkit-column-gap: @colgap;
+  -webkit-column-rule-color: @columnRuleColor;
+  -webkit-column-rule-style: @columnRuleStyle;
+  -webkit-column-rule-width: @columnRuleWidth;
+  column-width: @colwidth;
+  column-count: @colcount;
+  column-gap: @colgap;
+  column-rule-color: @columnRuleColor;
+  column-rule-style: @columnRuleStyle;
+  column-rule-width: @columnRuleWidth;
+}
+.translate(@x:0, @y:0) {
+  .transform(translate(@x, @y));
+}
+.background-clip(@argument: padding-box) {
+  -moz-background-clip: @argument;
+  -webkit-background-clip: @argument;
+  background-clip: @argument;
+}
+@MobileWidth: 767px;
+@MobileMaxWidth: @MobileWidth;
+@MobileMinWidth: (@MobileWidth + 1px);
+@TabletWidth: 991px;
+@TabletMaxWidth: @TabletWidth;
+@TabletMinWidth: (@TabletWidth + 1px);
+@UltraMobileWidth: 320px;
+@UltraMobileMaxWidth: @UltraMobileWidth;
+@UltraMobileMinWidth: (@UltraMobileWidth + 1px);
+
+@BoldRuleSet: { font-weight: bold; };
+h1 {
+	font-family: @TextTitleFont;
+	margin: @H1Margin;
+	padding: @H1Padding;
+	color: @H1TextColor;
+	font-size: @H1FontSize;
+	text-transform: @H1TextTransform;
+}
+
+.asH1 {
+	font-family: @TextTitleFont;
+	margin: @H1Margin;
+	padding: @H1Padding;
+	color: @H1TextColor;
+	font-size: @H1FontSize;
+	text-transform: @H1TextTransform;
+	font-weight: 700;
+}
+
+h2 {
+	font-family: @TextTitleFont;
+	margin: @H2Margin;
+	padding: @H2Padding;
+	line-height: @H2LineHeight;
+	color: @H2TextColor;
+	font-size: @H2FontSize;
+	font-weight: normal;
+	text-transform: @H2TextTransform;
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+
+.unclickable, .no-clickable {
+	pointer-events: none;
+	position: relative;
+	
+	button, a, input, select, textarea {
+		pointer-events: none;	
+	}
+	
+}
+
+.infotip {
+	border-bottom: 1px dashed gray;
+	cursor: help;
+}
+
+.highlight {
+	color: @HighLightColor;
+}
+
+.progress-text {
+	text-align: right;
+	color: @ActiveColorText;
+	padding: 5px;
+	font-weight: bold;
+}
+
+.ui-title-head {
+	border-color: #dedede !important;
+	color: @ActiveColor !important;
+	padding: 0.4em 0.5em !important;
+	margin: 1px;
+	z-index: 1;
+    text-shadow: 1px 1px 0px @White;
+}
+
+/* =============================================================================
+   Tables
+   ========================================================================== */
+
+table[data-role="form"] {
+    width             :100%;
+}
+
+table[data-role="form"] > tbody > tr > td {
+	padding           :3px 0px;
+}
+
+.labelTD > label {
+    display             :inline-block;
+}
+
+table {
+	
+	> thead > tr > th {
+		position: relative;
+	}
+	
+	> tbody > tr > td {
+		padding: 3px 2px;
+	}
+}
+
+table[data-role="detail"], table.info-detail {
+	border		  	: @DetailBorder !important;
+	border-collapse	:separate !important;
+	border-spacing	:0px;
+
+	> thead th {
+		font-weight		:@DetailHeadFontWeight !important;
+		color			:@DetailHeadColor !important;
+	 	background-color:@DetailHeadBackGroundColor !important;
+	 	padding			:@DetailHeadPadding !important;
+	 			 
+		label {
+		    display : inline !important;
+		}
+	
+	}
+	
+	> tbody > tr {
+	
+		> td {
+			padding			: @DetailBodyPadding;
+			background-color: @DetailBodyBackgroundColor;
+			color			: @DetailBodyColor;
+		}
+	
+		&:last-child > td {
+			border-bottom: 0px;
+		}
+	}
+	
+	> tbody > tr.nth-child-even > td,
+	> tbody > tr:nth-child(even) > td {
+		background-color: @DetailBodyEvenBackgroundColor;
+	}	
+}
+
+
+table[data-role="list"], table.info-list {
+	
+	border		  	:@ListBorder !important;
+	border-collapse	:separate !important;
+	border-spacing	:0px;
+
+	tr.selected > td {
+		color: @White !important;
+		border-color: @LightGray !important;
+	}
+	
+	> thead th {
+		font-weight		:@ListHeadFontWeight !important;
+		color			:@ListHeadColor !important;
+	 	background-color:@ListHeadBackGroundColor !important;
+	 	padding			:@ListHeadPadding !important;
+	 			 
+		label {
+		    display : inline !important;
+		}
+	
+	}
+	
+	> tbody > tr {
+	
+		> td {
+			padding			: @ListBodyPadding;
+			background-color: @ListBodyBackgroundColor;
+			color			: @ListBodyColor;
+		}
+	
+		&:last-child > td {
+			border-bottom: 0px;
+		}
+	}
+	
+	/*> tbody > tr.nth-child-even > td,
+	> tbody > tr:nth-child(even) > td {
+		background-color: @ListBodyEvenBackgroundColor;
+	}*/
+	// Défactorisation sinon IE8 boude la propriété CSS2
+	> tbody > tr:nth-child(even) > td {
+		background-color: @ListBodyEvenBackgroundColor;
+	}
+	> tbody > tr.nth-child-even > td {
+		background-color: @ListBodyEvenBackgroundColor;
+	}
+}
+
+table[data-role="list"], table.info-list {
+	
+	.checkbox {
+		width				:15px !important;
+		text-align			:center !important;
+	}
+	
+	.actions {
+		padding:			0px !important;
+			
+		> input, > button {
+			padding: 2px 6px !important;
+		}
+	
+		> [data-icon] {
+			padding: 0px 4px !important;
+		}
+	
+	}
+	
+	.date {
+		width				:140px;
+		text-align			:center !important;
+	}
+
+	.datetime {
+		width				:150px;
+		text-align			:center !important;
+	}
+
+}
+
+.labelTD {
+	width	:40%;
+	position: relative;
+}
+
+label.input {
+	border-bottom	:1px solid #ccc;
+	padding			:1px 10px;
+	width			:100%;
+	.border-radius(3px);
+	width				:100%;
+	box-sizing			:border-box;
+-moz-box-sizing			:border-box;
+-webkit-box-sizing	    :border-box;
+	width				:100%;
+	margin				:1px 5px;
+	display				:inline-block;
+}
+
+ul.messages, .messages {
+	list-style: none;
+	.border-radius(0px, 6px, 6px, 0px);
+	padding: @MessagePadding;
+	background-color: @MessageBackgroundColor;
+	margin: @MessageMargin;
+}
+
+ul.messages > li, .message {
+	padding-bottom: @Padding / 2;
+	color: @MessageColor;
+}
+
+td > .ui-ico-hint {
+	position: absolute;
+	right: 2px;
+	top: 3px;
+}
+
+.tab-list {
+	
+	display: table;
+	width: 100%;
+	background-color: @MenuTabBackgroundColor;
+	
+	.tab-item {
+		display: table-cell;
+		padding: @Padding;
+		text-align: center;
+		font-size: @MenuTabFontSize;
+		cursor: default;
+		width: auto;
+		background-color: @MenuTabActiveBackgroundColor;
+		color: @MenuTabActiveColor;
+		position: relative;
+		
+		&.current {
+			background-color: @MenuTabSelectedBackgroundColor;
+			color: @MenuTabSelectedColor;
+			
+			.numero {
+				background-color: @MenuTabNumeroSelectedBackgroundColor;
+			}
+			
+		}
+
+		&.inactif {
+			background-color: @MenuTabBackgroundColor;
+			color: @MenuTabColor;
+			text-decoration: none;
+			
+			.numero {
+				background-color: @MenuTabNumeroBackgroundColor;
+			}
+			
+		}
+		
+		.numero {
+			background-color: @MenuTabNumeroActiveBackgroundColor;
+			display: block;
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			bottom: 0px;
+			padding: 0px 12px;
+		}
+		
+	}
+}
+html { overflow: auto !important; overflow-x: hidden !important; }
+body { margin: 0; font-size: @TextFontSize; line-height: @LineHeight; background-color: @BackgroundColor; }
+body, button, pre, select, input, textarea { font-family: @TextFont; color: @TextColor; -moz-box-sizing: border-box; box-sizing: border-box; -webkit-box-sizing: border-box; }
+
+.gradient-button when not(@ButtonColor = '') {
+	.gradient(@ButtonColorStart, @ButtonColorEnd, @ButtonColor)
+}
+
+.gradient-button-active when not(@ButtonSelectColor = '') {
+	.gradient(@ButtonSelectColorStart, @ButtonSelectColorEnd, @ButtonSelectColor)
+}
+
+.gradient-button-checked when not(@ButtonCheckedBackground = '') {
+	.gradient(@ButtonCheckedBackground, @ButtonCheckedBackgroundEnd, @ButtonCheckedBackground)
+}
+
+.gradient-button-hover when not(@ButtonHoverColor = '') {
+	.gradient(@ButtonHoverColorStart, @ButtonHoverColorEnd, @ButtonHoverColor)
+}
+
+b, strong, .strong, .bold, table th {
+    @BoldRuleSet();
+}
+
+pre {
+	margin: 0px;
+	padding: 0px;
+	word-wrap: break-word;
+	white-space: pre-line;
+}
+
+.veryStrong {
+    font-weight: bold;
+    color: #018C94;
+    font-size: 1.5em;
+}
+
+p {
+    padding: 0px 0px !important;
+    margin:8px 0px !important;
+    text-align: justify;
+    font-size: @ParagraphFontSize;
+}
+
+ul {
+	padding: 0px;
+	margin: 0px;
+	list-style: none;
+	
+	> li {
+		padding: 0px;
+		margin: 0px;
+		list-style: none;
+	}
+	
+}
+
+hr {
+    height          :0px;
+    border-top		:1px solid @HrColor;
+    border-bottom   :1px solid @White;
+    margin			:1em 0;
+}
+
+a { color: @HyperLinkColor; }
+a:visited { color: @HyperLinkVisitedColor; }
+
+a.link, .nota {
+	color	:#00bdf2 !important;
+}
+
+a.disable {
+	color			:@HyperLinkDisabledColor !important;
+	text-decoration	:none !important;
+}
+
+.text-left {
+	text-align: left !important;
+}
+
+.text-center {
+	text-align: center !important;
+}
+
+.text-right {
+	text-align: right !important;
+}
+
+.text-justify {
+	text-align: justify !important;
+}
+
+.text-uppercase {
+	text-transform: uppercase !important;
+}
+
+.text-lowercase {
+	text-transform: lowercase !important;
+}
+
+.text-bigger {
+	font-size: 1.1em !important;
+}
+
+.text-smaller {
+	font-size: 0.9em !important;
+}
+
+.text-italic {
+	font-style: italic !important;
+}
+
+.green {
+	color: #008000;
+}
+
+.relative {
+	position: relative;
+}
+
+.TODO {
+	color: @ErrorLabelColor ;
+//	display: none;
+}
+
+.insecable {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.secable {
+	white-space: pre-line;	
+}
+
+fieldset > legend > label {
+    cursor: pointer; 
+    position: absolute; 
+    top     :-11px; 
+    right   :-250px;
+}
+
+.container {
+    padding     :0px !important;
+    margin      :0px !important;
+    width       :100% !important;
+    height      :100% !important;
+    display     :inline-block !important;
+    position    :relative !important;
+}
+
+.text {
+	padding: @FullPadding;	
+}
+
+.bordered {
+	border: 1px solid @BorderColor;	
+}
+
+.full-width {
+	width: 100%;
+}
+	
+.half-width {
+	width: 49%; /* Pour faire la marge */
+}
+
+@media screen and (min-width: @TabletMinWidth) {
+	
+	.col-lg-auto {
+		width: auto;
+	}
+	
+}
+
+
+@media screen and (min-width: @MobileMinWidth) {
+	
+	.col-sm-auto {
+		width: auto;
+	}
+	
+}
+
+@media screen and (max-width: @MobileMaxWidth) {
+	
+	.col-xs-auto {
+		width: auto;
+	}
+	
+}
+
+@media screen and (min-width: @MobileMinWidth) {
+
+	.visibility-xs {
+		visibility: hidden;
+	}
+	
+}
+
+@media screen and (max-width: @MobileMaxWidth) {
+
+	.full-width-xs {
+		width: 100%;
+	}
+	
+	.half-width-xs {
+		width: 49%; /* Pour faire la marge */
+	}
+	
+	.visibility-xs {
+		visibility: visible;
+	}
+	
+	.secable-xs { // Sécable en xs, ...
+		.secable() !important ;
+	}
+	
+}
+
+.secable-xs { // ... insécable en temps normal.
+	.insecable() ;
+}
+
+.text-underline {
+	text-decoration: underline;
+}
+
+.text-capitalize {
+	text-transform: capitalize;
+}
+
+.requiredInput {
+	padding-left: 0px;
+    min-width   : 8px;
+    display     : @FormRequiredTagDisplay;
+    padding     : 0px;
+    margin		: @FormRequiredTagMargin;
+    text-align  : left;
+    position	: @FormRequiredTagPosition;
+	top			: 0px;
+	right		: 0px;
+}
+
+.form-submit {
+	padding:	@FullPadding 0px;
+}
+
+.form-label {
+	
+	text-align: @FormLabelAlignement;
+	font-size: @FormLabelFontSize;
+	color: @FormLabelTextColor;
+	padding: @FormLabelPadding;
+
+	div.label {
+		display: inline-block;
+		
+		.sub {
+			font-size: @FormLabelSubFontSize;
+			line-height: 1.2em;
+		}
+	}
+
+	label {
+		font-weight: @FormLabelFontWeight !important;
+		white-space: normal;
+		display: inline !important;
+	}
+
+}
+
+.form-label-left {
+	
+	.form-label {
+		text-align: left;
+	}
+	
+}
+
+.form-label-right {
+	
+	.form-label {
+		text-align: right;
+	}
+	
+}
+
+
+@media screen and (max-width: @MobileMaxWidth) {
+
+	.form-label {
+		text-align: left !important;
+	}
+}
+
+
+.field-row {
+	
+	.form-label {
+		text-align: left;
+	}
+	
+}
+
+.form-checked .ui-field-valid,
+.ui-field-visited.ui-field-valid {
+	
+	.form-label {
+		.color() when not(@SuccessLabelColor = '') { color: @SuccessLabelColor !important };
+		.color;
+	}
+	
+	.ui-input-valid {
+		.input-valid;
+	}
+		
+	input:valid, textarea:valid {
+		.input-valid;	
+	}
+		
+}
+
+
+.form-checked .ui-field-warned,
+.ui-field-visited.ui-field-warned {
+	
+	.form-label {
+		color: @WarnedLabelColor !important;
+	}
+	
+	.ui-input-valid {
+		.input-warned;
+	}
+		
+	input:valid, textarea:valid {
+		.input-warned;	
+	}
+		
+}
+
+.form-checked .ui-field-invalid,
+.ui-field-visited.ui-field-invalid {
+	.form-label {
+		color: @ErrorLabelColor !important;
+	}
+	
+	.ui-input-invalid {
+		.input-invalid;
+	}
+	
+	input:invalid, textarea:invalid
+	{ 
+		.input-invalid;
+	}
+		
+}
+
+.form-checked .ui-group-valid, 
+.ui-group-visited.ui-group-valid {
+
+	.form-label {
+		color: @SuccessLabelColor !important;
+	}
+		
+}
+
+.form-checked .ui-group-warned, 
+.ui-group-visited.ui-group-warned {
+
+	.form-label {
+		color: @WarnedLabelColor !important;
+	}
+		
+}
+
+.form-checked .ui-group-invalid, 
+.ui-group-visited.ui-group-invalid {
+
+	.form-label {
+		color: @ErrorLabelColor !important;
+	}
+		
+}
+
+.form-spacer {
+	margin: @FormSpacerMargin !important;
+}
+
+.form-group-label-row {
+	width: 100%;
+}
+
+.form-group-input-row {
+	width: 100%;
+}
+
+@media screen and (min-width: @MobileMinWidth) {
+	
+	.form-group {
+		
+		.ui-field-numeric {
+			width: @FieldNumericWidth;	
+		}
+		
+	}
+	
+}
+
+/* Colors for form validity */
+
+.input-warned { 
+	.bg() when not(@InputWarnedBackgroundColor = '') { .bg-color(@InputWarnedBackgroundColor) !important };
+	.bg;
+	.color() when not(@InputWarnedTextColor = '') { color: @InputWarnedTextColor !important };
+	.color;
+	border-color: @InputWarnedBorderColor !important;
+	border-width: @InputWarnedBorderWidth !important;
+}
+
+.input-valid { 
+	.bg() when not(@InputValidBackgroundColor = '') { .bg-color(@InputValidBackgroundColor) !important };
+	.bg;
+	.color() when not(@InputValidTextColor = '') { color: @InputValidTextColor !important };
+	.color;
+	border-color: @InputValidBorderColor !important;
+	border-width: @InputValidBorderWidth !important;
+}
+
+.input-invalid { 
+	.bg() when not(@InputErrorBackgroundColor = '') { .bg-color(@InputErrorBackgroundColor) !important };
+	.bg;
+	.color() when not(@InputErrorTextColor = '') { color: @InputErrorTextColor !important };
+	.color;
+	border-color: @InputErrorBorderColor !important;
+	border-width: @InputErrorBorderWidth ! important;
+}
+
+/****************************************************************
+ * TEXT CONTROLS
+ ****************************************************************/
+
+input, select, select option, textarea {
+    color: @InputTextColor;
+    font-family: @InputTextFont;
+}
+
+.ui-field-select {
+	position: relative;
+}
+
+// Ciblage -web-kit
+@media all and (-webkit-min-device-pixel-ratio:0)
+{
+
+	input, select, select option, textarea {
+		.appearance(none);
+	}
+	
+	input[type="radio"] {
+		.appearance(radio);
+	}
+	
+	input[type="checkbox"] {
+		.appearance(checkbox);
+	}
+	
+	button {
+		.appearance(none);
+	}
+
+	.ui-field-select {
+		
+		select {
+			padding-right: @ImgSelectTargetPaddingAppearance + @ImgSelectTargetSizeAppearance;
+		}
+	
+	}
+
+	.ui-field-select::after {
+		content: '';
+		background-image: url("@{ImgSrc}/@{ImgSelectTargetAppearance}");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: @ImgSelectTargetSizeAppearance;
+		display: block;
+		position: absolute;
+		right: @ImgSelectTargetPaddingAppearance;
+		width: @ImgSelectTargetSizeAppearance;
+		top: 0px;
+		bottom: 0px;
+		pointer-events: none;
+	}
+
+}
+/***********
+ * TextBox */
+    
+input[type="text"], input[type="email"], input[type="number"], input[type="password"], input[type="tel"],
+select, textarea {
+	text-wrap: normal;
+	border-color: @InputBorderColor;
+	box-sizing	: border-box;
+	padding		 : @InputPadding;
+	border-width: @InputBorderWidth;
+	border-style: solid;
+	font-size: @InputFontSize;
+	outline: none;
+	width: 100%;
+	.bg-color(@InputBackgroundColor);
+	.rounded(@InputRadius);
+	.transition(~"background @{GlobalTransitionDuration}, background-color @{GlobalTransitionDuration}, border-color @{GlobalTransitionDuration}");
+}
+
+select {
+	padding: @InputSelectPadding;
+}
+
+/* IE8 Fix */
+input[readOnly] {
+	color: @LightGray !important;
+}
+
+.ui-input-readonly {
+	background: @DisabledColor;
+	color: @DisabledColorText;
+}
+
+.ui-input-empty {
+	color: @DisabledColorText;
+}
+
+select option[value=""] { // IE<=9
+	color: @PlaceHolderColor;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    @PlaceHolderColor;
+}
+
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    @PlaceHolderColor;
+   .opacity(1);
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    @PlaceHolderColor;
+   .opacity(1);
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    @PlaceHolderColor;
+}
+
+select:disabled, select[readonly], select[readOnly],
+textarea:disabled, textarea[readonly], textarea[readOnly],
+input:disabled, input[readonly], input[readOnly] {
+	.ui-input-readonly;
+}
+
+input:not([readonly]):not([type=radio]):enabled:hover,
+select:enabled:hover, 
+textarea:not([readonly]):enabled:hover {
+	border-color: @BorderColorInput;
+}
+input:not([readonly]):not([type=radio]):enabled:focus,
+select:enabled:focus, 
+textarea:enabled:focus,
+select:enabled:active, 
+textarea:not([readonly]):enabled:active {
+	border-color: @ActiveBorderColor;
+}
+
+input[type="checkbox"] {
+	vertical-align	:middle;
+}
+
+/****************************************************************
+ * CLIC CONTROLS
+ ****************************************************************/
+
+/**********
+ * Button */
+
+a[data-role="button"] {
+    display :inline-block;
+	vertical-align: middle;
+	text-decoration: none;
+	text-align: center;
+}
+
+
+div.ieLayout {
+	display : inline-block;
+	position: relative;
+}
+
+div.ieLayout[disabled] {
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=@DisabledOpacityPerc) !important;	
+    filter: "alpha(opacity=@{DisabledOpacityPerc})" !important; /* For IE8 and earlier */    
+}
+
+button,
+input[type="button"],
+a[data-role="button"] {
+	margin-bottom: 2px !important;
+	color: @ButtonColorText !important;
+	//margin: 0px @Padding !important;
+	border-width: 1px !important;
+	border-style: solid !important;
+	outline: none !important;
+	cursor: pointer !important;
+	font-family: @ButtonFontFamily;
+	line-height: @ButtonLineHeight;
+	font-weight: @ButtonFontWeight;
+	font-size: @ButtonFontSize !important;
+	background-color    : @ButtonColor !important;
+	padding				: @ButtonPadding !important;
+	border-color		: @ButtonBorderColor !important;
+	.insecable-btn-txt() when not(@ButtonTextInsecable = 'false') { .insecable(); };
+	.insecable-btn-txt;
+	.rounded(@ButtonRadius);
+	.gradient-button !important;
+	.transition(~"background @{GlobalTransitionDuration}, background-color @{GlobalTransitionDuration}, border-color @{GlobalTransitionDuration}");
+}
+
+button:enabled:focus,
+input[type="button"]:enabled:focus,
+a[data-role="button"]:focus {
+	border-color: @ActiveBorderColor !important;
+}
+
+button:disabled,
+input[type="button"]:disabled,
+a[data-role="button"].disabled {  
+	.opacity(@DisabledOpacity) !important;
+	cursor: not-allowed;
+}
+
+button:enabled:active,
+input[type="button"]:enabled:active,
+a[data-role="button"]:active {
+  .bg-color(@ActiveColor) !important;
+  color				: @ActiveColorText !important;
+  border-color		: @ActiveBorderColor !important;
+  .gradient-button-active !important;
+}
+
+button:enabled:hover, 
+input[type="button"]:enabled:hover,
+a[data-role="button"]:hover {
+	border-color: @ButtonHoverBorderColor !important;
+	.bg() when not(@ButtonHoverColor = '') {
+		color		: @ButtonHoverColorText !important; 
+		.bg-color(@ButtonHoverColor) !important;
+		.gradient-button-hover !important;
+	};
+	.bg
+}
+
+button[checked],
+input[type="button"][checked],
+a[data-role="button"][checked] {
+	.bg-color(@ButtonCheckedBackground) !important;
+	color: @ButtonCheckedColor !important;
+	.gradient-button-checked !important;
+} 
+.notification  {
+	.rounded(@NotificationRadius);
+	padding: @MediumPadding;
+	color: @TextColor;
+	background-color: @NotificationBackgroundColor;
+	border:  1px solid @NotificationBackgroundColor;	
+}
+
+.notification.blank {
+    padding-left: 28px;
+    position    :relative;
+	color: @TextColor;
+	background-color: transparent;
+	border-color: @LightGray;
+}
+
+.notification.error {
+	color: #000000;
+	background-color: #ebf8fd;
+	border-color: @ErrorColor;
+    padding-left: 28px;
+    position    :relative;
+}
+
+
+.notification.success {
+	color: #468847;
+	background-color: #DFF0D8;
+	border-color: #D6E9C6;
+    padding-left: 28px;
+    position    :relative;
+}
+
+.notification.info {
+	color: @InfoColorText;
+	background-color: @InfoColor;
+	border-color: @InfoColor;
+    position    :relative;
+    padding: @MediumPadding;
+}
+
+.notification.focus {
+	.rounded(0px);
+	color: @InfoColorText;
+    position    :relative;
+    padding: 0px;
+	border: 1px solid #808080;
+
+	> div {
+    	padding: 5px;
+    	color: #000000;
+    	border: 1px solid #FFFFFF;
+	}
+	
+	a {
+		color: #177a81;
+		font-weight: bold;
+	}
+}
+
+.notification.warn {
+	color: @TextColor;
+	background-color: transparent;
+	border-color: @LightGray;
+    padding-left: 28px;
+    position    :relative;
+}
+
+/* PROGRESS BAR */
+
+.ui-progressbar  {
+	background: @DarkGray;
+	border: 1px solid @DarkGray;
+	height: 8px !important;
+}
+
+.ui-progressbar .ui-progressbar-value {
+	background: @ActiveColor !important;
+}
+
+/* UI DIALOG */
+
+
+.ui-dialog {
+    background-color        :@DialogBackgroundColor;
+    color                   :@DialogTextColor;
+    position                :absolute !important;
+    z-index                 :9999999;
+    overflow				:visible !important;
+    .rounded(@DialogBorderRadius);
+    max-width				:@DialogMaxWidth;
+}
+
+.ui-dialog:before {
+  content: '';
+  position: absolute;
+  border: @DialogBorderWidth solid @DialogBorderColor;
+  display: block;
+  top: -@DialogBorderWidth;
+  bottom: -@DialogBorderWidth;
+  left: -@DialogBorderWidth;
+  right: -@DialogBorderWidth;
+  .opacity(@DialogBorderOpacity);
+  .rounded(@DialogBorderRadius + 4);
+  z-index: -1; 
+}
+
+.ui-dialog-titlebar {
+  border-bottom             : @DialogHeadSeparatorWidth solid @DialogHeadSeparatorColor !important;
+  color                     : @DialogHeadTextColor;
+  font-family				: @DialogHeadFontFamily;
+  font-size					: @DialogHeadFontSize;
+}
+
+.ui-dialog.no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+
+.ui-dialog-titlebar, .ui-datepicker-header {
+	background		: none !important;
+	border			: 0px !important;
+	font-weight				: normal;
+	border-bottom           : @DialogHeadSeparatorWidth solid @DialogHeadSeparatorColor !important;
+	color                   : @DialogHeadTextColor;
+	font-family				: @DialogHeadFontFamily;
+	font-size				: @DialogHeadFontSize;
+	border-bottom           : @DialogHeadSeparatorWidth solid @DialogHeadSeparatorColor !important;
+	.rounded(0px);
+}
+
+.ui-datepicker-header {
+	color					: @CalendarTextColor;	
+}
+
+// Modifie la taille de la zone de sélection de l'année (fix sur iOS)
+select.ui-datepicker-year {
+	width: 75px !important;
+}
+
+.ui-dialog-titlebar {
+	
+	.ui-dialog-titlebar-close,
+	.ui-dialog-titlebar-close:active,
+	.ui-dialog-titlebar-close:enabled:active {
+		background-color: inherit !important;
+		background-image: url('@{ImgSrc}/dialog/close.png') !important;
+		background-repeat: no-repeat !important;
+		background-position: center !important;
+		border: 0px !important;
+		margin-top: -10px !important;
+	}
+ 
+}
+
+.ui-datepicker-next {
+	background-image: url('@{ImgSrc}/calendar/arrowrightmonth.gif');
+	background-repeat: no-repeat;
+	background-position: center;
+} 
+
+.ui-datepicker-prev {
+	background-image: url('@{ImgSrc}/calendar/arrowleftmonth.gif');
+	background-repeat: no-repeat;
+	background-position: center;
+} 
+
+/* BOOTSTRAP */
+
+.form-horizontal .radio {
+	min-height: 20px !important;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	vertical-align: middle;
+}
+
+label {
+	font-weight: normal !important;
+	margin-bottom: 0px !important;
+}
+
+.form-group {
+	margin: @FormGroupMargin !important;
+}
+
+.input-group-addon {
+	font-size: @InputAddOnFontSize;
+	padding: @InputAddOnPadding;
+	background-color: @InputAddOnBackgroundColor;
+	color: @InputAddOnColor;
+	border-color: @InputAddOnBorderColor;
+	top: 0px;
+	.transition(~"background @{GlobalTransitionDuration}, background-color @{GlobalTransitionDuration}, border-color @{GlobalTransitionDuration}");
+}
+
+.input-group {
+	border-spacing: 0px !important;
+}
+
+.btn-group {
+	
+	border: @InputBorderWidth solid @BtnGroupBorderColor !important;
+	.rounded(@BtnGroupBorderRadius);
+	overflow: hidden;
+	
+	> .btn {
+		padding: @BtnGroupButtonPadding !important;
+		font-size: @InputFontSize !important;
+		border-top-width: 0px !important;
+		border-bottom-width: 0px !important;
+		border-left-width: 1px !important;
+		border-right-width: 0px !important;
+		margin-bottom: 0px !important;
+		margin-left: 0px !important; 
+		
+		&:first-child {
+			border-left-width: 0px !important;	
+		}
+		
+		&:first-child:not(:last-child):not(.dropdown-toggle) { 
+			border-top-left-radius: @BtnGroupBorderRadius - 2;
+			border-bottom-left-radius: @BtnGroupBorderRadius - 2;
+		}
+		
+		
+		&:last-child:not(:first-child), .btn-group>.dropdown-toggle:not(:first-child) {
+			border-bottom-right-radius: @BtnGroupBorderRadius - 2;
+			border-top-right-radius: @BtnGroupBorderRadius - 2;
+		}
+		
+	}
+	
+}
+
+@media screen and (max-width: @MobileMaxWidth) {
+
+	.input-group {
+		width: 100% !important;
+	}
+}
+
+.ui-field-date-separator{
+	font-size: @InputAddOnFontSize;
+	text-align: center;
+	padding : @MediumPadding 0px;
+	color: @InputAddOnColor;
+}
+
+select.ui-datepicker-year {
+	padding-left: 0px;
+	padding-right :0px;
+}
+
+/* TOOLTIPSTER */
+
+/* This is the default Tooltipster theme (feel free to modify or duplicate and create multiple themes!): */
+.tooltipster-default {
+	.rounded(2px);
+	background: @ToolTipBackgroundColor;
+	border: 1px solid @ToolTipBorderColor;
+	color: @ToolTipTextColor;
+
+	/* Use this next selector to style things like font-size and line-height: */
+	.tooltipster-content {
+		padding: @ToolTipPadding;
+		font-size: @ToolTipFontSize;
+		font-family: @ToolTipFontFamily;
+		overflow: hidden;
+		line-height: 1.2em;
+		max-width: @ToolTipMaxWidth;
+	}
+	
+	/* This next selector defines the color of the border on the outside of the arrow. This will automatically match the color and size of the border set on the main tooltip styles. Set display: none; if you would like a border around the tooltip but no border around the arrow */
+	.tooltipster-arrow .tooltipster-arrow-border {
+		/* border-color: ... !important; */
+	}
+
+}
+
+/* If you're using the icon option, use this next selector to style them */
+
+.ui-ico-hint {
+	cursor: help;
+	background: transparent url('@{ImgIcoHintSrc}') no-repeat center;
+	background-size: @ImgIcoHintWidth @ImgIcoHintHeight;
+	width: @ImgIcoHintWidth;
+	height: @ImgIcoHintHeight;
+	vertical-align: middle;
+	display: inline-block;
+}
+
+.tooltipstered {
+	position: relative;
+	z-index: 1;
+}
+
+.ui-accordion-header {
+	padding-left: 20px !important;
+	.transition(~"border .2s, color .2s, background-color .2s");
+}
+
+.ui-accordion-content {
+	padding: @FieldsetPadding !important;
+	color: @FieldsetContentColor;
+	background: @FieldsetBackground;
+	border: @FieldsetBorder;
+	.border-radius(0, 5px, 5px, 0);
+}
+
+.ui-accordion-header.ui-state-default when not(@ImgAccordionClosed = '') {
+	background-image: url('@{ImgSrc}/@{ImgAccordionClosed}');
+	background-repeat: no-repeat;
+	background-position: @ImgAccordionClosedPosition;
+}
+
+.ui-accordion-header.ui-state-active when not(@ImgAccordionOpened = '') {
+	background-image: url('@{ImgSrc}/@{ImgAccordionOpened}');
+	background-repeat: no-repeat;
+	background-position: @ImgAccordionOpenedPosition;
+}
+
+.radio {
+	> input {
+		vertical-align: middle;
+		position: relative !important;
+		display: inline-block;
+	}
+	
+	> label, > span {
+		vertical-align: middle;
+		margin: 0px !important;
+		position: relative;
+		display: inline !important;
+		padding-left: 0px !important;
+	}
+	
+	> .ui-ico-hint {
+		margin-left: 6px;	
+	}
+}
+
+.form-inline .radio, .form-inline .checkbox {
+	display: inline-block !important;
+}
+
+.form-inline {
+	
+	.radio {
+		margin-right: 6px;
+	}
+}
+
+legend {
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+
+input[type="radio"], 
+input[type="checkbox"] {
+	margin: 0px;
+	vertical-align: middle;
+}
+
+.radio input[type="radio"], 
+.radio-inline input[type="radio"], 
+.checkbox input[type="checkbox"], 
+.checkbox-inline input[type="checkbox"] {
+	position: relative;
+	margin-left: 1px;
+	margin-top: 0px;
+}
+.se-ui-glasspanel {
+	position	:fixed;	
+	z-index		:999;
+	left		:0px;
+	top			:0px;
+	right		:0px;
+	bottom		:0px;
+	display		:none;
+}
+
+.se-ui-glasspanel.withSteps {
+    z-index     :1000;
+}
+
+.se-ui-glasspanel-after, .ui-loader {
+	content		:'';
+	display		:block;
+	top         :0px;
+	left		:0px;
+	bottom		:0px;
+	right		:0px;
+    z-index     :999;
+	background-color: #fefefe;
+	background-image: url('@{ImgSrc}/loader-ie.gif');
+	background-repeat: no-repeat;
+	background-position: center;
+	position        :absolute;
+	.opacity(0.6);
+}
+
+.se-ui-glasspanel-after::after, .ui-loader::after {
+	content		:'';
+	display		:block;
+	top         :0px;
+	left		:0px;
+	bottom		:0px;
+	right		:0px;
+    z-index     :999;
+	background-image: url('@{ImgSrc}/tinyLogo.jpg');
+	background-repeat: no-repeat;
+	background-position: center;
+	position        :absolute;
+}
+
+.se-ui-glasspanel-text {
+	position: fixed;
+	z-index: 999;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	padding: 10px;
+	font-size: 1em;
+	color: #000;
+}
+
+.se-ui-glasspanel-text::after {
+	content		:'';
+	display		:block;
+	top         :0px;
+	left		:0px;
+	bottom		:0px;
+	right		:0px;
+    z-index     :-1;
+	background-color: #fff;
+	position        :absolute;
+	.opacity(0.6);
+}
+
+@media screen and (max-width: @MobileMaxWidth) {
+	
+	.se-ui-glasspanel-text {
+		left: 5%;
+		right: 5%;	
+	}	
+}
+
+.se-ui-glasspanel.show {
+	display		:block;	
+}
+
+.se-ui-glasspanel-content {
+	position	:fixed;
+    z-index     :1000;
+	left		:33%;
+	right		:33%;
+	top         :33%;
+    padding     :10px 20px 20px 20px;
+}
+
+.se-ui-glasspanel-content-text {
+	font-size	:1.1em;
+	margin      :7px 0px;
+}
+
+.se-ui-progressbar {
+	margin		:0px 0px;
+	position	:relative;
+	padding		:0px;
+	height		:10px;
+}
+
+.se-ui-progressbar-text {
+	position	:absolute;
+	top			:-22px;
+	right		:1px;
+}
+
+.se-ui-progressbar > span {
+	position	:absolute;
+	top			:0px;
+	bottom		:0px;
+	left		:0px;
+	width		:100%;
+	background-color    : @ActiveColor;
+	.rounded(5px);
+}
+
+.se-ui-progressbar:after {
+	content		:"";
+	display		:block;
+	top		:-2px;
+	left		:-2px;
+	bottom		:-2px;
+	right		:-2px;
+	z-index		:-1;
+	position	:absolute;	
+	border		:1px solid #4d4d4d;	
+	.rounded(10px);	
+	background-color:#4d4d4d;
+}
+
+.se-ui-popin {
+    position        :fixed;
+    top             :109px;
+    left            :30%;
+    right           :30%;
+    padding         :8px;
+    font-size       :1.0em;
+    cursor          :pointer;
+    background-color    : #ebf8fd;
+    .rounded(5px);
+    border              : 1px solid #00bdf2;
+    z-index             : 9999999;
+}
+
+.se-ui-popin > span.text {
+    line-height         :16px;
+    margin-left         :8px;
+}
+
+.se-ui-popin[data-type="error"] {
+    background-color    :#ebf8fd;
+    border-color        :#dc0a0a;
+}
+
+.se-ui-popin[data-type="success"] {
+    background-color    :#ebf8fd;
+    border-color        :#87d200;
+}
+
+.se-ui-messagebox-content > .se-ico-status {
+    float               :left;
+    margin-right        :16px;
+}
+
+.se-ui-messagebox-content > .se-ui-text {
+    margin                :0px;
+    padding               :8px;
+    max-width             :500px;
+    min-width             :350px;
+}
+
+fieldset {
+
+	> legend {
+	    position :relative;
+		font-size: @LegendFontSize !important;
+		font-family: @LegendFontFamily;
+	}
+
+	&.ui-widget {
+			
+		> legend {
+			color: @TextColor;
+			margin-bottom: @Padding;
+			width: @LegendWidth;
+	    	text-align		:@LegendTextAlignement;
+	    	background-color:@LegendBackgroundColor;
+	    	border: @LegendBorder;
+	    	text-transform: @LegendTextTransform;
+	    	
+	    	&.ui-state-active {
+	    		background-color:@LegendActiveBackgroundColor !important;
+	    		color:@LegendActiveColor !important;
+	    		border:@LegendActiveBorder !important;
+	    	}
+	    	
+		}
+	}
+	
+}
+
+.ui-datepicker {
+	background-color: @DialogBackgroundColor;
+	border: 1px solid @DialogBorderColor;	
+	width: auto;
+	margin-top: 1px;
+}
+
+.ui-datepicker a {
+	color: @CalendarTextColor;
+}
+
+.ui-datepicker thead th {
+	color: @CalendarTextColor;	
+}
+
+.ui-datepicker td {
+	border: 1px solid #fefefe;
+	background-color:	whitesmoke;
+}
+
+.ui-datepicker td a.ui-state-active {
+	background-color: @InfoColor !important;
+	color: @InfoColorText !important;
+}
+
+.ui-datepicker td a.ui-state-hover {
+	background-color: @ActiveColor !important;
+	color: @ActiveColorText !important;
+}
+
+.ui-datepicker td.ui-state-disabled {
+	background-color: #fff !important;
+	color: #aaa !important;
+}
+
+.ui-datepicker td.ui-datepicker-week-end {
+	background: #ededed;
+	
+	&.ui-state-disabled {
+		background-color: whitesmoke !important;
+	}
+	
+}
+
+.ui-datepicker .ui-icon-circle-triangle-w {
+		
+}
+
+.ui-field-textonly {
+	padding: @FieldReadOnlyTextPadding;
+	font-size: @InputFontSize;
+}
+
+.ui-group-date-multifield input {
+	text-align: center;
+}
+
+.ui-field-numeric {
+	
+	text-align: @FieldNumericTextAlign;
+	
+	input {
+		text-align: @FieldNumericTextAlign;
+	}
+	
+	input:focus {
+		text-align: @FieldNumericFocusTextAlign;
+	}
+
+}
+
+.ui-field-codepostal-input {
+	width:29% !important; 
+	margin-right:1% !important;
+}
+
+.ui-field-codepostal-select {
+	width:70% !important;
+}
+
+.ui-field-messages {
+	text-align: left;
+	list-style: none;
+	clear: both;
+	padding: @FieldMessagesPadding;
+	margin: @FieldMessagesMargin;
+}
+
+.ui-field-messages > li {
+	padding: @Padding / 2;
+	color: @FieldMessageColor;
+	font-size: @FieldMessageFontSize;
+	
+	&.warn {
+		color: @WarnedMessageColor;	
+	}
+	
+}
+
+.ui-pined-hint {
+	font-size: @FormLabelSubFontSize;
+	line-height: 1.2em;
+}
+
+.ui-toggle {
+	@ToggleSide: 25px;
+	@ToggleWidth: 46px;
+	@ToggleBorderWidth: 1px;
+	
+	@ToggleBorderFullWidth: @ToggleSide + 2 * @ToggleBorderWidth;
+	
+	@ToggleBackgroundColor: #efefef;	@ToggleOnBackgroundColor: #3CC1D5;
+    @ToggleBorderColor: #e2e2e2;		@ToggleOnBorderColor: rgba(0, 0, 0, 0);
+    @ToggleColor: #FFFFFF;				@ToggleOnColor: #999999;
+	
+	position: relative;
+	
+	.ui-toggle-component {
+	    @TogglePadding: 10px;
+	    
+	    @ToggleSwitchLightAngle: 51deg;
+		@ToggleSwitchDistance: 3px;
+		@ToggleSwitchHShadow: -@ToggleSwitchDistance * cos(@ToggleSwitchLightAngle);
+		@ToggleSwitchVShadow: @ToggleSwitchDistance * sin(@ToggleSwitchLightAngle);
+	    
+	    position	: relative; 
+	    width		: @ToggleWidth;
+	    -webkit-user-select	: none; 
+	    -moz-user-select	: none; 
+	    -ms-user-select		: none;
+	    margin-top: @Padding;
+	    
+	    > .ui-toggle-label {
+	    	display			: block; 
+	    	overflow		: hidden; 
+	    	cursor			: pointer;
+	    	border-radius	: @ToggleSide / 2;
+	    	height			: @ToggleBorderFullWidth;
+	    	
+	    	> .ui-toggle-inner {
+	    		display		: block; 
+    			width		: 100%;
+    			position	: absolute;
+    			height		: 100%;
+    			line-height	: @ToggleBorderFullWidth;
+    			padding-right	: @TogglePadding;
+    			background-color: @ToggleBackgroundColor; 
+    			border			: @ToggleBorderWidth solid @ToggleBorderColor;
+    			border-radius	: @ToggleSide / 2;
+    			color			: @ToggleOnColor;
+    			text-align		: right;
+    			.transition(~"background-color 0.2s ease-in 0s, color 0.2s ease-in 0s, border-color 0.2s ease-in 0s");
+	    	
+		    	> .ui-toggle-switch {
+		    		display				: block; 
+		    		width				: @ToggleSide;
+		    		height				: @ToggleSide;
+		    		background			: @ToggleColor;
+		    		position			: absolute; 
+		    		top					: 0; 
+		    		bottom				: 0;
+		    		border-radius		: 50%;
+		    		.box-shadow(~"@{ToggleSwitchHShadow} @{ToggleSwitchVShadow} 10px 0px rgba(0, 0, 0, 0.2)");
+		    		.transition(~"margin 0.15s ease-in 0s");
+		    	}
+	    	}
+	    }
+	    
+	    > input[type=checkbox] {
+	  		position: absolute;
+			width: 100%;
+			height: 100%;
+			z-index: 1;
+	    	.opacity(0);
+	    }
+	}
+	
+	.ui-toggle-component-checkbox {
+	    position	: relative; 
+	    width		: @FullPadding + @ToggleWidth;
+	    height		: @ToggleSide;
+	    -webkit-user-select	: none; 
+	    -moz-user-select	: none; 
+	    -ms-user-select		: none;
+	    margin-top: @Padding;
+	    
+	    > input[type=checkbox] {
+	  		display: block; 
+	    	width: 100%;
+			height: 100%;
+	    }
+	}
+	
+	.ui-toggle-text {
+		margin-top: -@ToggleBorderFullWidth;
+		line-height: @ToggleSide;
+		padding: 0px @FullPadding 0px (@FullPadding + @ToggleWidth); // On noie la marge à gauche dans le padding pour IE8 VS Chrome de la N7
+		float: left;
+		width: 100%; // IE8
+		.transition(~"color 0.1s ease-in 0s");
+		
+		.ui-field-textonly {
+			width: 100%;
+			padding: 0px;
+			text-decoration: line-through;
+		}
+	}
+	
+	&.ui-toggle-state-checked {
+		.ui-toggle-component {
+		    > .ui-toggle-label {
+		    	> .ui-toggle-inner {
+	    			background-color: @ToggleOnBackgroundColor;
+	    			border-color	: @ToggleOnBorderColor;
+	    			color			: @ToggleOnColor;	
+		    	
+			    	> .ui-toggle-switch {
+			    		margin-left: @ToggleWidth - @ToggleBorderFullWidth;
+			    	}
+		    	}
+		    }
+		}
+	
+		.ui-toggle-text {
+			color: @HighLightColor;
+			
+			.ui-field-textonly {
+				text-decoration: none;
+			}
+		}		
+	}
+}
+
+.ui-radio-switch {
+	display				: block; 
+	width				: 25px;
+	height				: 25px;
+	margin				: @UIRadioSwitchMargin;
+	background			: #FFF;
+	background-position : center;
+	background-size		: 25px 25px;
+	position			: absolute; 
+	top					: 10px;
+	left				: 10px;
+	bottom				: 0;
+	border-radius		: 50%;
+	.transition(~"all 0.1s ease-in 0s");
+	border				: 1px solid @BorderColor;
+}
+
+// Plugin cookie bar
+#cookie-bar {
+	padding: @Padding;
+	height: auto;
+	color: #fff;
+	position: relative;
+}
+
+#cookie-bar:after {
+	display: block;
+	position: absolute;
+	content: '';
+	background-color: #000;
+	.opacity(.8);
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+#cookie-bar.fixed {position:fixed; top:0; left:0; width:100%;}
+#cookie-bar a { 
+	display:inline-block; 
+	.rounded(@ButtonRadius);
+	text-decoration:none; 
+	padding:@ButtonPadding; 
+	line-height: @ButtonLineHeight; 
+	margin-left:@FullPadding;
+}
+
+#cookie-bar.fixed.bottom {bottom:0; top:auto;}
+#cookie-bar p { margin:0 !important; padding:0 !important; text-align: center; }
+
+#cookie-bar .cb-enable { 
+	.gradient-button();
+	color: @ButtonColorText;
+}
+#cookie-bar .cb-enable:hover {
+	.gradient-button-hover();
+	color: @ActiveColorText;
+}
+#cookie-bar .cb-disable { .ui-input-readonly() }
+#cookie-bar .cb-disable:hover { .ui-input-readonly() }
+#cookie-bar .cb-policy { .gradient-button() }
+#cookie-bar .cb-policy:hover { .gradient-button-hover() }

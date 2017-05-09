@@ -1,0 +1,512 @@
+{literal}
+<script id="ui-field-template" type="text/html">
+	<!-- ko if: isVisible -->
+		<div class="form-group clearfix" data-bind="css: { 'ui-field-invalid': !isDisabled() && !isLastInputValid(), 'ui-field-valid': !isDisabled() && isLastInputValid(), 'ui-field-visited': hasBeenVisited() && !isReadOnly(), 'ui-field-readonly': isReadOnly(), 'ui-field-warned': hasWarns(), 'ui-field-disabled': isDisabled() }">
+			<div data-bind="css: { 'col-xs-6': !isEditable() && showLabel(), 'col-sm-6': showLabel(), 'hidden': !showLabel() }, template: { name: $data.labelTemplate }"></div>
+			<div data-bind="css: { 'col-xs-6': !isEditable() && showLabel(), 'col-sm-6': showLabel(), 'col-sm-12': !showLabel() }">
+				<!-- ko template: { name: $data.inputTemplate } --><!-- /ko -->
+				<!-- ko if: showMessages() && messages().length > 0 -->
+				<ul class="ui-field-messages" data-bind="foreach: messages">
+					<li data-bind="html: $data.text, css: { 'warn': $data.isWarn }"></li>
+				</ul>
+				<!-- /ko -->
+			</div>
+		</div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-template-row" type="text/html">
+	<!-- ko if: $data.isVisible() -->
+	<div class="field-row clearfix">
+		<div class="form-group" data-bind="css: { 'ui-field-invalid': !isDisabled() && !isLastInputValid(), 'ui-field-valid': !isDisabled() && isLastInputValid(), 'ui-field-visited': hasBeenVisited() && !isReadOnly(), 'ui-field-readonly': isReadOnly(), 'ui-field-warned': hasWarns(), 'ui-field-disabled': isDisabled() }">
+			<div class="form-group-label-row" data-bind="css: { 'hidden': !showLabel() }, template: { name: $data.labelTemplate }"></div>
+			<div class="form-group-input-row">
+				<!-- ko template: { name: $data.inputTemplate } --><!-- /ko -->
+				<!-- ko if: showMessages() &&  messages().length > 0 -->
+				<ul class="ui-field-messages" data-bind="foreach: messages">
+					<li data-bind="html: $data.text, css: { 'warn': $data.isWarn }"></li>
+				</ul>
+				<!-- /ko -->
+			</div>
+		</div>
+	</div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-label-template" type="text/html">
+	<div class="form-label" data-bind="css: { 'with-tooltip': (tooltip.text() != '' && tooltip.show()) }" >
+		<div class="label">
+			<label for="" data-bind="attr: {'for': uid }, html: formattedLabel"></label>
+			<span class="requiredInput" data-bind="visible: isEditable(), html: isRequired() && !isDisabled()?'*':'&nbsp;'"></span>
+			<!-- ko template: { name: 'ui-tooltip', data: tooltip } --><!-- /ko -->
+			<div class="sub" data-bind="html: sub, visible: !!sub()"></div>
+		</div>
+	</div>
+</script>
+
+<script id="ui-field-no-empty-label-template" type="text/html">
+	<!-- ko if: formattedLabel() -->
+		<div class="form-label" data-bind="css: { 'with-tooltip': (tooltip.text() != '' && tooltip.show()) }" >
+			<div class="label">
+				<label for="" data-bind="attr: {'for': uid }, html: formattedLabel"></label>
+				<span class="requiredInput" data-bind="visible: isEditable(), html: isRequired() && !isDisabled()?'*':'&nbsp;'"></span>
+				<!-- ko template: { name: 'ui-tooltip', data: tooltip } --><!-- /ko -->
+				<div class="sub" data-bind="html: sub, visible: !!sub()"></div>
+			</div>
+		</div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-text-template" type="text/html">
+	<!-- ko if: isEditable() -->
+	<div class="ui-input">
+		<input id="" data-bind="inputType: inputType, valueUpdate: valueUpdateOn(), disable: isReadOnly() || isDisabled(), attr: { 'id': uid, 'name': name()?name:null, 'pattern':pattern()?pattern:null, 'placeholder': !isFocused()?placeholder:null, 'maxlength': maxLength }, event: { 'keydown': function(o, e) { return onKeyDownEventHandler(e); }, 'keyup': function(o, e) { return onKeyUpEventHandler(e); },  'blur': function(o, e) { return onBlurEventHandler(); }, 'focus': function(o, e) { return onFocusEventHandler(); } }, value: formattedValue, css: { /* QuickFix IE<=9 */ 'placeholdersjs': !value() && !isFocused(), 'ui-input-empty': !value() && !isFocused(), 'ui-input-invalid': !isDisabled() && !isLastInputValid(), 'ui-input-valid': !isDisabled() && isLastInputValid(), 'ui-input-readonly': isReadOnly() || isDisabled(), 'ui-input-visited': hasBeenVisited() }" type="text" placeholder="" />
+	<div class="ui-input-after"></div>
+	</div>
+	<!-- /ko -->
+	<!-- ko if: !isEditable() -->
+	<div class="ui-field-textonly" data-bind="text: formattedValue() || '&nbsp;'"></div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-text-toggle" type="text/html">
+	<!-- ko if: isEditable() -->
+		<div class="ui-toggle" data-bind="css: { 'ui-toggle-state-checked': isChecked(), 'ui-input-invalid': !isDisabled() && !isLastInputValid(), 'ui-input-valid': !isDisabled() && isLastInputValid(), 'ui-input-readonly': isReadOnly() || isDisabled(), 'ui-input-visited': hasBeenVisited() }">
+			<div class="ui-toggle-component">
+    			<input type="checkbox" data-bind="checked: isChecked, attr: { 'id': uid }, disable: isReadOnly() || isDisabled(), checkedValue: value, event: { 'blur': function(o, e) { return onBlurEventHandler(); }, 'focus': function(o, e) { return onFocusEventHandler(); } }" />
+    			<label class="ui-toggle-label" for="" data-bind="attr: { 'for': uid }">
+	        		<div class="ui-toggle-inner">
+        				<div class="ui-toggle-switch"></div>
+					</div>
+    			</label>
+			</div>
+			<div class="ui-toggle-text">
+				<label data-bind="attr: { 'for': uid }, html: isChecked()?textForTrue():textForFalse()"></label>
+			</div>
+		</div>
+	<!-- /ko -->	
+	<!-- ko if: !isEditable() -->
+		<div class="ui-toggle" data-bind="css: { 'ui-toggle-state-checked': isChecked(), 'ui-input-visited': hasBeenVisited() }">
+			<div class="ui-toggle-component">
+    			<input disabled="disabled" type="checkbox" data-bind="checked: isChecked, attr: { 'id': uid }, disable: isReadOnly() || isDisabled(), checkedValue: value, event: { 'blur': function(o, e) { return onBlurEventHandler(); }, 'focus': function(o, e) { return onFocusEventHandler(); } }" />
+    			<label class="ui-toggle-label" for="" data-bind="attr: { 'for': uid }">
+	        		<div class="ui-toggle-inner">
+        				<div class="ui-toggle-switch"></div>
+					</div>
+    			</label>
+			</div>
+			<div class="ui-toggle-text">
+				<label class="ui-field-textonly" data-bind="attr: { 'for': uid }, html: isChecked()?textForTrue():textForFalse()"></label>
+			</div>
+		</div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-text-toggle-checkbox" type="text/html">
+	<!-- ko if: isEditable() -->
+		<div class="ui-toggle" data-bind="css: { 'ui-toggle-state-checked': isChecked(), 'ui-input-invalid': !isDisabled() && !isLastInputValid(), 'ui-input-valid': !isDisabled() && isLastInputValid(), 'ui-input-readonly': isReadOnly() || isDisabled(), 'ui-input-visited': hasBeenVisited() }">
+			<div class="ui-toggle-component-checkbox">
+    			<input type="checkbox" data-bind="checked: isChecked, attr: { 'id': uid }, disable: isReadOnly() || isDisabled(), checkedValue: value, event: { 'blur': function(o, e) { return onBlurEventHandler(); }, 'focus': function(o, e) { return onFocusEventHandler(); } }" />
+			</div>
+			<div class="ui-toggle-text">
+				<label data-bind="attr: { 'for': uid }, html: isChecked()?textForTrue():textForFalse()"></label>
+			</div>
+		</div>
+	<!-- /ko -->	
+	<!-- ko if: !isEditable() -->
+		<div class="ui-toggle" data-bind="css: { 'ui-toggle-state-checked': isChecked(), 'ui-input-visited': hasBeenVisited() }">
+			<div class="ui-toggle-component-checkbox">
+    			<input disabled="disabled" type="checkbox" data-bind="checked: isChecked, disable: isReadOnly() || isDisabled(), attr: { 'id': uid }, checkedValue: value, event: { 'blur': function(o, e) { return onBlurEventHandler(); }, 'focus': function(o, e) { return onFocusEventHandler(); } }" />
+			</div>
+			<div class="ui-toggle-text">
+				<label class="ui-field-textonly" data-bind="attr: { 'for': uid }, html: isChecked()?textForTrue():textForFalse()"></label>
+			</div>
+		</div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-text-tooltip-toggle-checkbox" type="text/html">
+	<!-- ko if: isEditable() -->
+		<div class="ui-toggle" data-bind="css: { 'ui-toggle-state-checked': isChecked(), 'ui-input-invalid': !isDisabled() && !isLastInputValid(), 'ui-input-valid': !isDisabled() && isLastInputValid(), 'ui-input-readonly': isReadOnly() || isDisabled(), 'ui-input-visited': hasBeenVisited() }">
+			<div class="ui-toggle-component-checkbox">
+    			<input type="checkbox" data-bind="checked: isChecked, attr: { 'id': uid }, disable: isReadOnly() || isDisabled(), checkedValue: value, event: { 'blur': function(o, e) { return onBlurEventHandler(); }, 'focus': function(o, e) { return onFocusEventHandler(); } }" />
+			</div>
+			<div class="ui-toggle-text">
+				<label data-bind="attr: { 'for': uid }, html: isChecked()?textForTrue():textForFalse()"></label>
+				<!-- ko template: { name: 'ui-tooltip', data: tooltip } --><!-- /ko -->
+			</div>
+		</div>
+	<!-- /ko -->	
+	<!-- ko if: !isEditable() -->
+		<div class="ui-toggle" data-bind="css: { 'ui-toggle-state-checked': isChecked(), 'ui-input-visited': hasBeenVisited() }">
+			<div class="ui-toggle-component-checkbox">
+    			<input disabled="disabled" type="checkbox" data-bind="checked: isChecked, disable: isReadOnly() || isDisabled(), attr: { 'id': uid }, checkedValue: value, event: { 'blur': function(o, e) { return onBlurEventHandler(); }, 'focus': function(o, e) { return onFocusEventHandler(); } }" />
+			</div>
+			<div class="ui-toggle-text">
+				<label class="ui-field-textonly" data-bind="attr: { 'for': uid }, html: isChecked()?textForTrue():textForFalse()"></label>
+				<!-- ko template: { name: 'ui-tooltip', data: tooltip } --><!-- /ko -->
+			</div>
+		</div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-textarea-template" type="text/html">
+	<!-- ko if: isEditable() -->
+		<div class="ui-textarea">
+			<textarea data-bind="disable: isReadOnly() || isDisabled(), attr: { 'id': uid, 'name': name()?name:null, 'placeholder': !isFocused()?placeholder:null, 'rows': rows }, value: value, event: { 'keydown': function(o, e) { return onKeyDownEventHandler(e); }, 'keyup': function(o, e) { return onKeyUpEventHandler(e); }, 'blur': function(o, e) { return onBlurEventHandler(); }, 'focus': function(o, e) { return onFocusEventHandler(); } }, css: { 'ui-input-empty': !value() && !isFocused(), 'ui-input-invalid': !isDisabled() && !isLastInputValid(), 'ui-input-valid': !isDisabled() && isLastInputValid(), 'ui-input-readonly': isReadOnly() || isDisabled(), 'ui-input-visited': hasBeenVisited() }"></textarea>
+		</div>
+	<!-- /ko -->
+	<!-- ko if: !isEditable() -->
+		<p class="ui-field-textonly" data-bind="text: value() || '&nbsp;'"></p>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-date-template" type="text/html">
+	<!-- ko if: isEditable() -->
+	<div class="input-group ui-field-date">
+		<div data-bind="template: { 'name': 'ui-field-text-template' }"></div>
+		<!-- ko if: isReadOnly() || isDisabled() -->
+			<div class="input-group-addon glyphicon glyphicon-calendar"></div>
+		<!-- /ko -->
+		<!-- ko if: !(isReadOnly() || isDisabled()) -->
+			<div class="input-group-addon glyphicon glyphicon-calendar clickable" data-bind="datepicker: { id: uid, options: { minDate: minDate(), maxDate: maxDate() } }"></div>
+		<!-- /ko -->
+	</div>
+	<!-- /ko -->
+	<!-- ko if: !isEditable() -->
+	<div class="ui-field-date ui-field-textonly">
+		<span data-bind="text: formattedValue() || '&nbsp;'"></span>
+	</div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-date-multifield-template" type="text/html">
+	<!-- ko if: isEditable() -->	
+		<div class="ui-group-date-multifield">
+			<div class="col-xs-3">
+				<div class="ui-field-figures" data-bind="template: { 'name': 'ui-field-text-template', data: oTextUIFieldDay }"></div>
+			</div>
+			<div class="ui-field-date-separator col-xs-1" data-bind="visible: separator, html: separator"></div>
+			<div class="col-xs-3">
+				<div class="ui-field-figures" data-bind="template: { 'name': 'ui-field-text-template', data: oTextUIFieldMonth }"></div>
+			</div>
+			<div class="ui-field-date-separator col-xs-1" data-bind="visible: separator, html: separator"></div>
+			<div class="col-xs-4">
+				<div class="ui-field-figures" data-bind="template: { 'name': 'ui-field-text-template', data: oTextUIFieldYear }"></div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	<!-- /ko -->
+	<!-- ko if: !isEditable() -->
+		<div class="ui-field-date ui-field-textonly">
+			<span data-bind="text: formattedValue() || '&nbsp;'"></span>
+		</div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-textsearch-template" type="text/html">
+	<!-- ko if: isEditable() -->
+	<div class="input-group ui-field-textsearch">
+		<div data-bind="template: { 'name': 'ui-field-text-template' }"></div>
+		<!-- ko if: isReadOnly() || isDisabled() -->
+			<div class="input-group-addon glyphicon glyphicon-search"></div>
+		<!-- /ko -->
+		<!-- ko if: !(isReadOnly() || isDisabled()) -->
+			<div class="input-group-addon glyphicon glyphicon-search clickable" data-bind="click: function() { $data.onSearch(); }"></div>
+		<!-- /ko -->
+	</div>
+	<!-- /ko -->
+	<!-- ko if: !isEditable() -->
+	<div class="ui-field-date ui-field-textsearch">
+		<span data-bind="text: formattedValue() || '&nbsp;'"></span>
+	</div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-tooltip" type="text/html">
+	<!-- ko if: text() -->
+		<!-- ko if: type() == "pined" -->
+			<div class="ui-pined-hint" data-bind="attr: { id: uid }, visible: show(), html: text"></div>
+		<!-- /ko -->
+		<!-- ko if: !type() -->
+			<div class="ui-ico-hint" data-bind="attr: { id: uid }, visible:  show(), tooltip: { text: text, animation: animation, position: position }"></div>
+		<!-- /ko -->
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-numeric-template" type="text/html">
+	<!-- ko if: isEditable() -->
+	<div class="ui-group-numeric" data-bind="css: { 'input-group': unit }">
+		<div class="ui-field-numeric" data-bind="template: { 'name': 'ui-field-text-template' }"></div>
+		<div class="input-group-addon" data-bind="visible: unit, html: unit"></div>
+	</div>	
+	<!-- /ko -->
+	<!-- ko if: !isEditable() -->
+	<div class="ui-group-numeric ui-field-numeric ui-field-textonly"><span data-bind="text: formattedValue() || '&nbsp;'"></span> <span data-bind="visible: unit() && value(), html: unit"></span></div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-codepostal-template" type="text/html">
+	<div class="ui-group-codepostal" data-bind="attr: { 'id': $data.uid }">
+		<div data-bind="template: { 'name': 'ui-field-text-template', data: oTextUIField }" class="ui-field-numeric pull-left ui-field-codepostal-input"></div>
+		<div data-bind="template: { 'name': 'ui-field-select-template', data: oSelectUIField }" class="pull-left ui-field-codepostal-select"></div>
+		<div class="clearfix"></div>
+	</div>
+</script>
+
+<script id="ui-field-select-template" type="text/html">
+	<!-- ko if: isEditable() -->
+	<div data-bind="template: { name: 'ui-field-select-' + view() + '-template' }"></div>
+	<!-- /ko -->
+	<!-- ko if: !isEditable() -->
+	<div class="ui-field-textonly" data-bind="text: $('<a>'+selectedOptionText()+'</a>').text() || '&nbsp;'"></div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-select-default-template" type="text/html">
+	<div class="ui-field-select ui-select">
+		<select id="" data-bind="disable: isReadOnly() || isDisabled() || options().length == 0, attr: { 'id': uid, 'name': name()?name:null }, value: value, optionsCaption: (options().length > 1?placeholder() || null:null), optionsText: 'text', optionsValue: 'value', optionsAfterRender: kit.fields.Option.afterRenderFunction, options: options, css: { 'ui-input-invalid': !isDisabled() && !isLastInputValid(), 'ui-input-valid': !isDisabled() && isLastInputValid(), 'ui-input-readonly': isReadOnly() || isDisabled(), 'ui-input-visited': hasBeenVisited(), 'ui-input-empty': !value() }, event: { 'blur': function(o, e) { return onBlurEventHandler(); }, 'focus': function(o, e) { return onFocusEventHandler(); } }"></select>
+		<div class="ui-select-after"></div>
+	</div>
+</script>
+
+<script id="ui-field-selectcond-template" type="text/html">
+	<!-- ko if: isEditable() -->
+	<input type="radio" name="" value="" style="position: absolute; top: 2px" data-bind="disable: isDisabled(), value: condValue, checked: condUIField.value, attr: { 'name': condUIField.uid }" />
+	<div data-bind="template: 'ui-field-select-template'" style="margin-left:20px"></div>
+	<!-- /ko -->
+	<!-- ko if: !isEditable() -->
+	<div class="ui-field-textonly" data-bind="visible: !isDisabled(), text: selectedOptionText()"></div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-select-radios-template" type="text/html">
+	<div data-bind="foreach: options, attr: { 'id': $data.uid }, css: { 'form-inline': inline }">
+		<div class="radio"> 
+		    <input data-bind="disable: $parent.isReadOnly() || $parent.isDisabled() || disabled(), attr: { 'checked': $parent.value() == value, 'name': $parent.uid, 'id': $parent.uid + '-' + $index() }, value: value, click: function(option, e) { $parent.viewRadiosOptionClickFunction(option, e); return true; }, event: { 'blur': function(o, e) { return $parent.onBlurEventHandler(); }, 'focus': function(o, e) { return $parent.onFocusEventHandler(); } }" type="radio" />
+		    <label data-bind="text: text, attr: { 'for': $parent.uid + '-' + $index() }"></label>
+			<!-- ko template: { name: 'ui-tooltip', data: tooltip } --><!-- /ko -->
+		</div>
+	</div>
+</script>
+
+<script id="ui-field-select-button-radios-template" type="text/html">
+	<div class="clearfix">
+		<div class="buttons-col col-xs-12" data-bind="foreach: options, attr: { 'id': $data.uid }, css: { 'btn-group': inline, 'btn-group-vertical': !inline() }" role="group">
+			<div data-bind="css: { 'col-sm-6': !$parent.inline() }">
+				<button type="button" class="radio" data-bind="disable: $parent.isReadOnly() || $parent.isDisabled() || disabled() || !$parent.isEditable(), attr: { 'checked': $parent.value() == value, 'name': $parent.uid, 'id': $parent.uid + '-' + $index() }, value: value, click: function(option, e) { $parent.viewRadiosOptionClickFunction(option, e); return true; }, event: { 'blur': function() { $parent.onBlurEventHandler(); }, 'focus': function() { $parent.onFocusEventHandler(); } }">
+					<div class="ui-radio-switch"></div>
+					<div class="label-container">
+						<label data-bind="html: text"></label>
+					</div>
+				</button>
+				<!-- ko template: { name: 'ui-tooltip', data: tooltip } --><!-- /ko -->
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="ui-field-select-button-radios-3col-template" type="text/html">
+	<div class="clearfix">
+		<div class="buttons-3col col-xs-12" data-bind="foreach: options, attr: { 'id': $data.uid }, css: { 'btn-group': inline, 'btn-group-vertical': !inline() }" role="group">
+			<div data-bind="css: { 'col-sm-4': !$parent.inline() }">
+				<button type="button" class="radio" data-bind="disable: $parent.isReadOnly() || $parent.isDisabled() || disabled() || !$parent.isEditable(), attr: { 'checked': $parent.value() == value, 'name': $parent.uid, 'id': $parent.uid + '-' + $index() }, value: value, click: function(option, e) { $parent.viewRadiosOptionClickFunction(option, e); return true; }, event: { 'blur': function() { $parent.onBlurEventHandler(); }, 'focus': function() { $parent.onFocusEventHandler(); } }">
+					<div class="ui-radio-switch"></div>
+					<div class="label-container">
+						<label data-bind="html: text"></label>
+					</div>
+				</button>
+				<!-- ko template: { name: 'ui-tooltip', data: tooltip } --><!-- /ko -->
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="ui-field-select-buttons-template" type="text/html">
+	<div data-bind="foreach: options, attr: { 'id': $data.uid }, css: { 'btn-group': inline, 'btn-group-vertical': !inline() }" role="group">
+		<button type="button" class="btn btn-default" data-bind="disable: $parent.isReadOnly() || $parent.isDisabled() || disabled(), attr: { 'checked': $parent.value() == value, 'name': $parent.uid, 'id': $parent.uid + '-' + $index() }, value: value, click: function(option, e) { $parent.viewRadiosOptionClickFunction(option, e); return true; }, event: { 'blur': function(o, e) { return $parent.onBlurEventHandler(); }, 'focus': function(o, e) { return $parent.onFocusEventHandler(); } }"> 
+			<span data-bind="text: text"></span>
+			<!-- ko template: { name: 'ui-tooltip', data: tooltip } --><!-- /ko -->
+		</button>
+	</div>
+</script>
+
+<script id="ui-field-select-buttons-img-template" type="text/html">
+	<div class="ui-field-group-img">
+	<div data-bind="foreach: options, attr: { 'id': $data.uid }, css: { 'btn-group': inline, 'btn-group-vertical': !inline() }" role="group">
+		<div data-bind="css: { 'col-xs-4': ($parent.options().length == 3), 'col-xs-6': ($parent.options().length > 3), 'col-sm-3': ($parent.options().length == 4), 'col-sm-4 col-md-2': ($parent.options().length > 4) }">
+			<div class="text-center btn-img">
+				<div data-bind="animate: { animation: 'fadeIn', delay: ($index() + 1) * (900 / $parent.options().length) }" data-duration="1.5s">
+					<button type="button" class="btn-default" data-bind="disable: $parent.isReadOnly() || $parent.isDisabled() || disabled() || !$parent.isEditable(), attr: { 'checked': $parent.value() == value, 'name': $parent.uid, 'id': $parent.uid + '-' + $index() }, value: value, click: function(option, e) { $parent.viewRadiosOptionClickFunction(option, e); return true; }, event: { 'blur': function(o, e) { return $parent.onBlurEventHandler(); }, 'focus': function(o, e) { return $parent.onFocusEventHandler(); } }, tooltip: { text: tooltip.text, animation: tooltip.animation, position: tooltip.position }">
+						<div class="btn-img-area">
+							<img class="alt" data-bind="attr: { 'src': '${host}${baseSrc}images/' + app.i18n.getString(resourceTextId + '.img.src').split('_').join('-active_') + '.png'}" />
+							<img class="src" data-bind="attr: { 'src': '${host}${baseSrc}images/' + app.i18n.getString(resourceTextId + '.img.src') + '.png'}" />
+						</div>
+					</button>
+					<label class="strong" data-bind="html: text, attr: { 'for': $parent.uid + '-' + $index() }, css: { 'disable': $parent.isReadOnly() || $parent.isDisabled() || disabled() || !$parent.isEditable() }"></label>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</script>
+
+
+<script id="ui-field-row-template" type="text/html">
+	<!-- ko if: isVisible -->
+	<tr data-bind="css: { 'ui-group-invalid': !isDisabled() && !isLastInputValid(), 'ui-group-valid': !isDisabled() && isLastInputValid(), 'ui-group-visited': hasBeenVisited(), 'ui-group-warned': hasWarns() }">
+		<!-- ko if: showLabel -->
+		<td class="labelTD" data-bind="template: { name: 'ui-field-label-template' }"></td>
+		<!-- /ko -->
+		<!-- ko foreach: oListOfUIField() -->
+		<td data-bind="visible: $data.isVisible" style="position: relative">
+			<div data-bind="css: { 'ui-field-invalid': !isDisabled() && !isLastInputValid(), 'ui-field-valid': !isDisabled() && isLastInputValid(), 'ui-field-visited': hasBeenVisited() && !isReadOnly(), 'ui-field-warned': hasWarns() }">
+				<!-- ko template: { name: $data.inputTemplate } --><!-- /ko -->
+			</div>
+		</td>
+		<!-- /ko -->
+	</tr>
+	<!-- ko if: showMessages() &&  messages().length > 0 -->
+	<tr class="ui-group-messages" data-bind="css: { 'ui-group-invalid': !isDisabled() && !isLastInputValid(), 'ui-group-valid': !isDisabled() && isLastInputValid(), 'ui-group-visited': hasBeenVisited(), 'ui-group-warned': hasWarns() }">
+		<!-- ko if: showLabel -->
+		<td class="labelTD">&nbsp;</td>
+		<!-- /ko -->
+		<!-- ko foreach: oListOfUIField() -->
+		<!-- ko if: $data.isVisible -->
+		<td style="position: relative">
+			<div data-bind="css: { 'ui-field-invalid': !isDisabled() && !isLastInputValid(), 'ui-field-valid': !isDisabled() && isLastInputValid(), 'ui-field-visited': hasBeenVisited() && !isReadOnly(), 'ui-field-warned': hasWarns() }">
+				<!-- ko if: showMessages() &&  messages().length > 0 -->
+				<ul class="ui-field-messages" data-bind="foreach: messages">
+					<li data-bind="html: $data.text, css: { 'warn': $data.isWarn }"></li>
+				</ul>
+				<!-- /ko -->
+			</div>
+		</td>
+		<!-- /ko -->
+		<!-- /ko -->
+	</tr>
+	<!-- /ko -->
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-group-template" type="text/html">
+	<!-- ko if: isVisible -->
+		<div data-bind="css: { 'ui-group-invalid': !isDisabled() && !isLastInputValid(), 'ui-group-valid': !isDisabled() && isLastInputValid(), 'ui-group-visited': hasBeenVisited(), 'ui-group-warned': hasWarns()  }">
+			<div class="data-bind="css: { 'col-sm-3': showLabel(), 'hidden': !showLabel() }, template: { name: 'ui-field-label-template' }"></div>
+			<!-- ko foreach: oListOfUIField() -->
+				<div data-bind="visible: $data.isVisible, css: { 'col-sm-3': $parent.showLabel(), 'col-sm-4': !$parent.showLabel() }">
+					<div data-bind="css: { 'ui-field-invalid': !isDisabled() && !isLastInputValid(), 'ui-field-valid': !isDisabled() && isLastInputValid(), 'ui-field-visited': hasBeenVisited() && !isReadOnly(), 'ui-field-warned': hasWarns() }">
+						<!-- ko template: { name: $data.inputTemplate } --><!-- /ko -->
+						<!-- ko if: showMessages() &&  messages().length > 0 -->
+						<ul class="ui-field-messages" data-bind="foreach: messages">
+							<li data-bind="html: $data.text, css: { 'warn': $data.isWarn }"></li>
+						</ul>
+						<!-- /ko -->
+					</div>
+				</div>
+			<!-- /ko -->
+		</div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-group-template-responsive" type="text/html">
+	<!-- ko if: $data.isVisible() -->
+	<fieldset class="form-fieldset hidden-lg">
+		<legend>
+			<span data-bind="html: $data.label"></span>
+			<!-- ko template: { name:'ui-tooltip', data: $data.tooltip } --><!-- /ko -->
+		</legend>
+		<!-- ko template: { name: 'ui-field-template', foreach: $data.oListOfUIField() } --><!-- /ko -->
+	</fieldset>
+	<!-- /ko -->	
+</script>
+
+<script id="ui-field-group-first-template" type="text/html">
+	<!-- ko if: $data.isVisible() -->
+		<div class="form-group" data-bind="css: { 'ui-group-invalid': !isDisabled() && !isLastInputValid(), 'ui-group-valid': !isDisabled() && isLastInputValid(), 'ui-group-visited': hasBeenVisited(), 'ui-group-warned': hasWarns() }">
+			<div data-bind="css: { 'col-xs-6': !isEditable() && showLabel(), 'col-sm-6': showLabel(), 'hidden': !showLabel() }, template: { name: 'ui-field-label-template' }"></div>
+			<!-- ko with: oListOfUIField()[0] -->
+			<div data-bind="css: { 'col-xs-6': !$parent.isEditable() && $parent.showLabel(), 'col-sm-6': $parent.showLabel(), 'col-sm-12': !$parent.showLabel() }">
+				<div data-bind="css: { 'ui-field-invalid': !isDisabled() && !isLastInputValid(), 'ui-field-valid': !isDisabled() && isLastInputValid(), 'ui-field-visited': hasBeenVisited() && !isReadOnly(), 'ui-field-warned': hasWarns() }">
+				<!-- ko template: { name: $data.inputTemplate } --><!-- /ko -->
+				<!-- ko if: showMessages() &&  messages().length > 0 -->
+				<ul class="ui-field-messages" data-bind="foreach: messages">
+					<li data-bind="html: $data.text, css: { 'warn': $data.isWarn }"></li>
+				</ul>
+				<!-- /ko -->
+				</div>
+			</div>
+			<!-- /ko -->
+		</div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-question" type="text/html">
+	<div class="question form-spacer">
+		<div class="msg" data-bind="i18n: $data"></div>
+		<div class="fleche_bas_super">
+			<div>
+				<div class="fleche_bas">
+					<div class="fleche_bas-after"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="ui-signet-solo" type="text/html">
+	<div class="signet">
+		<ul>
+			<li>
+				<div class="text-center">
+					<div class="fleche_droite"></div>
+					<div class="nowrap">
+						<span class="strong" data-bind="i18n: $data"></span>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</script>
+
+<script id="ui-field-template-tiers" type="text/html">
+	<!-- ko if: isVisible -->
+		<div class="form-group" data-bind="css: { 'ui-field-invalid': !isDisabled() && !isLastInputValid(), 'ui-field-valid': !isDisabled() && isLastInputValid(), 'ui-field-visited': hasBeenVisited() && !isReadOnly(), 'ui-field-readonly': isReadOnly(), 'ui-field-warned': hasWarns(), 'ui-field-disabled': isDisabled() }">
+			<div data-bind="css: { 'col-xs-5': !isEditable() && showLabel(), 'col-sm-5': showLabel(), 'hidden': !showLabel() }, template: { name: $data.labelTemplate }"></div>
+			<div data-bind="css: { 'col-xs-7': !isEditable() && showLabel(), 'col-sm-7': showLabel(), 'col-sm-12': !showLabel() }">
+				<!-- ko template: { name: $data.inputTemplate } --><!-- /ko -->
+				<!-- ko if: showMessages() && messages().length > 0 -->
+				<ul class="ui-field-messages" data-bind="foreach: messages">
+					<li data-bind="html: $data.text, css: { 'warn': $data.isWarn }"></li>
+				</ul>
+				<!-- /ko -->
+			</div>
+		</div>
+	<!-- /ko -->
+</script>
+
+<script id="ui-field-gridpassword-template" type="text/html">
+	<div class="ui-field-gridpassword">
+		<div data-bind="foreach: oRandomChars()" class="ui-field-gridpassword-grid clearfix user-select">
+			<div class="ui-field-gridpassword-button">
+				<button type="button" data-bind="disable: ($data == ' ') || $parent.isReadOnly() || $parent.isDisabled() || !$parent.isEditable(), html: ($data.trim() || '&nbsp;'), event : {'click': function(){ $parent.onClickChar($data.trim()); }}, css: {'cursor-initial': ($data == ' ') }  "></button>
+			</div>
+		</div>
+		<!-- ko if: $data.isEditable() -->
+		<div class="ui-field-gridpassword-input clearfix">
+			<div class="col-xs-6">
+				<input type="password" data-bind="value: oObfuscatedPassword, attr: { 'name': $data.name() }" disabled="disabled" />
+			</div>
+			<div class="col-xs-6"> 
+			<button type="button" class="insecable button-border blank" data-bind="disable: isReadOnly(),event: { 'click': function() { $data.clear(); } }">
+				<span data-bind="i18n: 'page.button.erase.label'"></span>
+			</button>
+			</div>
+		</div>
+		<!-- /ko -->
+	</div>
+</script>
+{/literal}
+<script id="sequence-view" type="text/html">
+	{include file="./views/sequenceView.html"}
+</script>

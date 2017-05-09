@@ -1,0 +1,14 @@
+form.field.required: Ce champ est requis
+form.field.invalid: Ce champ n'est pas valide
+
+ufo.adr_1.label: Adresse
+ufo.adr_1.placeholder: Adresse
+
+ufo.adr_2.label: 
+ufo.adr_2.placeholder: 
+
+ufo.postal_code.label: Code postal
+ufo.postal_code.placeholder: Code postal
+
+ufo.city.label: Ville
+ufo.city.placeholder: Ville

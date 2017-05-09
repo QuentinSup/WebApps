@@ -1,0 +1,24 @@
+<html>
+	<head>
+		
+	</head>
+	<body>
+		Bonjour !<br />
+		<p>
+			Vous venez de créer une nouvelle publication '{$data.shortTitle}' sur le site <a href="{$baseUri}">{$baseUri}</a>.
+		</p>
+		<p>
+			Les liens suivants vous permettront de partager et d'éditer votre publication :<br />
+			<ul>
+				<li>Lien de partage : <a href="{$baseUri}/?article/{$data.ref}">{$baseUri}/?article/{$data.ref}</a> : vous pouvez communiquer ce lien en toute tranquilité à vos contacts ou sur les réseaux sociaux.</li>
+				<li>Lien d'administration : <a href="{$baseUri}/?form/edit/{$data.token}">{$baseUri}/?form/edit/{$data.token}</a> : <b>ne communiquez pas ce lien</b>. Il vous permettra de modifier votre publication par la suite.</li>
+			</ul>
+		</p>
+		<b>Important</b>
+		<p>
+			Ces liens sont spécifiques à votre publication : ne perdez pas ces liens !<br />
+			Vous n'aurez aucun moyen de les récupérer en cas d'oubli.
+		</p>
+	</body>
+	
+</html>

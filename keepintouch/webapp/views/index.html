@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$title}</title>
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato:400,700">
+	<link rel="stylesheet" type="text/css" href="{$host}assets/vendors/knockit/knockitjs-1.1.0.css" />
+	<link rel="stylesheet" type="text/css" href="{$host}assets/css/index.css" />
+</head>
+<body>
+	{* includes knockitjs templates *}
+	{include file="../templates/knockitjs-tpl.html"}
+	<div id="app">
+	{include file="./{$pageId}/index.html"}
+	</div>
+	
+	<script src="{$host}assets/vendors/knockit/knockitjs-1.1.0.js"></script>
+	<script src="{$host}assets/js/app.js"></script>
+	<script src="{$host}views/{$pageId}/js/main.js"></script>
+	
+	<script type="text/javascript">
+	
+	    app.version = "{$version}";         
+	    app.servicesPath = "{$host}";
+	    app.context.device = "{$deviceId|default:''}";
+	    app.context.page = "{$pageId|default:''}";
+	    app.basePath = "{$host|default:''}";
+	    app.logLevel = "{$hmiLogLevel|default:'1'}";
+	    app.logConsole = "{$hmiLogConsole|default:'1'}";
+	    app.i18n.uri = "{$webkitI18nUri|default:'i18n/'}";
+	    app.webkitLogUri = "{$webkitRemoteLogUri|default:''}";
+	    
+	    app.init();
+	
+	</script>
+
+</body>
+</html>

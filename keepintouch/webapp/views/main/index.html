@@ -1,0 +1,63 @@
+<div class="page clearfix">
+	<div class="head">
+		<h1>Keep'In</h1>
+	</div>
+	<div class="body-head">
+		<h2>Actualiser les coordonnées</h2>
+	</div>
+	<div class="body">
+		<div class="row">
+			<div class="col-sm-12 col-lg-8 col-lg-offset-2">
+				<form novalidate>
+					<h3>Demandeur</h3>
+					<div class="row">
+						<!-- ko template: { name: 'ui-field-template', data: FromName } --><!-- /ko -->
+					</div>
+					<div class="row">
+						<!-- ko template: { name: 'ui-field-template', data: FromEmail } --><!-- /ko -->
+					</div>
+					<!-- ko template: { name: 'ui-field-template', data: FromMessage } --><!-- /ko -->
+					<h3>Personne à contacter</h3>		
+					<div class="row">
+						<!-- ko template: { name: 'ui-field-template', data: ToName } --><!-- /ko -->
+					</div>
+					<div class="row">
+						<!-- ko template: { name: 'ui-field-template', data: ToEmail } --><!-- /ko -->
+					</div>
+					<h3>Informations à vérifier</h3>		
+					<div class="row">
+						<div class="col-xs-3 col-sm-1">
+						<!-- ko template: { name: 'ui-field-template', data: AdrEmailCoche } --><!-- /ko -->
+						</div>
+						<div class="col-xs-9 col-sm-11">
+						<!-- ko template: { name: 'ui-field-template', data: AdrEmail } --><!-- /ko -->
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-3 col-sm-1">
+						<!-- ko template: { name: 'ui-field-template', data: AdrPostalCoche } --><!-- /ko -->
+						</div>
+						<div class="col-xs-9 col-sm-11">
+							<!-- ko template: { name: 'ui-field-template', data: AdrPostalLigne1 } --><!-- /ko -->
+							<!-- ko template: { name: 'ui-field-template', data: AdrPostalLigne2 } --><!-- /ko -->
+							<div class="row">
+							<div class="col-sm-6"></div>
+							<div class="col-sm-6">
+								<div class="col-sm-4">
+								<!-- ko template: { name: 'ui-field-template', data: AdrPostalCdPost } --><!-- /ko -->
+								</div>
+								<div class="col-sm-7 col-sm-offset-1">
+								<!-- ko template: { name: 'ui-field-template', data: AdrPostalVille } --><!-- /ko -->
+								</div>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-submit text-right">
+						<button data-bind="click: function() { onSubmit(); }">Valider</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

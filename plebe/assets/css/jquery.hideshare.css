@@ -1,0 +1,39 @@
+/*
+  HIDESHARE CSS
+*/
+.hideshare-wrap {
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+.hideshare-wrap .hideshare-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+    background-color: #57C2BE;
+    /* opacity: 0.9; */
+    border-radius: 20px;
+    padding: 15px;
+}
+.hideshare-wrap li {
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+  margin: 10px 5px 0;
+}
+.hideshare-wrap span {
+  display: none;
+}
+
+.hideshare-list a {
+  color: #dedede;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+}
+.hideshare-list a:hover {
+  color: #ffffff;
+}

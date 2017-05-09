@@ -1,0 +1,15 @@
+<h2>Votre adresse</h2>
+<p>
+Modifier les informations suivantes pour mettre à jour votre adresse postale.
+</p>
+<br />
+<form role="form" class="form-horizontal" novalidate data-bind="visible: isReady">
+	<div data-bind="template: { name: 'ui-field-template', data: inputAdr1 }"></div>
+	<div class="col-sm-offset-6" data-bind="template: { name: 'ui-field-template', data: inputAdr2 }"></div>
+	<div data-bind="template: { name: 'ui-field-template', data: inputPostalCode }"></div>
+	<div data-bind="template: { name: 'ui-field-template', data: inputCity }"></div>
+	<div class="form-submit clearfix">
+		<button class="col-xs-12 col-sm-auto pull-right" data-bind="click: function() { onSubmitHandler() }">Enregistrer</button>
+	</div>
+</form>
+<script src="{$pageSrc}assets/js/main.js"></script>

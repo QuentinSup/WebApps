@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<application>
+<about>
+	<name>MyAPI</name>
+	<author>Quentin Supernant</author>
+	<version>1.0</version>
+	<description></description>
+</about>
+<config>
+	<application run="0" lang="fr" />
+	<connectors>
+		<connector name="db" type="dbi" dsn="mysqli://root:@localhost:/myapi" autoconnect="1" />
+		<connector name="mail" type="mail" from="no-reply@template.fr" />
+	</connectors>	
+	<listeners>
+		<listener name="accessControl" />
+	</listeners>
+	<security>
+		<adapters>
+			<adapter name="Basic" class="dw\adapters\security\dwBasicAuthorization">
+				<config>
+					<users>
+						<user name="jose">garcia</user>
+					</users>
+				</config>
+			</adapter>
+		</adapters>
+	</security>
+</config>
+<plugins />
+</application>

@@ -1,0 +1,241 @@
+<section id="publication" class="section dark">
+	<div class="icon-wrap"><span class="icon icon-documents-bookmarks-02"></span></div>
+	<h4>Publiez un article</h4>
+	<div class="sub-title">Ecrivez, publiez, <span class="highlight" style="font-weight: bold;">partagez</span></div>
+	<br />
+	<br />
+	<div class="container">
+		<article class="article-big" style="text-align:left;">
+		<form id="form">
+			<input id="form-id" name="id" type="hidden" value="" />
+			<input id="form-state" name="state" type="hidden" value="0" />
+			<div class="form-group">
+			<input id="form-shortTitle" class="form-control" name="shortTitle" type="text" pattern=".*" maxlength="70" title="Donnez un titre à votre publication" placeholder="Donnez un titre à votre publication" required />
+			</div>
+			<div class="form-group">
+			<textarea id="form-text" class="form-control" name="text" rows="15" type="text" pattern=".*" title="Saisir le contenu de votre publication" placeholder="Saisir le contenu de votre publication"></textarea>
+			</div>
+			<fieldset>
+				<legend>
+					Propriétés
+				</legend>
+				<div class="form-group">
+					<label for="form-author" class="form-label">Signez votre article (optionnel)</label>
+					<input type="text" id="form-author" class="form-control" name="author" value="" placeholder="Ex. : Ethan GRANT" />					
+				</div>
+				<div class="form-group">
+					<label for="form-catchPhrase">Captez votre public en personnalisant votre texte d'accroche (moins de 240 caractères)</label>
+					<textarea id="form-catchPhrase" class="form-control limit-text" name="catchPhrase" maxlength="240" rows="4" type="text" pattern=".*" title="Renseignez votre texte d'accroche (moins de 240 caractères)" placeholder=""></textarea>
+					<span id="limit-text-descr">240</span> caractère(s) restant(s)
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend></legend>
+				<div class="bg-warning" style="padding: 1em;">
+					<div class="form-group">
+						<label for="form-email" class="form-label">Votre email (optionnel)</label>
+						<p>
+							Renseignez votre adresse email pour recevoir les liens d'édition et d'administration de votre article directement dans votre boîte mail.
+							Cette adresse email ne sera pas visible par les personnes qui consulteront votre publication, ni communiquée à des tiers.
+						</p>
+						<input type="email" id="form-email" class="form-control" name="email" value="" placeholder="Ex. : ethan.grant@gmail.com" />
+					</div>
+				</div>
+			</fieldset>
+			<div style="margin: 2em 0em;">
+				<div class="checkbox" id="group-optin_cgu">
+					<label for="form-optin_global_publication"><b>Partager mon article</b> avec les autres utilisateurs de Plebe.fr (optionnel)</label>
+					<input type="checkbox" class="form-control" id="form-optin_global_publication" name="optin_global_publication" value="1" />
+				</div>
+				<div class="checkbox">
+					<label for="form-optin_cgu">J'ai lu et j'accepte les <a href="/?/cgu" target="plebe_cgu">conditions générales d'utilisation</a> de Plebe.fr (CGU)</label>
+					<input type="checkbox" class="form-control" id="form-optin_cgu" name="optin_cgu" value="1" required />
+				</div>
+			</div>
+			<br />
+			<div class="form-group">
+				<button id="btn-publish-action" type="submit" class="btn btn-primary big active">Mettre en ligne tout de suite !</button>
+				<button id="btn-save-action" type="submit" style="display: none" class="btn btn-primary big active">Publier les modifications !</button>
+				<button id="btn-draft-action" type="submit" class="btn btn-default">Enregistrer en tant que brouillon</button>
+				<button id="btn-unpublish-action" type="submit" style="display: none" class="btn btn-default">Rendre indisponible</button>
+			</div>
+		</form>
+		<p class="bg-info" style="padding: 2em; font-size: 0.9em;">
+			<b>Note</b> : Mettez en ligne votre article ou enregistrez-le en tant que brouillon pour le sauvegarder sans le rendre visible.<br />
+			Vous pourrez dans tous le cas revenir modifier votre contenu plus tard grâce au lien d'administration qui vous sera communiqué sur le prochain écran, après la validation.
+		</p>
+		<p class="bg-info" style="padding: 2em; font-size: 0.9em;">
+			<b>*</b> : La publication du contenu par Plebe.fr est soumise à modération et sous condition de renseigner une adresse email de contact valide.<br />
+			Dans le cas contraire, votre contenu ne sera pas diffusé aux autres utilisateurs de Plebe.fr, mais il restera possible d'en partager le lien.<br />
+		</p>
+		<p class="bg-info" style="padding: 2em; font-size: 0.9em;">
+			Tout contenu illicite signalé ou avec du contenu illégal ou inadapté au regard de la loi est suceptible d'être retiré ou supprimé sans délai.
+		</p>
+		</article>
+	</div>
+</section>
+<script src="assets/js/tinymce/tinymce.min.js"></script>
+<script>
+
+	function initMCE() {
+		
+		tinymce.init({
+			setup: function(ed) {
+			   ed.on('init', function() 
+				{
+					this.getDoc().body.style.fontSize = '14px';
+					this.getDoc().body.style.fontFamily = 'Arial, sans-serif';
+				});
+			},
+			selector: "#form-text",
+			menubar: false,
+			paste_as_text: false,
+			contextmenu: "paste pastetext link undo redo",
+			browser_spellcheck : true,
+			plugins: [
+				 "advlist autolink link image lists charmap print hr anchor pagebreak",
+				 "searchreplace wordcount visualblocks visualchars code media nonbreaking",
+				 "save contextmenu directionality emoticons template paste textcolor"
+		   ],
+			toolbar: "paste pastetext | undo redo | bold italic underline strikethrough | removeformat blockquote forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | code link image media | print"
+		 });
+
+	}
+	
+	(function() {
+		
+		$('#btn-publish-action, #btn-save-action').on('click', function() {
+			
+			$('#form-state').val("1");
+			
+		});
+		
+		$('#btn-draft-action').on('click', function() {
+			
+			$('#form-state').val("0");
+			
+		});
+		
+		$('#btn-unpublish-action').on('click', function() {
+			
+			if(confirm("Votre article ne sera plus accessible par vos lecteurs !\n\nContinuer ?")) {
+				$('#form-state').val("0");
+			} else {
+				return false;
+			}
+			
+		});
+		
+		$('#form-catchPhrase').on('change keyup', function() {
+			var $this = $(this);
+			if($this.val().length > 240) {
+				$this.val($this.val().substr(0, 240));
+			}
+			
+			$('#limit-text-descr').html(240 - $this.val().length);
+			
+		});
+		
+		$("#form").on('submit', function() {
+
+			setTimeout(function() {
+				
+				/*
+				if(!confirm("Attention \n Vous êtes sur une version bêta de plebe.fr.\n\nN'utilisez pas plebe.fr pour sauvegarder vos articles.\n\nVeillez à conserver une copie de vos publications pour prévenir toute perte ou arrêt de service.\n\n")) {
+					return false;
+				}
+				*/
+				
+				var $this = $("#form");
+				var data = $this.serialize();
+				
+				if(!$("#form-text").val()) {
+					alert("Le texte de votre publication est vide !");
+					return false;
+				}
+				
+				$.post("{$baseUri}/?/api/article/{if $data}{$data.token}{/if}", data).done(function(data) {
+					if(data.ref) {
+						document.location.assign("{$baseUri}/?/article/confirm/" + data.token);
+					}
+				}).fail(function() {
+					alert('Oups ! Il y a eu une erreur lors de la sauvegarde.');
+				});
+			}, 0);
+
+			return false;
+		});
+		
+	})();
+	
+
+</script>
+{if $isAdmin && $data.token}
+<script>
+
+	(function() {
+		
+		$.get('{$baseUri}/?/api/article/{$data.token}', function(data) {
+			
+			var $form = $('#form');
+			
+			if(data.state == "1") {
+				$('#btn-draft-action').hide();
+				$('#btn-publish-action').hide();
+				$('#btn-save-action').show();
+				$('#btn-unpublish-action').show();
+			} else {
+				$('#btn-draft-action').show();
+				$('#btn-publish-action').show();
+				$('#btn-save-action').hide();
+				$('#btn-unpublish-action').hide();
+			}
+			
+			$form.find('#form-id').val(data.id);
+			$form.find('#form-state').val(data.state);
+			$form.find('#form-shortTitle').val(data.shortTitle);
+			$form.find('#form-catchPhrase').val(data.catchPhrase);
+			$form.find('#form-text').val(data.text);
+			$form.find('#form-author').val(data.author);
+			$form.find('#form-email').val(data.email);
+			$form.find('#form-optin_cgu').attr('CHECKED', data.optin_cgu == "1");
+			$form.find('#form-optin_global_publication').attr('CHECKED', data.optin_global_publication == "1");
+			
+			if(data.optin_cgu == "1") {
+				$form.find('#group-optin_cgu').hide();	
+			}
+			
+			initMCE();
+			
+		});
+		
+	})();
+	
+</script>
+{elseif $templateRef}
+<script>
+
+	(function() {
+		
+		$.get('{$baseUri}/?/api/template/{$templateRef}', function(data) {
+			
+			var $form = $('#form');
+			
+			$form.find('#form-shortTitle').val(data.shortTitle);
+			$form.find('#form-catchPhrase').val(data.catchPhrase);
+			$form.find('#form-text').val(data.text);
+			
+			initMCE();
+			
+		});
+		
+	})();
+	
+</script>
+{else}
+<script>
+
+	initMCE();
+
+</script>
+{/if}

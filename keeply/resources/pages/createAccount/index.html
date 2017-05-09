@@ -1,0 +1,15 @@
+<h2 data-bind="i18n: 'page.title'"></h2>
+<p data-bind="i18n: 'page.description'"></p>
+<br />
+<form role="form" class="form-horizontal" novalidate>
+	<div data-bind="template: { name: 'ui-field-template', data: inputName }"></div>
+	<div data-bind="template: { name: 'ui-field-template', data: inputFirstName }"></div>
+	<div data-bind="template: { name: 'ui-field-template', data: inputEmail }"></div>
+	<div data-bind="template: { name: 'ui-field-template', data: inputConfirmEmail }"></div>
+	<div data-bind="template: { name: 'ui-field-template', data: inputPassword }"></div>
+	<div data-bind="template: { name: 'ui-field-template', data: inputConfirmPassword }"></div>
+	<div class="form-submit clearfix">
+		<button class="col-xs-12 col-sm-auto pull-right" data-bind="click: function() { onSubmitHandler() }">Créer mon compte</button>
+	</div>
+</form>
+<script src="{$pageSrc}assets/js/main.js"></script>

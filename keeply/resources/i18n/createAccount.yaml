@@ -1,0 +1,18 @@
+form.field.required: 'Ce champ est requis'
+form.field.invalid: 'Ce champ n'est pas valide'
+
+page.title: 'Création d'un compte'
+page.description: 'Renseigner les informations suivantes pour obtenir un compte'
+
+account.name.label: 'Nom'
+account.name.placeholder: 'Nom'
+account.firstName.label: 'Prénom'
+account.firstName.placeholder: 'Prénom'
+account.email.label: 'Adresse email'
+account.email.placeholder: 'email@example.com'
+account.confirmEmail.label: 'Confirmer l'adresse email'
+account.confirmEmail.placeholder: 'email@example.com'
+account.confirmEmail.constraints.equality: 'Les adresses emails ne sont pas identiques'
+account.password.label: 'Mot de passe'
+account.confirmPassword.label: 'Confirmer le mot de passe'
+account.confirmPassword.constraints.equality: 'Les mots de passes ne sont pas identiques'

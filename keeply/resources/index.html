@@ -1,0 +1,57 @@
+<html>
+<head>
+
+	<link href="{$host}resources/assets/css/h5bp.min.css" rel="stylesheet" type="text/css" />
+	<link href="{$host}resources/assets/css/bootstrap-3.2.0.min.css" rel="stylesheet" type="text/css" />
+	
+	<link href="{$host}resources/assets/css/main.css" rel="stylesheet" type="text/css" />
+	<link href="{$host}resources/assets/css/blue/styles/styles.css" rel="stylesheet" type="text/css" />
+
+	<script src="{$host}resources/assets/js/sprintf-1.0.0.min.js"></script>
+	<script src="{$host}resources/assets/js/jquery-2.1.4.min.js"></script>
+	<script src="{$host}resources/assets/js/knockout-3.4.1.ext-0.0.1.js"></script>
+	<script src="{$host}resources/assets/js/knockout-latest.debug.js"></script>
+	
+	<script src="{$host}resources/assets/js/knockitjs-1.0.1.js"></script>
+
+	{include file='resources/assets/ko-templates.tpl'}
+
+</head>
+<body>
+	
+	<div id="body">
+		<webkit-field></webkit-field>
+		<div id="page-header" class="row">
+			<a class="col-xs-12 col-lg-auto" href="{$host}?/pages/root">Accueil</a>
+			{if {$userId} neq ''}
+			<a class="col-xs-12 col-lg-auto" href="{$host}?/pages/account">Mon compte</a>
+			<a class="col-xs-12 col-lg-auto" href="{$host}?/pages/ufo">Mes informations partagées</a>
+			{else}
+			<a class="col-xs-12 col-lg-auto" href="{$host}?/pages/connexion">Connexion</a>
+			<a class="col-xs-12 col-lg-auto" href="{$host}?/pages/createAccount">Créer un compte</a>
+			{/if}
+			{if {$userId} neq ''}
+			<a class="col-xs-12 col-lg-auto" href="{$host}?/disconnect">{$user.firstName} {$user.name} - Déconnexion</a>
+			{/if}
+		</div>
+		<div id="page-body" style="display: none" data-bind="visible: isReady">
+			{include file="resources/pages/{$pageId}/index.html"}
+		</div>
+		<div id="page-footer"></div>
+	</div>
+	<script>
+	
+	(function() {
+
+		app.servicesPath = '{$host}?';
+		app.context.device = 'computer';
+		app.context.app = 'computer';
+		app.context.page = '{$pageId}';
+		
+		app.init();
+
+	})();
+	
+	</script>
+</body>
+</html>

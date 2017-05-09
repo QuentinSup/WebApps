@@ -1,0 +1,128 @@
+<section id="publication" class="section dark">
+	<div class="icon-wrap"><span class="icon icon-documents-bookmarks-02"></span></div>
+	<h4>Modèle</h4>
+	<br />
+	<br />
+	<div class="container">
+		<article class="article-big" style="text-align:left;">
+		<form id="form">
+			<input id="form-id" name="id" type="hidden" />
+			<div class="form-group">
+			<input id="form-shortTitle" class="form-control" name="shortTitle" type="text" pattern=".*" maxlength="70" title="Donnez un titre à votre modèle" placeholder="Donnez un titre à votre modèle de publication" required />
+			</div>
+			<div class="form-group">
+			<textarea id="form-text" class="form-control" name="text" rows="15" type="text" pattern=".*" title="Saisir le modèle" placeholder="Saisir le modèle"></textarea>
+			</div>
+			<fieldset>
+				<legend>
+					Propriétés
+				</legend>
+				<div class="form-group">
+					<label for="form-catchPhrase">Le descriptif pour la phrase d'accroche (moins de 240 caractères)</label>
+					<textarea id="form-catchPhrase" class="form-control limit-text" name="catchPhrase" maxlength="240" rows="4" type="text" pattern=".*" title="Renseignez le descriptif du texte d'accroche (moins de 240 caractères)" placeholder=""></textarea>
+					<span id="limit-text-descr">240</span> caractère(s) restant(s)
+				</div>
+			</fieldset>
+			<div class="form-group">
+				<button id="btn-draft-action" type="submit" class="btn btn-default">Enregistrer</button>
+			</div>
+		</form>
+		</article>
+	</div>
+</section>
+<script src="assets/js/tinymce/tinymce.min.js"></script>
+<script>
+
+	function initMCE() {
+		
+		tinymce.init({
+			setup: function(ed) {
+			   ed.on('init', function() 
+				{
+					this.getDoc().body.style.fontSize = '14px';
+					this.getDoc().body.style.fontFamily = 'Arial, sans-serif';
+				});
+			},
+			selector: "#form-text",
+			menubar: false,
+			paste_as_text: false,
+			contextmenu: "paste pastetext link undo redo",
+			browser_spellcheck : true,
+			plugins: [
+				 "advlist autolink link image lists charmap print hr anchor pagebreak",
+				 "searchreplace wordcount visualblocks visualchars code media nonbreaking",
+				 "save contextmenu directionality emoticons template paste textcolor"
+		   ],
+			toolbar: "paste pastetext | undo redo | bold italic underline strikethrough | removeformat blockquote forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | code link image media | print"
+		 });
+
+	}
+	
+	(function() {
+		
+		$('#form-catchPhrase').on('change keyup', function() {
+			var $this = $(this);
+			if($this.val().length > 240) {
+				$this.val($this.val().substr(0, 240));
+			}
+			
+			$('#limit-text-descr').html(240 - $this.val().length);
+			
+		});
+		
+		$("#form").on('submit', function() {
+
+			setTimeout(function() {
+				
+				var $this = $("#form");
+				var data = $this.serialize();
+				
+				if(!$("#form-text").val()) {
+					alert("Le texte de votre modèle est vide !");
+					return false;
+				}
+				
+				$.post("{$baseUri}/?/api/template/{if $data}{$data.token}{/if}", data).done(function(data) {
+					if(data.ref) {
+						alert("Modèle sauvegardé !");
+					}
+				}).fail(function() {
+					alert('Oups ! Il y a eu une erreur lors de la sauvegarde.');
+				});
+			}, 0);
+
+			return false;
+		});
+		
+	})();
+	
+
+</script>
+{if $data && $data.token}
+<script>
+
+	(function() {
+		
+		$.get('{$baseUri}/?/api/template/token/{$data.token}', function(data) {
+			
+			var $form = $('#form');
+			
+			$form.find('#form-id').val(data.id);
+			$form.find('#form-shortTitle').val(data.shortTitle);
+			$form.find('#form-catchPhrase').val(data.catchPhrase);
+			$form.find('#form-text').val(data.text);
+			
+			initMCE();
+			
+		});
+		
+	})();
+	
+</script>
+{else}
+<script>
+
+	initMCE();
+
+</script>
+{/if}
