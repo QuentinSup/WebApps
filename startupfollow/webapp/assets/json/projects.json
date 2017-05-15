@@ -1,0 +1,23 @@
+var projects = [{
+	uid: 1,
+	name: 'Loha',
+	description: 'Rémunérez votre passion sur Loha',
+	image: 'https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-1/p200x200/17021851_1211158719002617_8014940771419524491_n.png?oh=ad5a9073bd9ec8eb762a8198b36b9a21&oe=59749471', 
+	links: [
+		{ rel: 'twitter', value: 'loha_fr', href: 'https://twitter.com/loha_fr' },
+		{ rel: 'facebook', value: 'loha.fr', href: 'https://www.facebook.com/loha.fr/' },
+		{ rel: 'website', value: 'loha.fr', href: 'http://loha.fr/' }
+	],
+	founders: [{
+		uid: 1,
+		firstName: 'Jordan',
+		lastName: 'CHENEVIER',
+		email: 'jordan.chenevier@gmail.com',
+		links: [
+			
+		]	
+	}],
+	members: [{
+		
+	}]
+}];

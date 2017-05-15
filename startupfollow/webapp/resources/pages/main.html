@@ -1,0 +1,164 @@
+<section id="hero" class="light">
+	<div class="container">
+		<div class="home-bg">
+			<div class="hero-content text-center ">
+				<div class="hero-big">
+					<span class="sublime-text">Startup Follows</span>
+				</div>
+				<div class="hero-normal">
+					<span class="sublime-text">Suivez les projets de vos Startups</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- End Hero Section -->
+
+<!-- Header -->
+<header id="header" class="navigation-bar-header light hidden-xs">
+	<div class="container">
+		<nav class="navigation">
+			<div class="navigation-txt visible-xs" data-toggle="dropdown">Home</div>
+			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+			</button>
+			<ul class="navigation-bar navigation-bar-left">
+				<!--<li><a href="#stat">Number Facts</a></li>-->
+				<li><a href="#about">A propos</a></li>
+				<li><a href="#projects">Les projets</a></li>
+				<li><a href="#newsletter">Contact</a></li>
+
+			</ul>
+		</nav>
+	</div>
+</header>
+<!-- End Header -->
+<section id="about" class="section dark">
+	<div class="container">
+		<h4>Suivez les projets de vos Startups préférées</h4>
+		<article class="article-big" style="text-align: left;">
+			<p class="big">La vie d'une Startup est mouvementée et il est parfois difficile de suivre l'avancement des projets des Startups !</p>
+			<p class="big">
+				Grâce à <span class="sublime-text">StartupFollows</span>, les porteurs de projets reçoivent régulièrement et automatiquement des invitations à
+				mettre à jour leur profil, et partager leurs principales avancées, pour vous tenir informés !
+			</p>
+		</article>
+	</div>
+</section>
+<section id="search" class="section">
+	<div class="container">
+		<div class="h7">Rechercher un projet</div>
+		<form class="form-register" data-role="form">
+			<div class="form-group relative">
+				<input type="text" value="" class="form-control" data-bind="value: searchValue, valueUpdate: 'keyup'" placeholder="nom du projet..." />
+				<ul class="search-list" data-bind="visible: R().length > 0">
+					<!-- ko foreach: R -->
+					<li><span class="strong" data-bind="text: name"></span> <span data-bind="text: description"></span></li>
+					<!-- /ko -->
+					<li><strong>Vous ne trouvez pas votre Startup ? Ajoutez-la !</strong></li>
+				</ul>
+			</div>
+		</form>
+	</div>
+</section>
+<section id="add" class="section">
+	<div class="container">
+		<div class="h7">Ajouter une startup à la liste ?</div>
+		<p class="big">
+			Si vous ne trouvez pas votre Startup dans la liste mais que vous connaissez l'adresse email du porteur de projet, vous pouvez utilisez ce formulaire pour lui demander de se rajouter !<br />
+			S'il accepte, vous serez informés de son ajout et automatiquement inscrits aux changements du projet. 
+		</p>
+		<!-- ko with: startupRequestForm -->
+		<form class="form-register" data-role="form">
+			<div class="form-group">
+				<label for="AddProjectName">Nom du projet</label>
+				<input id="AddProjectName" type="text" value="" data-bind="value: name, valueUpdate: 'keyup'" class="form-control" placeholder="nom du projet..." required />
+			</div>
+			<div class="form-group">
+				<label for="AddProjectEmail">Adresse email du porteur de projet</label>
+				<input id="AddProjectEmail" type="email" value="" data-bind="value: email, valueUpdate: 'keyup'" class="form-control" placeholder="email du porteur de projet..." required />
+			</div>
+			<div class="form-group">
+				<button data-bind="click: function() { submit(); }" class="btn btn-default">Valider</button>
+			</div>
+		</form>
+		<!-- /ko -->
+	</div>
+</section>
+<section id="stat" class="section hidden-xs">
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-sm-6 col-xs-6">
+				<div class="counter animated fadeInDown visible" data-animation="fadeInDown" data-delay="0">
+					<div class="stat">
+						<span data-bind="attr: { 'data-to': P().length }" class="value" data-from="0" data-to="">0</span>
+					</div>
+					<div class="stat-info">startups</div>
+					<hr />
+					<p class="small text-center">suivis</p>
+				</div>
+			</div>
+			<div class="col-md-6 col-sm-6 col-xs-6">
+				<div class="counter animated fadeInDown visible" data-animation="fadeInDown" data-delay="500">
+					<div class="stat">
+						<span class="value" data-from="0" data-to="25">0</span>
+					</div>
+					<div class="stat-info">membres</div>
+					<hr />
+					<p class="small text-center">suivent les startups</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<section id="projects" class="speakers section light">
+	<div class="overlay"></div>
+	<div class="container">
+		<div class="icon-wrap">
+			<span class="icon icon-active icon-multimedia-12"></span>
+		</div>
+		<h5>Les Startups</h5>
+		<div class="sub-title"></div>
+		<br />
+		<section class="row">
+			<!-- ko foreach: P -->
+			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+				<div class="speaker-item">
+					<div class="animated hiding" data-animation="fadeInUp" data-delay="0">
+						<div class="img-wrapper">
+							<img data-bind="attr: { 'src': $data.image }" class="img-responsive img-circle" alt="speaker-1" />
+						</div>
+						<div class="name" data-bind="text: $data.name"></div>
+						<div class="sub" data-bind="text: $data.description"></div>
+						<p class="small" data-bind="text: $data.description"></p>
+						<div class="social-link">
+							<!-- ko foreach: links -->
+							<a href="" data-bind="attr: { 'href': $data.href }"><span class="fa fa-link"></span></a>
+							<!-- /ko -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /ko -->
+		</section>
+	</div>
+</section>
+
+<!-- Map Section -->
+<section id="map" class="dark">
+	<div id="canvas-map"></div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-5 col-sm-7 animated hiding location" data-animation="fadeInLeft" data-delay="0">
+				<h3>Contact</h3>
+				<ul itemscope="" itemtype="http://schema.org/PostalAddress">
+					<li itemprop="email"><a href="mailto:contact@colaunch.fr"><i class="fa fa-envelope highlight"></i>contact@colaunch.fr</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script type="text/javascript" src="assets/json/projects.json"></script>
+<script type="text/javascript" src="resources/pages/js/main.js"></script>
