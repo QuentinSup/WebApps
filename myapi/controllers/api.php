@@ -88,7 +88,6 @@ class index extends dwBasicController {
 	
 	/**
 	 * Retourne tout le contenu d'une API
-	 * @Security
 	 * @Mapping(value = ':categoryName/all', method = "get", produces = 'application/json; charset=utf8')
 	 */
 	public function getAllFromAPI(dwHttpRequest $request, dwHttpResponse $response, dwModel $model) {
