@@ -1,8 +1,8 @@
 interface Window {
-    model: startupfollows.Model
+    model: startupfollows.request.Model
 }
 
-module startupfollows {
+module startupfollows.request {
     
     declare var projects;
     declare var ko;

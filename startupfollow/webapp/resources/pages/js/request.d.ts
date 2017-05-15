@@ -1,7 +1,7 @@
 interface Window {
-    model: startupfollows.Model;
+    model: startupfollows.request.Model;
 }
-declare module startupfollows {
+declare module startupfollows.request {
     class StartupAddForm {
         name: any;
         punchLine: any;

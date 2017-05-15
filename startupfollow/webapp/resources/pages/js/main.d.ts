@@ -1,2 +1,2 @@
-declare module startupfollows {
+declare module startupfollows.main {
 }

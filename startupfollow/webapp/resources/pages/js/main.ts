@@ -1,4 +1,4 @@
-module startupfollows {
+module startupfollows.main {
     
     declare var projects;
     declare var ko;
@@ -55,8 +55,33 @@ module startupfollows {
                 }));
             });
             
+            this.getAllProjects();
+            
         }
         
+        /**
+         * retourne la liste des projets
+         */
+        public getAllProjects(): void {
+
+            var request = {
+                type: 'get',
+                url: 'rest/startup/all',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json' 
+            };
+            
+            $.ajax(request).complete((response, status): void => {
+                   if(response.status == 200) {
+                       var projects = [];
+                        $.each(response.responseJSON, (k, v): void => {
+                            projects.push(JSON.parse(v.data));    
+                        });
+                       this.P(projects);
+                   }
+            });
+
+        }
         
         
     }

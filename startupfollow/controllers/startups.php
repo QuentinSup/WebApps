@@ -54,6 +54,28 @@ class startup extends dwBasicController {
 	}
 	
 	/**
+	 * @Mapping(method = "GET", value="all", consumes="application/json")
+	 */
+	public function getAll(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	{
+	
+		if(self::$log -> isTraceEnabled()) {
+			self::$log -> trace("Récupération de l'ensemble des projets");
+		}
+	
+		$resp = dwHttpSocket::request('GET', "http://localhost:8080/myapi/api/QuentinSup/startupfollow/startup/all", null, array("Content-Type" => "application/json; charset=utf8"));
+	
+		if(self::$log -> isDebugEnabled()) {
+			self::$log -> debug("Récupération de l'ensemble des projets. Code retour : ".$resp -> status_code.$resp -> body);
+		}
+	
+		$response -> statusCode = $resp -> status_code;
+		
+		return "text:".$resp -> body;
+	
+	}
+	
+	/**
 	 * @Mapping(method = "post", consumes="application/json")
 	 */
 	public function add(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
