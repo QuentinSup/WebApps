@@ -11,7 +11,6 @@ use dw\classes\controllers\dwBasicController;
 
 /**
  * API
- * @Security()
  * @Mapping(value = '/')
  */
 class main extends dwBasicController

@@ -158,6 +158,7 @@ class index extends dwBasicController {
 	 */
 	public function postToAPI(dwHttpRequest $request, dwHttpResponse $response, dwModel $model) {
 		$doc = self::$apiEntity;
+		
 		$p_userName = $request->Path ( 'userName' );
 		$p_appName = $request->Path ( 'appName' );
 		$p_categoryName = $request->Path ( 'categoryName' );
