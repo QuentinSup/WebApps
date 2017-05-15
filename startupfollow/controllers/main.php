@@ -46,6 +46,7 @@ class main extends dwBasicController {
 	
 	/**
 	 * @Mapping(method = "get", value= "request/:id")
+	 * @Mapping(method = "get", value= "get-started/:id")
 	 */
 	public function requests(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
@@ -56,8 +57,8 @@ class main extends dwBasicController {
 		$json = json_decode($resp -> body);
 	
 		if($resp -> status_code == HttpStatus::OK) {
-			$model -> request_Name = $json -> name;
-			$model -> request_Email = $json -> email;
+			$model -> requestName = $json -> name;
+			$model -> requestEmail = $json -> email;
 		}
 	
 		return $this -> prepareModel($request, $model, 'request') -> view();

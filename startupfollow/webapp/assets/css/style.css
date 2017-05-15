@@ -5,8 +5,30 @@
 }
 
 .lightgray {
-	background-color: #F9F9F9 !important;
+	background: transparent !important;
+/*	color: #fff; */
+	margin: 0px 10px;
+	z-index: 1;
+	position: relative;
+}
+
+.lightgray p {
+	/*color: #fff;*/	
+}
+
+.lightgray:after {
+	display: block;
+	content: '';
+	position: absolute;
+	z-index: -1;
+	background-color: #fff;
 	box-shadow: 0 1px 1px rgba(0,0,0,.1);
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border-radius: 10px;
+	opacity: .9;
 }
 
 .sublime-text {
@@ -14,6 +36,11 @@
     display: inline-block;
 	padding: .2em .2em;
 	color: #fff;
+}
+
+ul {
+	padding: 0px;
+	margin: 0px;
 }
 
 .search-list {
@@ -43,8 +70,8 @@ input[type=text], input[type=email] {
 	font-size: 1.25em;
 	font-weight: 400;
     line-height: normal;
-    padding: .4em .7em;
-    border: .1em solid #C5C5C5;
+    padding: .5em .7em;
+    border: 1px solid #C5C5C5;
     border-radius: .25em;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -88,6 +115,39 @@ input[type=button], button, .btn {
     margin: 0;
     -webkit-appearance: none;
     -webkit-tap-highlight-color: transparent;
+}
+
+input[type=button].blank, button.blank, .btn.blank {
+    background: transparent;
+    color: #737373;
+    /* font-weight: 600; */
+    font-size: .9em;
+}
+
+.form-control-feedback {
+	position: absolute;
+    top: -10px !important;
+    right: 0;
+    display: block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 34px;
+    background: #fff;
+    border: 1px solid #8bbba8;
+    color: #fff;
+    background: #65c39d;
+}
+
+.input-group-addon {
+	min-width: 50px;
+	background-color: #fff;
+}
+
+.input-group .form-control {
+	border-left: 0px !important;
+	padding-left: 0px !important;
 }
 
 *::-webkit-input-placeholder { 

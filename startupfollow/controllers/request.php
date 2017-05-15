@@ -65,13 +65,12 @@ class request extends dwBasicController {
 		
 			$str = dwSmartyTemplate::renderize("../emails/startupRequest.html", $mail_model -> toArray());
 		
-			if(!self::$smtp -> send($json -> email, null, null, "Des fans souhaitent vous suivre sur StartupFollow", $str)) {
+			if(!self::$smtp -> send($json -> email, null, null, "Des amis souhaitent vous suivre sur StartupFollow", $str)) {
 				self::$log -> error("Error sending email to ".$json -> to -> email);
 			}
 		
 		}
-		
-		
+
 		
 		return $p_id;
 		

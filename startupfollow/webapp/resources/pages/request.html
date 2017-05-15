@@ -1,41 +1,134 @@
+<link rel="stylesheet" href="{$host}assets/css/unslider.css" type="text/css" media="all" />
 <section id="hero">
 	<div class="overlay"></div>
 	<div class="container">
 		<div class="home-bg">
 			<div class="hero-content text-center ">
 				<section class="section lightgray">
-					
 					<div class="container">
+						<div id="StartupAddForm">
 						<ul>
 						<li>
-							<div class="h7">Annoncer un nouveau projet</div>
+							<div class="h7">Welcome</div>
+							<p class="help-block">Bienvenue sur StartupFollow. Votre inscription sera effectuée en quelques cliques seulement.</p>
 							<p>
-								Pour commencer, merci d'indiquer le nom (actuel) de votre projet.
+								Pour commencer, merci d'indiquer le nom (actuel) de votre projet et votre phrase d'accroche
 							</p>
 							<!-- ko with: form -->
 							<form class="form-register" data-role="form">
-								<div class="form-group">
-									<input id="AddProjectName" type="text" value="" data-bind="value: name, valueUpdate: 'keyup'" placeholder="nom du projet..." required />
-									<button data-bind="click: function() { submit(); }" class="btn btn-default">Commencer</button>
+								<div class="form-group row has-feedback">
+									<div class="col-sm-4">
+										<input type="text" value="" class="form-control" data-bind="value: name, valueUpdate: 'input'" placeholder="nom du projet..." required />
+										<!-- ko if: !nameExists() -->
+										<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+										<!-- /ko -->
+									</div>
 								</div>
+								<div class="form-group row">
+									<div class="col-sm-8">
+										<input type="text" class="form-control" value="" data-bind="value: punchLine, valueUpdate: 'input'" placeholder="Ex. : In tartiflette we trust" />
+									</div>
+								</div>
+								<button data-bind="click: function() { next(); }" class="btn btn-default">Commencer</button>
 							</form>
 							<!-- /ko -->
 						</li>
 						<li>
-							<div class="h7">Annoncer un nouveau projet</div>
+							<div class="h7">Votre adresse email de contact</div>
 							<p>
-								Il nous faut ensuite une adresse email valide pour pouvoir communiquer avec vous.
+								Cette adresse sera privilégiée pour prendre contact avec vous. Vous recevrez une notification afin de donner régulièrement des nouvelles à votre communauté
 							</p>
 							<!-- ko with: form -->
 							<form class="form-register" data-role="form">
+								<label>Adresse de contact</label>
+								<div class="form-group row">
+									<div class="col-sm-8">
+										<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input'" placeholder="email de contact" required />
+									</div>
+								</div>
+								<button data-bind="click: function() { prev(); }" class="btn blank"><< Retour</button>
+								<button data-bind="click: function() { next(); }" class="btn btn-default">Continuer</button>
+							</form>
+							<!-- /ko -->
+						</li>
+						<li>
+							<div class="h7">Votre logo</div>
+							<p>Votre logo et vos liens vers vos réseaux sociaux permettront à vos fans de vous suivre plus facilement et d'accroître votre communauté.</p>
+							<!-- ko with: form -->
+							<form class="form-register" data-role="form">
+								<label>Votre image</label>
+								<div class="form-group row">
+									<div class="col-sm-5">
+										<input type="file" value="" data-bind="value: image, valueUpdate: 'input'" placeholder="" required />
+										 <p class="help-block">Fichiers autorisés : .png, .jpg. Max: 3Mb</p>
+									</div>
+								</div>
+								<label>Liens</label>
+								<div class="form-group row-fluid">
+									<div class="input-group col-sm-3">
+										<span class="input-group-addon"><span class="fa fa-twitter"></span></span>
+										<input type="text" class="form-control" value="" data-bind="value: twitter, valueUpdate: 'input'" placeholder="@" />
+									</div>
+								</div>
+								<div class="form-group row-fluid">
+									<div class="input-group col-sm-6">
+										<span class="input-group-addon"><span class="fa fa-link"></span></span>
+										<input type="text" class="form-control" value="" data-bind="value: website, valueUpdate: 'input'" placeholder="http://" />
+									</div>
+								</div>
+								<div class="form-group row-fluid">
+									<div class="input-group col-sm-6">
+										<span class="input-group-addon"><span class="fa fa-facebook"></span></span>
+										<input type="text" class="form-control" value="" data-bind="value: facebook, valueUpdate: 'input'" placeholder="" />
+									</div>
+								</div>
+								<button data-bind="click: function() { prev(); }" class="btn blank"><< Retour</button>
+								<button data-bind="click: function() { next(); }" class="btn btn-default">Continuer</button>
+							</form>
+							<!-- /ko -->
+						</li>
+						<li>
+							<div class="h7">Votre équipe</div>
+							<p>
+								
+							</p>
+							<!-- ko with: form -->
+							<form data-role="form">
+								<label>Votre nom</label>
+								<div class="row">
+									<div class="form-group col-sm-3">
+										<input type="text" class="form-control" value="" data-bind="value: lastName, valueUpdate: 'input'" placeholder="Prénom" required />
+									</div>
+									<div class="form-group col-sm-3">
+										<input type="text" class="form-control" value="" data-bind="value: firstName, valueUpdate: 'input'" placeholder="Nom" />
+									</div>
+								</div>
+								<label>Votre équipe</label>
+								<p>
+								Invitez votre équipe à vous rejoindre !
+								</p>
+								<!-- ko foreach: members() -->
+								<div class="row">
+									<div class="form-group col-sm-6">
+										<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input'" placeholder="Email" required />
+									</div>
+									<div class="form-group col-sm-3">
+										<input type="text" class="form-control" value="" data-bind="value: lastName, valueUpdate: 'input'" placeholder="Prénom"  />
+									</div>
+									<div class="form-group col-sm-3">
+										<input type="text" class="form-control" value="" data-bind="value: firstName, valueUpdate: 'input'" placeholder="Nom" />
+									</div>
+								</div>
+								<!-- /ko -->
 								<div class="form-group">
-									<input id="AddProjectName" type="text" value="" data-bind="value: name, valueUpdate: 'keyup'" placeholder="email de contact" required />
-									<button data-bind="click: function() { submit(); }" class="btn btn-default">Continuer</button>
+								<button data-bind="click: function() { prev(); }" class="btn blank"><< Retour</button>
+								<button data-bind="click: function() { addMember(); }" class="btn">+</button> <button data-bind="click: function() { submit(); }" class="btn btn-default">Continuer</button>
 								</div>
 							</form>
 							<!-- /ko -->
 						</li>
 						</ul>
+						</div>
 					</div>
 				</section>
 			</div>
@@ -60,4 +153,17 @@
 </header>
 <!-- End Header -->
 
-<script type="text/javascript" src="resources/pages/js/request.js"></script>
+<script type="text/javascript" src="{$host}/resources/pages/js/request.js"></script>
+<script type="text/javascript" src="{$host}/assets/js/unslider.js"></script>
+<script type="text/javascript">
+
+	var host = '{$host}';
+
+	model.form.name("{$requestName}");
+	model.form.email("{$requestEmail}");
+	
+	jQuery(document).ready(function($) {
+		$('#StartupAddForm').unslider();
+	});
+
+</script>
