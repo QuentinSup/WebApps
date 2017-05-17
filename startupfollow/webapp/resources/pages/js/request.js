@@ -11,8 +11,8 @@ var startupfollows;
                 this.firstName = ko.observable();
                 this.lastName = ko.observable();
                 this.image = ko.observable();
-                this.website = ko.observable('http://');
-                this.twitter = ko.observable('@');
+                this.website = ko.observable();
+                this.twitter = ko.observable();
                 this.facebook = ko.observable();
                 this.members = ko.observableArray();
                 this.nameExists = ko.observable(true);
@@ -58,21 +58,18 @@ var startupfollows;
             StartupAddForm.prototype.submit = function () {
                 var data = {
                     name: this.name(),
+                    email: this.email(),
                     punchLine: this.punchLine(),
-                    description: '',
                     image: this.image(),
-                    links: [
-                        { rel: 'twitter', value: this.twitter(), href: 'https://twitter.com/' + this.twitter() },
-                        { rel: 'facebook', value: this.facebook(), href: 'https://www.facebook.com/' + this.facebook() + '/' },
-                        { rel: 'website', value: this.website(), href: this.website() }
-                    ],
-                    founders: [{
+                    link_twitter: this.twitter(),
+                    link_website: this.website(),
+                    link_facebook: this.facebook(),
+                    members: [{
                             firstName: this.firstName(),
                             lastName: this.lastName(),
                             email: this.email(),
-                            links: []
-                        }],
-                    members: []
+                            founder: 1
+                        }]
                 };
                 $.each(this.members(), function (k, v) {
                     data.members.push({
@@ -95,14 +92,12 @@ var startupfollows;
             };
             return StartupAddForm;
         })();
-        request_1.StartupAddForm = StartupAddForm;
         var Model = (function () {
             function Model() {
                 this.form = new StartupAddForm();
             }
             return Model;
         })();
-        request_1.Model = Model;
         window.model = new Model();
         ko.applyBindings(window.model, $('#app')[0]);
     })(request = startupfollows.request || (startupfollows.request = {}));

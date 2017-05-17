@@ -1,0 +1,224 @@
+<link rel="stylesheet" href="{$host}assets/css/unslider.css" type="text/css" media="all" />
+<!-- Header -->
+<header id="header" class="navigation-bar-header light hidden-xs">
+	<div class="container">
+		<nav class="navigation">
+			<div class="navigation-txt hidden-xs" data-toggle="dropdown">StartupFollow</div>
+			<div class="navigation-txt visible-xs" data-toggle="dropdown">Home</div>
+			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+			</button>
+			<ul class="navigation-bar navigation-bar-left">
+
+			</ul>
+		</nav>
+	</div>
+</header>
+<!-- End Header -->
+<section style="font-size: .9em; padding-top: 2em;" class="bg-gray">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3">
+				<ul class="list">
+					<li data-bind="click: function() { showSection(1) }, css: { 'strong': index() == 1 }">Votre Startup</li>
+					<li data-bind="click: function() { showSection(2) }, css: { 'strong': index() == 2 }">Logo &amp; réseaux sociaux</li>
+					<li data-bind="click: function() { showSection(3) }, css: { 'strong': index() == 3 }">Votre équipe</li>
+					<li data-bind="click: function() { showSection(4) }, css: { 'strong': index() == 4 }">Votre histoire</li>
+				</ul>
+			</div>
+			<div class="col-sm-9">
+				<div id="sections" class="slider" data-slider-speed="0">
+					<ul>
+						<li>
+							<section>
+								<div class="h8">Votre Startup</div>
+								<!-- ko with: form -->
+								<form data-role="form">
+									<div class="form-group row has-feedback">
+										<label for="FormInputName" class="col-sm-12 control-label">Nom et phrase d'accroche</label>
+										<div class="col-sm-4">
+											<input id="FormInputName" type="text" value="" class="form-control" data-bind="value: name, valueUpdate: 'input'"
+												placeholder="nom du projet..." required />
+											<!-- ko if: !nameExists() -->
+											<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+											<!-- /ko -->
+										</div>
+									</div>
+									<div class="form-group row">
+										<div class="col-sm-8">
+											<input id="FormInputPunchLine" type="text" class="form-control" value="" data-bind="value: punchLine, valueUpdate: 'input'"
+												placeholder="Ex. : In tartiflette we trust" />
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<div class="col-sm-12">
+											<label for="FormInputEmail" class="control-label"> Adresse de contact </label>
+											<p class="help-block">Cette adresse sera privilégiée pour prendre contact avec vous. Vous recevrez une notification afin de donner
+												régulièrement des nouvelles à votre communauté</p>
+										</div>
+										<div class="col-sm-8">
+											<input id="FormInputEmail" type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input'"
+												placeholder="email de contact" required />
+										</div>
+									</div>
+									<div class="form-submit">
+										<button data-bind="click: function() { submit(); }" class="btn btn-default">Enregistrer</button>
+									</div>
+								</form>
+								<!-- /ko -->
+							</section>
+						</li>
+						<li>
+							<section>
+								<div class="h8">Votre logo</div>
+								<p>Votre logo et vos liens vers vos réseaux sociaux permettront à vos fans de vous suivre plus facilement et d'accroître votre communauté.</p>
+								<!-- ko with: form -->
+								<form class="form-register" data-role="form">
+									<label>Votre image</label>
+									<div class="form-group row">
+										<div class="col-sm-5">
+											<input type="file" value="" data-bind="value: image, valueUpdate: 'input'" placeholder="" required />
+											<p class="help-block">Fichiers autorisés : .png, .jpg. Max: 3Mb</p>
+										</div>
+									</div>
+									<label>Liens</label>
+									<div class="form-group row-fluid">
+										<div class="input-group col-sm-3">
+											<span class="input-group-addon"><span class="fa fa-twitter"></span></span> <input type="text" class="form-control" value=""
+												data-bind="value: twitter, valueUpdate: 'input'" placeholder="@" />
+										</div>
+									</div>
+									<div class="form-group row-fluid">
+										<div class="input-group col-sm-6">
+											<span class="input-group-addon"><span class="fa fa-link"></span></span> <input type="text" class="form-control" value=""
+												data-bind="value: website, valueUpdate: 'input'" placeholder="http://" />
+										</div>
+									</div>
+									<div class="form-group row-fluid">
+										<div class="input-group col-sm-6">
+											<span class="input-group-addon"><span class="fa fa-facebook"></span></span> <input type="text" class="form-control" value=""
+												data-bind="value: facebook, valueUpdate: 'input'" placeholder="" />
+										</div>
+									</div>
+									<div class="form-submit">
+										<button data-bind="click: function() { submit(); }" class="btn btn-default">Enregistrer</button>
+									</div>
+								</form>
+								<!-- /ko -->
+							</section>
+						</li>
+						<li>
+							<section>
+								<div class="h8">Votre équipe</div>
+								<p></p>
+								<!-- ko with: form -->
+								<form data-role="form">
+									<label>Votre nom</label>
+									<div class="row">
+										<div class="form-group col-sm-3">
+											<input type="text" class="form-control" value="" data-bind="value: lastName, valueUpdate: 'input'" placeholder="Prénom" required />
+										</div>
+										<div class="form-group col-sm-3">
+											<input type="text" class="form-control" value="" data-bind="value: firstName, valueUpdate: 'input'" placeholder="Nom" />
+										</div>
+									</div>
+									<label>Votre équipe</label>
+									<p>Invitez votre équipe à vous rejoindre !</p>
+									<!-- ko foreach: members() -->
+									<div class="row-fluid">
+										<div class="col-sm-1">
+											<button class="btn" data-bind="click: function() { removeMember(); }">-</button>
+										</div>
+										<div class="col-sm-1 text-center">
+											<div class="img-wrapper">
+												<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/team-avatar.png' }" class="img-responsive img-circle" alt="avatar" />
+											</div>
+										</div>
+										<div class="form-group col-sm-4">
+											<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input'" placeholder="Email" required />
+										</div>
+										<div class="form-group col-sm-3">
+											<input type="text" class="form-control" value="" data-bind="value: lastName, valueUpdate: 'input'" placeholder="Prénom" />
+										</div>
+										<div class="form-group col-sm-3">
+											<input type="text" class="form-control" value="" data-bind="value: firstName, valueUpdate: 'input'" placeholder="Nom" />
+										</div>
+									</div>
+									<!-- /ko -->
+									<div class="form-group">
+										<button data-bind="click: function() { addMember(); }" class="btn">+</button>
+									</div>
+									<div class="form-submit">
+										<button data-bind="click: function() { submit(); }" class="btn btn-default">Enregistrer</button>
+									</div>
+								</form>
+								<!-- /ko -->
+							</section>
+						</li>
+						<li>
+							<section>
+								<div class="h8">Votre histoire</div>
+								<button data-bind="click: function() { newStory(); }" class="btn blank">Ajouter</button>
+								<div id="stories" class="slider">
+									<ul>
+										<li>
+											<ul class="list">
+												<!-- ko foreach: stories -->
+												<li data-bind="click: function() { $root.editStory($data.uid) }">
+													<span class="h8" data-bind="text: $data.shortLine"></span>
+													<span data-bind="text: $data.date"></span>
+												</li>
+												<!-- /ko -->
+											</ul>
+										</li>
+										<li>
+											<!-- ko with: storyform -->
+											<form data-role="form">
+												<label></label>
+												<div class="row">
+													<div class="form-group col-sm-12">
+														<input type="text" class="form-control h7" value="" data-bind="value: shortLine, valueUpdate: 'input'"
+															placeholder="Ex. : Startup Weekend nous voilà !" required />
+													</div>
+												</div>
+												<div class="row">
+													<div class="form-group col-sm-12">
+														<div id="form-text" data-bind="html: text" class="tinymce" title="Donnez à vos fans l'envie de vous suivre !"
+															placeholder="Donnez de vos nouvelles à vos fans !"></div>
+													</div>
+												</div>
+												<div class="form-submit">
+													<button data-bind="click: function() { cancel(); }" class="btn blank">Annuler</button>
+													<button data-bind="click: function() { submit(); }" class="btn btn-default">Enregistrer</button>
+												</div>
+											</form> <!-- /ko -->
+										</li>
+									</ul>
+								</div>
+							</section>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- End Hero Section -->
+
+<script src="{$host}assets/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="{$host}/assets/js/unslider.js"></script>
+<script type="text/javascript" src="{$host}resources/pages/js/startupedit.js"></script>
+
+<script type="text/javascript">
+
+	model.load("{$name}");
+	
+	jQuery(document).ready(function($) {
+		$('.slider').each(function() {
+			var $this = $(this);
+			$this.unslider({ keys: false, speed: ($this.attr('data-slider-speed') || 500) * 1 });
+		});
+	});
+	
+</script>

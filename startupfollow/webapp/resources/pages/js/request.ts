@@ -1,7 +1,3 @@
-interface Window {
-    model: startupfollows.request.Model
-}
-
 module startupfollows.request {
     
     declare var projects;
@@ -11,7 +7,7 @@ module startupfollows.request {
     declare var host;
     
     
-    export class StartupAddForm {
+    class StartupAddForm {
      
         public name      = ko.observable();
         public punchLine = ko.observable();
@@ -19,8 +15,8 @@ module startupfollows.request {
         public firstName = ko.observable();
         public lastName  = ko.observable();
         public image     = ko.observable();
-        public website   = ko.observable('http://');
-        public twitter   = ko.observable('@');
+        public website   = ko.observable();
+        public twitter   = ko.observable();
         public facebook  = ko.observable();
         public members   = ko.observableArray();
         public nameExists = ko.observable(true);
@@ -79,23 +75,18 @@ module startupfollows.request {
             
             var data: any = {
                 name: this.name(),
+                email: this.email(),
                 punchLine: this.punchLine(),
-                description: '',
                 image: this.image(), 
-                links: [
-                    { rel: 'twitter', value: this.twitter(), href: 'https://twitter.com/' + this.twitter() },
-                    { rel: 'facebook', value: this.facebook(), href: 'https://www.facebook.com/' + this.facebook() + '/' },
-                    { rel: 'website', value: this.website(), href: this.website() }
-                ],
-                founders: [{
+                link_twitter: this.twitter(),
+                link_website: this.website(),
+                link_facebook: this.facebook(),
+                members: [{
                     firstName: this.firstName(),
                     lastName: this.lastName(),
                     email: this.email(),
-                    links: [
-                        
-                    ]   
-                }],
-                members: []
+                    founder: 1
+                }]
             };
             
             $.each(this.members(), function(k, v) {
@@ -124,7 +115,7 @@ module startupfollows.request {
         
     }
     
-    export class Model {
+    class Model {
         
         public form = new StartupAddForm();
         

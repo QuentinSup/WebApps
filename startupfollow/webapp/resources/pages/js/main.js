@@ -59,7 +59,7 @@ var startupfollows;
                     if (response.status == 200) {
                         var projects = [];
                         $.each(response.responseJSON, function (k, v) {
-                            projects.push(JSON.parse(v.data));
+                            projects.push(v);
                         });
                         _this.P(projects);
                     }

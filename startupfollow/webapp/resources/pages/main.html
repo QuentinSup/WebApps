@@ -61,7 +61,8 @@
 		</form>
 	</div>
 </section>
-<section id="add" class="section">
+<section id="add" class="section light">
+	<div class="overlay"></div>
 	<div class="container">
 		<div class="h7">Ajouter une startup à la liste ?</div>
 		<p class="big">
@@ -127,7 +128,7 @@
 				<div class="speaker-item">
 					<div>
 						<div class="img-wrapper">
-							<img data-bind="attr: { 'src': $data.image }" class="img-responsive img-circle" alt="speaker-1" />
+							<img data-bind="attr: { 'src': $data.image || (host + 'assets/img/avatars/project-avatar.svg') }" class="img-responsive img-circle" alt="project" />
 						</div>
 						<div class="name" data-bind="text: $data.name"></div>
 						<div class="sub" data-bind="text: $data.punchLine"></div>
@@ -142,21 +143,6 @@
 			</div>
 			<!-- /ko -->
 		</section>
-	</div>
-</section>
-
-<!-- Map Section -->
-<section id="map" class="dark">
-	<div id="canvas-map"></div>
-	<div class="container">
-		<div class="row">
-			<div class="col-md-5 col-sm-7 animated hiding location" data-animation="fadeInLeft" data-delay="0">
-				<h3>Contact</h3>
-				<ul itemscope="" itemtype="http://schema.org/PostalAddress">
-					<li itemprop="email"><a href="mailto:contact@colaunch.fr"><i class="fa fa-envelope highlight"></i>contact@colaunch.fr</a></li>
-				</ul>
-			</div>
-		</div>
 	</div>
 </section>
 

@@ -75,7 +75,7 @@ module startupfollows.main {
                    if(response.status == 200) {
                        var projects = [];
                         $.each(response.responseJSON, (k, v): void => {
-                            projects.push(JSON.parse(v.data));    
+                            projects.push(v);    
                         });
                        this.P(projects);
                    }

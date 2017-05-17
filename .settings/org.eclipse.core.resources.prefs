@@ -1,8 +1,12 @@
 eclipse.preferences.version=1
 encoding//myapi/controllers/api.php=UTF-8
 encoding//myapi/controllers/user.php=UTF-8
+encoding//plebe/pages/form.html=UTF-8
 encoding//startupfollow/controllers/request.php=UTF-8
 encoding//startupfollow/controllers/startups.php=UTF-8
+encoding//startupfollow/controllers/stories.php=UTF-8
 encoding//startupfollow/webapp/assets/json/projects.json=UTF-8
 encoding//startupfollow/webapp/resources/pages/main.html=UTF-8
-encoding//startupfollow/webapp/resources/pages/request.html=UTF-8
+encoding//startupfollow/webapp/resources/pages/startup_add.html=UTF-8
+encoding//startupfollow/webapp/resources/pages/startup_edit.html=UTF-8
+encoding//startupfollow/webapp/resources/pages/startup_landingPage.html=UTF-8

@@ -157,13 +157,11 @@
 <script type="text/javascript" src="{$host}/assets/js/unslider.js"></script>
 <script type="text/javascript">
 
-	var host = '{$host}';
-
 	model.form.name("{$requestName}");
 	model.form.email("{$requestEmail}");
 	
 	jQuery(document).ready(function($) {
-		$('#StartupAddForm').unslider();
+		$('#StartupAddForm').unslider({ keys: false });
 	});
 
 </script>

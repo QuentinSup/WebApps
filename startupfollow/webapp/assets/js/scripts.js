@@ -62,6 +62,7 @@
       
     jQuery(window).on("resize", heroInit);
     jQuery(document).on("ready", heroInit);
+    jQuery(document).on("unsyncready", heroInit);
     
     $('.navigation-bar').onePageNav({
         currentClass: 'active',

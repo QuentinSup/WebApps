@@ -1,0 +1,82 @@
+<header id="header" class="navigation-bar-header light hidden-xs">
+	<div class="container">
+		<nav class="navigation">
+			<div class="navigation-txt visible-xs" data-toggle="dropdown">Home</div>
+			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+			</button>
+			<ul class="navigation-bar navigation-bar-left">
+				<li><a href="#about">A propos</a></li>
+				<li><a href="#members">L'équipe</a></li>
+			</ul>
+		</nav>
+	</div>
+</header>
+
+<!-- ko with: data() -->
+<section id="hero" class="light">
+	<div class="container">
+		<div class="home-bg">
+			<div class="hero-content text-center ">
+				<div class="hero-big">
+					<span class="sublime-text" data-bind="text: $data.name"></span>
+				</div>
+				<div class="hero-normal">
+					<span class="sublime-text" data-bind="text: $data.punchLine"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="members" class="speakers section light">
+	<div class="overlay"></div>
+	<div class="container">
+		<h5>L'équipe</h5>
+		<div class="sub-title"></div>
+		<br />
+		<section class="row" class="animated hiding" data-animation="fadeInUp" data-delay="1000">
+			<!-- ko foreach: $data.founders -->
+			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+				<div class="speaker-item">
+					<div>
+						<div class="img-wrapper">
+							<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/team-avatar-founder.png' }" class="img-responsive img-circle" alt="team member" />
+						</div>
+						<div class="name" data-bind="text: $data.lastName + ' ' + $data.firstName"></div>
+					</div>
+				</div>
+			</div>
+			<!-- /ko -->
+			<!-- ko foreach: $data.members -->
+			<!-- ko if: $data.firstName -->
+			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+				<div class="speaker-item">
+					<div>
+						<div class="img-wrapper">
+							<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/team-avatar.png' }" class="img-responsive img-circle" alt="speaker-1" />
+						</div>
+						<div class="name" data-bind="text: $data.lastName + ' ' + $data.firstName"></div>
+					</div>
+				</div>
+			</div>
+			<!-- /ko -->
+			<!-- /ko -->
+		</section>
+	</div>
+</section>
+
+<!-- /ko -->
+
+<section id="story" class="section">
+	<div class="container">
+		<h5>L'histoire</h5>
+	</div>
+</section>
+
+<script type="text/javascript" src="{$host}/resources/pages/js/startupstories.js"></script>
+<script type="text/javascript">
+
+	model.find('{$name}');
+	
+</script>
