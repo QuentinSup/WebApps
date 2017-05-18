@@ -7,7 +7,7 @@ use dw\classes\dwHttpRequest;
 use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
 use dw\classes\dwObject;
-use dw\classes\http\dwHttpSocket;
+use dw\classes\dwSession;
 use dw\enums\HttpStatus;
 use dw\classes\controllers\dwBasicController;
 
@@ -20,8 +20,30 @@ class main extends dwBasicController {
 	 * @DatabaseEntity('request')
 	 */
 	public static $requestEntity;
+
+	/**
+	 * @Session()
+	 */
+	public static $session;
 	
-	private function prepareModel($request, $model, $pageId) {
+	/**
+	 * Traitement de prérequête
+	 *
+	 * @param dwHttpRequest $request
+	 * @param dwHttpResponse $response
+	 * @param dwModel $model
+	 * @return boolean
+	 */
+	public function startRequest(dwHttpRequest $request, dwHttpResponse $response, dwModel $model) {
+
+		if(self::$session -> has('user')) {
+			$model -> userName = self::$session -> user -> name;
+			$model -> user = self::$session -> user;
+		}
+
+	}
+	
+	private function prepareModel(dwHttpRequest $request, dwModel $model, $pageId) {
 		$model -> title = "StartupFollow";
 		$model -> pageId = $pageId;
 		$model -> version = "1.0.0";
@@ -43,16 +65,16 @@ class main extends dwBasicController {
 	}
 	
 	/**
-	 * @Mapping(method = "get", value="/:pageid")
+	 * @Mapping(method = "get", value = "login")
 	 */
-	public function page(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	public function login(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
-		return $this -> prepareModel($request, $model, $request -> Path('pageid')) -> view();
+		return $this -> prepareModel($request, $model, 'log-in') -> view();
 	}
-	
+		
 	/**
 	 * @Mapping(method = "get", value= "request/:id")
-	 * @Mapping(method = "get", value= "get-started/:id")
+	 * @Mapping(method = "get", value= "get-started")
 	 */
 	public function requests(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
@@ -61,10 +83,12 @@ class main extends dwBasicController {
 		
 		$p_id = $request -> Path('id');
 	
-		$doc -> uid = $p_id;
-		if($doc -> find()) {
-			$model -> requestName = $doc -> name;
-			$model -> requestEmail = $doc -> email;
+		if($p_id) {
+			$doc -> uid = $p_id;
+			if($doc -> find()) {
+				$model -> requestName = $doc -> name;
+				$model -> requestEmail = $doc -> email;
+			}
 		}
 		
 		return $this -> prepareModel($request, $model, 'startup_add') -> view();
@@ -105,6 +129,13 @@ class main extends dwBasicController {
 		return $this -> prepareModel($request, $model, 'startup_stories') -> view();
 	}
 	
+	/**
+	 * @Mapping(method = "get", value="/:pageid")
+	 */
+	public function page(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	{
+		return $this -> prepareModel($request, $model, $request -> Path('pageid')) -> view();
+	}
 	
 }
 

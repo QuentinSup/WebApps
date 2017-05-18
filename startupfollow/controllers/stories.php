@@ -45,7 +45,7 @@ class story extends dwBasicController {
 		$p_startup_uid = $request -> Path('startup_uid');
 	
 		if(self::$log -> isTraceEnabled()) {
-			self::$log -> trace("Récupération de l'ensemble des récits de la startup '$p_uid'");
+			self::$log -> trace("Récupération de l'ensemble des récits de la startup '$p_startup_uid'");
 		}
 	
 		$data = array();
@@ -132,10 +132,39 @@ class story extends dwBasicController {
 		$doc -> date = $jsonContent -> date;
 		
 		if($doc -> update()) {
-			$doc -> find(array('uid' => getLastInsertId()));
+			$doc -> find();
 			return $doc -> toArray();
 		}
 		
+		return HttpStatus::INTERNAL_SERVER_ERROR;
+	
+	}
+	
+	/**
+	 * @Mapping(method = "post", value=":uid/like", consumes="application/json", produces="application/json; charset=utf-8")
+	 */
+	public function like(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	{
+	
+		$p_startup_uid = $request -> Path('startup_uid');
+		$p_uid = $request -> Path('uid');
+	
+		if(self::$log -> isTraceEnabled()) {
+			self::$log -> trace("Ajout d'un 'like' au récit '$p_uid'");
+		}
+	
+		$jsonContent = $request -> Body();
+	
+		$doc = self::$storyEntity -> factory();
+		$doc -> uid = $p_uid;
+		$doc -> startup_uid = $p_startup_uid;
+		$doc -> numberOfLikes = $doc -> castSQL("numberOfLikes + 1");
+	
+		if($doc -> update()) {
+			$doc -> find();
+			return $doc -> toArray();
+		}
+	
 		return HttpStatus::INTERNAL_SERVER_ERROR;
 	
 	}

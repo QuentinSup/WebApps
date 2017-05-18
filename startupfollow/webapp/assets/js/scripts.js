@@ -103,6 +103,7 @@
 	});
 	
 		// ****** GOOGLE MAP *******
+	/*
 	var map;
 	var servan = new google.maps.LatLng(45.1853666,5.7316135);
 				
@@ -165,5 +166,5 @@
 	}
 				
 	google.maps.event.addDomListener(window, 'load', initialize); 
-	
+	*/
 })();

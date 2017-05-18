@@ -1,4 +1,36 @@
 
+.clickable {
+	cursor: pointer;
+}
+
+.input-group .form-control:first-child {
+	border-right: 1px solid #fff;
+}
+
+.input-group .input-group-addon {
+	font-size: 1.25em;
+}
+
+.badged {
+	position: relative;
+	z-index: 1;
+	color: #fff;
+}
+
+.badged:after {
+	content: '';
+	position: absolute;
+	top:-7px;
+	bottom:-7px;
+	right:-7px;
+	left:-7px;
+	border-radius: 100%;
+	border: 2px solid #fff;
+	z-index: -1;
+	background-color: #007AB8;
+	box-shadow: 0px 0px 0px 1px #dcdcdc;
+}
+
 input.h7 {
 	color: #000 !important;
 	border: 0px !important;
@@ -30,9 +62,25 @@ body, .bg-gray {
 }
 
 
-#hero {
+.bg-home {
 	background: #fff url('../img/startup-photos.jpg') center center no-repeat;
 	background-size: 100%;
+}
+
+.bg-color {
+	background: #006192;
+	color: #fff;
+}
+
+.bg-color .help-block {
+	color: #b7b7b7;
+}
+
+.bg-color a,
+.bg-color a:active,
+.bg-color a:hover,
+.bg-color a:focus {
+	color: #de7979 !important;
 }
 
 .lightgray {
@@ -60,6 +108,13 @@ body, .bg-gray {
 	bottom: 0;
 	border-radius: 10px;
 	opacity: .9;
+}
+
+#footer {
+	padding: 2em;
+    font-size: .9em;
+    background-color: rgba(0,0,0,.05);
+    font-weight: 400;
 }
 
 .sublime-text {
@@ -97,7 +152,7 @@ ul {
 	width: 200px;
 }
 
-input[type=text], input[type=email] {
+input[type=text], input[type=email], input[type=password] {
 	font-size: 1.25em;
 	font-weight: 400;
     line-height: normal;
@@ -172,13 +227,7 @@ input[type=button].blank, button.blank, .btn.blank {
 }
 
 .input-group-addon {
-	min-width: 50px;
 	background-color: #fff;
-}
-
-.input-group .form-control {
-	border-left: 0px !important;
-	padding-left: 0px !important;
 }
 
 *::-webkit-input-placeholder { 
@@ -1230,20 +1279,11 @@ article {
 }
 
 .form .form-group {
-	margin-bottom: 25px;
+	margin-bottom: .6em;
 }
 
 .form .form-group+.form-group {
 	margin-top: -10px;
-}
-
-.form .form-control {
-	height: 55px;
-	border: 1px solid #ddd;
-	border-radius: 0;
-	box-shadow: 0px 0px 0px transparent;
-	background: #fff;
-	font-size: 18px;
 }
 
 /* Start registration form */
@@ -1265,10 +1305,6 @@ article {
 	height: 44px;
 }
 
-.form-group {
-	margin-bottom: 20px;
-}
-
 .form-control:focus {
 	border-color: #fff !important;
 	outline: 0 !important;
@@ -1277,8 +1313,7 @@ article {
 }
 
 .form .form-group {
-	margin-bottom: 25px;
-	color: #000;
+	margin-bottom: 1.2em;
 }
 
 .form .form-group:after {
@@ -1958,10 +1993,6 @@ px
 	z-index: 1;
 }
 
-#footer {
-	padding: 0;
-}
-
 #footer .navigation-bar>li a {
 	color: #536371;
 }
@@ -2005,6 +2036,7 @@ px
 	-webkit-transition: all 0.5s ease;
 	transition: all 0.5s ease;
 	cursor: pointer;
+	border-radius: 40px;
 	z-index: 9999;
 }
 

@@ -1,0 +1,42 @@
+<!-- Header -->
+<header id="header" class="navigation-bar-header light hidden-xs">
+	<div class="container">
+		<nav class="navigation">
+			<div class="navigation-txt visible-xs" data-toggle="dropdown">Home</div>
+			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+			</button>
+			<ul class="navigation-bar navigation-bar-left">
+
+			</ul>
+		</nav>
+	</div>
+</header>
+
+<section id="hero" class="bg-color">
+	<div class="container">
+		<div class="hero-content">
+			<section class="col-sm-4 col-md-4 col-md-offset-4 col-sm-offset-4">
+				<form data-role="form" class="form">
+					<label for="FormInputName">Authentification</label>
+					<div class="form-group">
+						<input id="FormInputName" type="text" value="" class="form-control" data-bind="value: name, valueUpdate: 'input'" placeholder="Nom d'utilisateur" required />
+					</div>
+					<div class="form-group">
+						<div class="input-group">
+							<input id="FormInputPassword" type="password" value="" class="form-control" data-bind="value: password, valueUpdate: 'input'" placeholder="Mot de passe" required />
+							<span class="input-group-addon clickable" data-bind="click: function() { login(); }"><span class="fa fa-arrow-circle-right"></span></span>
+						</div>
+					</div>
+				</form>
+				<p>
+				ou <a href="{$host}sign-up">crééer votre compte</a>
+				</p>
+			</section>
+		</div>
+	</div>
+</section>
+<!-- End Hero Section -->
+
+<!-- End Header -->
+<script type="text/javascript" src="resources/pages/js/log-in.js"></script>

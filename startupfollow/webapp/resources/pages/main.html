@@ -1,4 +1,4 @@
-<section id="hero" class="light">
+<section id="hero" class="bg-home light">
 	<div class="container">
 		<div class="home-bg">
 			<div class="hero-content text-center ">
@@ -23,11 +23,9 @@
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
 			<ul class="navigation-bar navigation-bar-left">
-				<!--<li><a href="#stat">Number Facts</a></li>-->
 				<li><a href="#about">A propos</a></li>
 				<li><a href="#projects">Les projets</a></li>
 				<li><a href="#newsletter">Contact</a></li>
-
 			</ul>
 		</nav>
 	</div>
@@ -127,15 +125,21 @@
 			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
 				<div class="speaker-item">
 					<div>
-						<div class="img-wrapper">
+						<div class="img-wrapper clickable" data-bind="click: function() { document.location = host + 'startup/' + $data.uri }">
 							<img data-bind="attr: { 'src': $data.image || (host + 'assets/img/avatars/project-avatar.svg') }" class="img-responsive img-circle" alt="project" />
 						</div>
 						<div class="name" data-bind="text: $data.name"></div>
 						<div class="sub" data-bind="text: $data.punchLine"></div>
 						<p class="small" data-bind="text: $data.description"></p>
 						<div class="social-link">
-							<!-- ko foreach: links -->
-							<a href="" data-bind="attr: { 'href': $data.href }"><span class="fa fa-link"></span></a>
+							<!-- ko if: link_twitter -->
+							<a href="" data-bind="attr: { 'href': $data.link_twitter }"><span class="fa fa-twitter"></span></a>
+							<!-- /ko -->
+							<!-- ko if: link_facebook -->
+							<a href="" data-bind="attr: { 'href': $data.link_facebook }"><span class="fa fa-facebook"></span></a>
+							<!-- /ko -->
+							<!-- ko if: link_website -->
+							<a href="" data-bind="attr: { 'href': link_website }"><span class="fa fa-link"></span></a>
 							<!-- /ko -->
 						</div>
 					</div>

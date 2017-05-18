@@ -39,7 +39,21 @@ var startupfollows;
                 };
                 $.ajax(request).complete(function (response, status) {
                     if (response.status == 200) {
-                        _this.stories(response.responseJSON);
+                        _this.stories(ko.mapping.fromJS(response.responseJSON)());
+                    }
+                });
+            };
+            Model.prototype.addStoryLike = function (uid, index) {
+                var _this = this;
+                var request = {
+                    type: 'post',
+                    url: host + 'rest/startup/' + this.data().uid + '/story/' + uid + '/like',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json'
+                };
+                $.ajax(request).complete(function (response, status) {
+                    if (response.status == 200) {
+                        _this.stories()[index].numberOfLikes((_this.stories()[index].numberOfLikes() * 1) + 1);
                     }
                 });
             };

@@ -74,8 +74,10 @@
 		<!-- ko foreach: stories -->
 		<article>
 			<label class="strong text-center" data-bind="text: $data.shortLine"></label>
-			<span data-bind="text: $data.date"></span>
 			<p data-bind="html: $data.text"></p>
+			<span>Fait le <span data-bind="text: $data.date"></span> - 
+			<span class="clickable badged fa fa-thumbs-o-up" data-bind="click: function() { $root.addStoryLike($data.uid(), $index()); }"></span>
+			<span data-bind="text: $data.numberOfLikes"></span></span>
 		</article>
 		<hr />
 		<!-- /ko -->

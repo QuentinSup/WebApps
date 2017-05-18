@@ -52,11 +52,27 @@ module startupfollows.startup {
             
             $.ajax(request).complete((response, status): void => {
                  if(response.status == 200) {
-                    this.stories(response.responseJSON);
+                    this.stories(ko.mapping.fromJS(response.responseJSON)());
                  }
             });    
         } 
-
+        
+        public addStoryLike(uid: string, index: number): void {
+            
+            var request = {
+                type: 'post',
+                url: host + 'rest/startup/' + this.data().uid + '/story/' + uid + '/like',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json' 
+            };
+            
+            $.ajax(request).complete((response, status): void => {
+                 if(response.status == 200) {
+                    this.stories()[index].numberOfLikes((this.stories()[index].numberOfLikes()*1)+1);
+                 }
+            });   
+            
+        }
         
     }
     
