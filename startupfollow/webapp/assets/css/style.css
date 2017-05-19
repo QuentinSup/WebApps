@@ -212,8 +212,9 @@ input[type=button].blank, button.blank, .btn.blank {
 
 .form-control-feedback {
 	position: absolute;
-    top: -10px !important;
-    right: 0;
+    top: 5px !important;
+    right: 5px !important;
+    z-index: 1 !important;
     display: block;
     width: 30px;
     height: 30px;
@@ -2362,4 +2363,34 @@ px
 	.container {
 		width: 970px;
 	}
+}
+
+
+/*---------------------- TOOLTIPSTER ----------------------*/
+
+/* This is the default Tooltipster theme (feel free to modify or duplicate and create multiple themes!): */
+.tooltipster-default {
+	border-radius: 2px;
+	background: #404040;
+	border: 1px solid #404040;
+	color: #FFF;
+}
+
+/* Use this next selector to style things like font-size and line-height: */
+.tooltipster-default .tooltipster-content {
+	padding: .5em;
+	font-size: 14px;
+	overflow: hidden;
+	line-height: 1.2em;
+	max-width: 400px;
+}
+	
+/* This next selector defines the color of the border on the outside of the arrow. This will automatically match the color and size of the border set on the main tooltip styles. Set display: none; if you would like a border around the tooltip but no border around the arrow */
+.tooltipster-default .tooltipster-arrow .tooltipster-arrow-border {
+	/* border-color: ... !important; */
+}
+
+.tooltipstered {
+	position: relative;
+	z-index: 1;
 }

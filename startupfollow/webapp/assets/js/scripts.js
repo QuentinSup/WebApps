@@ -9,6 +9,9 @@
     app.el['loader']                   = $('#loader');
     app.el['mask']                     = $('#mask');
 
+    
+    $('*[title]').tooltipster();
+    
 	app.fn.screenSize = function() {
 		var size, width = app.el['window'].width();
 		if(width < 320) size = "Not supported";
