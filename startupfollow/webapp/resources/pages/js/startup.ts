@@ -5,17 +5,28 @@ module startupfollows.startup {
     declare var $;
     declare var window;
     declare var host;
+    declare var user;
     
     class Model {
         
         public data = ko.observable();
         public stories = ko.observableArray();
+        public isFollowedByUser = ko.observable(false);
         
         public constructor() {
          
             this.data.subscribe((s: any): void => {
                 this.listStories();
+                
+                user.ready((user: any): void => {
+                    if(user.isFollowingStartup(s.uid)) {
+                        this.isFollowedByUser(true);
+                    }
+                });
+                
             });
+            
+            
             
         }
         
@@ -59,19 +70,28 @@ module startupfollows.startup {
         
         public addStoryLike(uid: string, index: number): void {
             
-            var request = {
-                type: 'post',
-                url: host + 'rest/user/story/' + uid + '/like',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json' 
-            };
-            
-            $.ajax(request).complete((response, status): void => {
+            user.likeStory(uid, (response, status): void => {
                  if(response.status == 204) {
                     this.stories()[index].numberOfLikes((this.stories()[index].numberOfLikes()*1)+1);
                  }
-            });   
-            
+            });
+
+        }
+        
+        public follow(): void {
+            user.follow(this.data().uid, (response, status): void => {
+                if(response.status == 204) {
+                    this.isFollowedByUser(true);
+                }   
+            });
+        }
+        
+        public unfollow(): void {
+            user.unfollow(this.data().uid, (response, status): void => {
+                if(response.status == 204) {
+                    this.isFollowedByUser(false);
+                }    
+            });
         }
         
     }

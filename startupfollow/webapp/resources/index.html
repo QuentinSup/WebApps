@@ -81,6 +81,12 @@
 	</div>
 
 	<script type="text/javascript" src="{$host}assets/js/scripts.js"></script>
+	<script type="text/javascript" src="{$host}resources/pages/js/user.js"></script>
+	<script type="text/javascript">
+		{if $userName}
+		user.load();
+		{/if}
+	</script>
 
 </body>
 </html>

@@ -47,6 +47,11 @@ class user extends dwBasicController {
 	public static $storyLikeEntity;
 	
 	/**
+	 * @DatabaseEntity('startup_user_subscription')
+	 */
+	public static $startupUserSubscriptionEntity;
+	
+	/**
 	 * @Mapping(method = "get", consumes="application/json", produces="application/json; charset=utf-8")
 	 */
 	public function get(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
@@ -60,7 +65,13 @@ class user extends dwBasicController {
 		$doc = self::$userEntity->factory ();
 		$doc->uid = $p_uid;
 		if ($doc->find ()) {
-			return $doc->toArray ();
+			$data = $doc->toArray ();
+			
+			$docSubscriptions = self::$startupUserSubscriptionEntity -> factory();
+			$docSubscriptions -> user_uid = $doc -> uid;
+			$data['subscriptions'] = $docSubscriptions -> getAll();
+			
+			return $data;
 		}
 		
 		$response->statusCode = HttpStatus::NOT_FOUND;

@@ -42,6 +42,11 @@ class startup extends dwBasicController {
 	public static $startupEntity;
 	
 	/**
+	 * @DatabaseEntity('startup_user_subscription')
+	 */
+	public static $startupUserSubscriptionEntity;
+	
+	/**
 	 * @Session()
 	 */
 	public static $session;
@@ -232,6 +237,62 @@ class startup extends dwBasicController {
 				$memberDoc -> indate();
 			}
 			
+		} else {
+			$response -> statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
+		}
+	
+	}
+	
+	/**
+	 * @Mapping(method = "post", value=":uid/subscribe", consumes="application/json")
+	 */
+	public function addSubscription(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	{
+		if(!self::$session -> has('user')) {
+			return HttpStatus::FORBIDDEN;
+		}
+		
+		$p_startup_uid = $request -> Path('uid');
+		$p_uid = self::$session -> user -> uid;
+		
+		if(self::$log -> isTraceEnabled()) {
+			self::$log -> trace("Creation d'un souscription au compte Startup");
+		}
+
+		$doc = self::$startupUserSubscriptionEntity -> factory();
+		$doc -> startup_uid = $p_startup_uid;
+		$doc -> user_uid = $p_uid;
+		
+		if($doc -> insert()) {
+			$uid = $doc -> getLastInsertId();
+		} else {
+			$response -> statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
+		}
+	
+	}
+	
+	/**
+	 * @Mapping(method = "delete", value=":uid/subscribe", consumes="application/json")
+	 */
+	public function removeSubscription(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	{
+		if(!self::$session -> has('user')) {
+			return HttpStatus::FORBIDDEN;
+		}
+	
+		$p_startup_uid = $request -> Path('uid');
+		$p_uid = self::$session -> user -> uid;
+	
+		if(self::$log -> isTraceEnabled()) {
+			self::$log -> trace("Suppression d'un souscription au compte Startup");
+		}
+	
+		$doc = self::$startupUserSubscriptionEntity -> factory();
+		$doc -> startup_uid = $p_startup_uid;
+		$doc -> user_uid = $p_uid;
+	
+		if($doc -> delete()) {
+
 		} else {
 			$response -> statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
 		}
