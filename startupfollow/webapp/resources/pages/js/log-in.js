@@ -5,9 +5,11 @@ var startupfollows;
         var Model = (function () {
             function Model() {
                 this.name = ko.observable();
-                this.password = ko.observableArray();
+                this.password = ko.observable();
+                this.redirectTo = ko.observable();
             }
             Model.prototype.login = function () {
+                var _this = this;
                 var data = {
                     name: this.name(),
                     password: this.password()
@@ -21,7 +23,7 @@ var startupfollows;
                 };
                 $.ajax(request).complete(function (response, status) {
                     if (response.status == 200) {
-                        document.location.href = host;
+                        document.location.href = host + _this.redirectTo() || '';
                     }
                 });
             };

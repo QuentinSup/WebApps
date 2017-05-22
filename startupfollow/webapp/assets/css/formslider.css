@@ -11,48 +11,58 @@
  *   CSS and include that instead to use some of that
  *   hardware-accelerated goodness.
  */
-.unslider {
+.formslider {
   overflow: auto;
   margin: 0;
   padding: 0;
 }
-.unslider-wrap {
+.formslider-wrap {
   position: relative;
 }
-.unslider-wrap.unslider-carousel > li {
+.formslider-wrap.formslider-carousel > li {
   float: left;
 }
-.unslider-vertical > ul {
+.formslider-vertical > ul {
   height: 100%;
 }
-.unslider-vertical li {
+.formslider-vertical li {
   float: none;
   width: 100%;
 }
-.unslider-fade {
+.formslider-fade {
   position: relative;
 }
-.unslider-fade .unslider-wrap li {
+.formslider-fade .formslider-wrap li {
   position: absolute;
   left: 0;
   top: 0;
   right: 0;
   z-index: 8;
 }
-.unslider-fade .unslider-wrap li.unslider-active {
+.formslider-fade .formslider-wrap li.formslider-active {
   z-index: 10;
 }
-.unslider ul, .unslider ol, .unslider li {
+.formslider ul, .formslider ol, .formslider li {
   list-style: none;
   /* Reset any weird spacing */
   margin: 0;
   padding: 0;
   border: none;
 }
-.unslider-arrow {
+
+.formslider > li {
+	visibility: hidden;
+}
+
+.formslider li.formslider-active,
+.formslider-move > li {
+	visibility: visible !important;
+}
+
+.formslider-arrow {
 	display: none;
 }
 
-.unslider-nav {
+.formslider-nav {
   display: none;
 }

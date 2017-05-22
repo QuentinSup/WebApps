@@ -34,7 +34,7 @@ module startupfollows.startupEdit {
         }
         
         public cancel(): void {
-            $('#stories').unslider('animate:first');    
+            $('#stories').formslider('animate:first');    
         }
 
         public submit(): boolean {
@@ -231,7 +231,7 @@ module startupfollows.startupEdit {
             });
             
             this.index.subscribe((i: number): void => {
-                $('#sections').unslider('animate:' + (i - 1));    
+                $('#sections').formslider('animate:' + (i - 1));    
             });
 
         }
@@ -255,7 +255,7 @@ module startupfollows.startupEdit {
 
         public newStory(): void {
             this.storyform.new(this.startup().uid);
-            $('#stories').unslider('animate:1');
+            $('#stories').formslider('animate:1');
         }
 
         public loadStory(uid: string): void {
@@ -270,7 +270,7 @@ module startupfollows.startupEdit {
             $.ajax(request).complete((response, status): void => {
                 if (response.status == 200) {
                     this.storyform.fill(response.responseJSON);
-                    $('#stories').unslider('animate:1');
+                    $('#stories').formslider('animate:1');
                 }
             });
 

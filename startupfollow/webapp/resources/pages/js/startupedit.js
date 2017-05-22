@@ -22,7 +22,7 @@ var startupfollows;
                 this.startupUID(json.startup_uid);
             };
             StartupStoryForm.prototype.cancel = function () {
-                $('#stories').unslider('animate:first');
+                $('#stories').formslider('animate:first');
             };
             StartupStoryForm.prototype.submit = function () {
                 var _this = this;
@@ -189,7 +189,7 @@ var startupfollows;
                     _this.listStories();
                 });
                 this.index.subscribe(function (i) {
-                    $('#sections').unslider('animate:' + (i - 1));
+                    $('#sections').formslider('animate:' + (i - 1));
                 });
             }
             Model.prototype.load = function (name) {
@@ -208,7 +208,7 @@ var startupfollows;
             };
             Model.prototype.newStory = function () {
                 this.storyform.new(this.startup().uid);
-                $('#stories').unslider('animate:1');
+                $('#stories').formslider('animate:1');
             };
             Model.prototype.loadStory = function (uid) {
                 var _this = this;
@@ -221,7 +221,7 @@ var startupfollows;
                 $.ajax(request).complete(function (response, status) {
                     if (response.status == 200) {
                         _this.storyform.fill(response.responseJSON);
-                        $('#stories').unslider('animate:1');
+                        $('#stories').formslider('animate:1');
                     }
                 });
             };

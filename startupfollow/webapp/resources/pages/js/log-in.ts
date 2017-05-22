@@ -9,7 +9,8 @@ module startupfollows.startup {
     class Model {
 
         public name = ko.observable();
-        public password = ko.observableArray();
+        public password = ko.observable();
+        public redirectTo = ko.observable();
 
         public constructor() {
 
@@ -33,7 +34,7 @@ module startupfollows.startup {
 
             $.ajax(request).complete((response, status): void => {
                 if (response.status == 200) {
-                    document.location.href = host;
+                    document.location.href = host + this.redirectTo() || '';
                 }
             });
 

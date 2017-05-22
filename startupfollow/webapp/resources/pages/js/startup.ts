@@ -61,13 +61,13 @@ module startupfollows.startup {
             
             var request = {
                 type: 'post',
-                url: host + 'rest/startup/' + this.data().uid + '/story/' + uid + '/like',
+                url: host + 'rest/user/story/' + uid + '/like',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json' 
             };
             
             $.ajax(request).complete((response, status): void => {
-                 if(response.status == 200) {
+                 if(response.status == 204) {
                     this.stories()[index].numberOfLikes((this.stories()[index].numberOfLikes()*1)+1);
                  }
             });   

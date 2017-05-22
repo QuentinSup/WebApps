@@ -47,7 +47,7 @@ var startupfollows;
                 var _this = this;
                 var request = {
                     type: 'post',
-                    url: host + 'rest/startup/' + this.data().uid + '/story/' + uid + '/like',
+                    url: host + 'rest/user/story/' + uid + '/like',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json'
                 };

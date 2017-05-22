@@ -1,4 +1,4 @@
-<script src="{$host}assets/css/fileuploader.css"></script>
+<link rel="stylesheet" href="{$host}assets/css/simpleupload.css" type="text/css" media="all" />
 <!-- Header -->
 <header id="header" class="navigation-bar-header light hidden-xs">
 	<div class="container">
@@ -76,10 +76,15 @@
 								<!-- ko with: form -->
 								<form class="form-register" data-role="form">
 									<label>Votre image</label>
-									<div id="fileuploader">Upload</div>
+									
 									<div class="form-group row">
-										<div class="col-sm-5">
-											<input type="file" value="" data-bind="value: image, valueUpdate: 'input'" placeholder="" required />
+										<div class="col-sm-12 text-center">
+											<div id="fileuploader">
+												<img id="fileuploader-preview" data-bind="attr: { 'src': $data.image }" />
+												<div class="upload-bar">
+													<div id="fileupload-pbar"></div>
+												</div>
+											</div>
 											<p class="help-block">Fichiers autorisés : .png, .jpg. Max: 3Mb</p>
 										</div>
 									</div>
@@ -208,7 +213,7 @@
 <!-- End Hero Section -->
 
 <script src="{$host}assets/js/tinymce/tinymce.min.js"></script>
-<script src="{$host}assets/js/jquery.fileupload.js"></script>
+<script src="{$host}assets/js/jquery.simpleupload.js"></script>
 <script type="text/javascript" src="{$host}resources/pages/js/startupedit.js"></script>
 
 <script type="text/javascript">
@@ -218,22 +223,26 @@
 	jQuery(document).ready(function($) {
 		$('.slider').each(function() {
 			var $this = $(this);
-			$this.unslider({ keys: false, speed: ($this.attr('data-slider-speed') || 500) * 1 });
+			$this.formslider({ speed: ($this.attr('data-slider-speed') || 500) * 1 });
 		});
 		
-		$("#fileuploader").uploadFile({
+		$("#fileuploader").simpleupload({
 			url: '{$host}api/image',
-			multiple:false,
-			dragDrop:true,
-			fileName:"logo",
 			acceptFiles:"image/*",
+			previewImage: '#fileuploader-preview',
+			authorizedExtensions:"png,jpg,jpeg",
 			maxFileSize:3*1024*1024,
-			showStatusAfterSuccess: false,
-			showProgress: true,
-			showPreview: true,
-	    	afterUploadAll: function(o) {
-				console.log(o);
-		
+			onUploadProgress: function(file, e) {
+				
+				var percent = Math.round(e.loaded / e.total * 100 * 10) / 10; // round to 1 dec
+				$('#fileupload-pbar').width(percent + '%');
+				
+			},
+			onUploadComplete: function(file, status, data) {
+				if(status == 200) {
+					var json = JSON.parse(data);
+					model.form.image(json.location);
+				}
 			}
 		});
 		

@@ -47,10 +47,15 @@ class user extends dwBasicController {
 	public static $storyLikeEntity;
 	
 	/**
-	 * @Mapping(method = "get", value=":uid", consumes="application/json", produces="application/json; charset=utf-8")
+	 * @Mapping(method = "get", consumes="application/json", produces="application/json; charset=utf-8")
 	 */
 	public function get(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
-		$p_uid = $request->Path ( 'uid' );
+		
+		if(!self::$session -> has('user')) {
+			return HttpStatus::FORBIDDEN;
+		}
+		
+		$p_uid = self::$session -> user -> uid;
 		
 		$doc = self::$userEntity->factory ();
 		$doc->uid = $p_uid;
@@ -174,10 +179,16 @@ class user extends dwBasicController {
 	}
 	
 	/**
-	 * @Mapping(method = "put", value=":uid", consumes="application/json", produces="application/json; charset=utf-8")
+	 * @Mapping(method = "put", consumes="application/json", produces="application/json; charset=utf-8")
 	 */
 	public function update(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
-		$p_uid = $request->Path ( 'uid' );
+		
+		if(!self::$session -> has('user')) {
+			return HttpStatus::FORBIDDEN;
+		}
+		
+		$p_uid = self::$session -> user -> uid;
+		
 		
 		if (self::$log->isTraceEnabled ()) {
 			self::$log->trace ( "Modification du compte utilisateur n°$p_uid" );
@@ -203,11 +214,16 @@ class user extends dwBasicController {
 	}
 	
 	/**
-	 * @Mapping(method = "post", value=":uid/story/:story_uid/like", consumes="application/json", produces="application/json; charset=utf-8")
+	 * @Mapping(method = "post", value="story/:story_uid/like", consumes="application/json", produces="application/json; charset=utf-8")
 	 */
 	public function likeStory(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
+		
+		if(!self::$session -> has('user')) {
+			return HttpStatus::FORBIDDEN;
+		}
+		
+		$p_uid = self::$session -> user -> uid;
 		$p_story_uid = $request->Path ( 'story_uid' );
-		$p_uid = $request->Path ( 'uid' );
 		
 		if (self::$log->isTraceEnabled ()) {
 			self::$log->trace ( "Ajout d'un 'like' au récit '$p_uid'" );

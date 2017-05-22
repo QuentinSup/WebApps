@@ -42,6 +42,30 @@ class startup extends dwBasicController {
 	public static $startupEntity;
 	
 	/**
+	 * @Session()
+	 */
+	public static $session;
+	
+	/**
+	 * Traitement de prérequête
+	 *
+	 * @param dwHttpRequest $request
+	 * @param dwHttpResponse $response
+	 * @param dwModel $model
+	 * @return boolean
+	 */
+	public function startRequest(dwHttpRequest $request, dwHttpResponse $response, dwModel $model) {
+	
+		if(strtolower($request -> getMethod()) == "post" || strtolower($request -> getMethod()) == "put") {
+			if(!self::$session -> has('user')) {
+				$response -> statusCode = HttpStatus::FORBIDDEN;
+				return false;
+			}
+		}
+	
+	}
+	
+	/**
 	 * @Mapping(method = "GET", value="/exists/:name", consumes="application/json", produces="application/json")
 	 */
 	public function exists(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
@@ -135,6 +159,7 @@ class startup extends dwBasicController {
 		$doc = self::$startupEntity -> factory();
 		$doc -> name = $jsonContent -> name;
 		$doc -> email = $jsonContent -> email;
+		$doc -> image = $jsonContent -> image;
 		$doc -> uri = strtolower($jsonContent -> name);
 		$doc -> punchLine = $jsonContent -> punchLine;
 		$doc -> link_website = @$jsonContent -> link_website;
@@ -187,6 +212,7 @@ class startup extends dwBasicController {
 		$doc = self::$startupEntity -> factory();
 		$doc -> uid = $p_id;
 		$doc -> name = $jsonContent -> name;
+		$doc -> image = $jsonContent -> image;
 		$doc -> email = $jsonContent -> email;
 		$doc -> uri = strtolower($jsonContent -> name);
 		$doc -> punchLine = $jsonContent -> punchLine;

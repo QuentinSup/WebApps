@@ -23,6 +23,7 @@ class api extends dwBasicController {
 	public function image(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) 
 	{			
 		$file = $request -> File(0);
+
 		if($file -> save('./assets/upload_images') === FALSE) {
 			return HttpStatus::INTERNAL_SERVER_ERROR;
 		}

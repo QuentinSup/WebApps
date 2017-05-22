@@ -37,6 +37,11 @@ class story extends dwBasicController {
 	public static $storyEntity;
 	
 	/**
+	 * @DatabaseEntity('user_story_like')
+	 */
+	public static $userStoryLikeEntity;
+	
+	/**
 	 * @Mapping(method = "GET", value="all", consumes="application/json", produces="application/json; charset=utf-8")
 	 */
 	public function getAll(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
@@ -52,13 +57,20 @@ class story extends dwBasicController {
 		
 		$doc = self::$storyEntity -> factory();
 		$doc -> startup_uid = $p_startup_uid;
+		$list = [];
 		if($doc -> plist('date DESC')) {
-			$data = $doc -> fetchAll();
+			while($doc -> fetch()) {
+				$data = $doc -> toArray();
+				$docLikes = self::$userStoryLikeEntity -> factory();
+				$docLikes -> story_uid = $doc -> uid;
+				$data['numberOfLikes'] = $docLikes -> count(); 
+				$list[] = $data;
+			}
 		} else {
 			$response -> statusCode = HttpStatus::NO_CONTENT;
 		}
 
-		return $data;
+		return $list;
 	
 	}
 	
@@ -136,35 +148,6 @@ class story extends dwBasicController {
 			return $doc -> toArray();
 		}
 		
-		return HttpStatus::INTERNAL_SERVER_ERROR;
-	
-	}
-	
-	/**
-	 * @Mapping(method = "post", value=":uid/like", consumes="application/json", produces="application/json; charset=utf-8")
-	 */
-	public function like(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
-	{
-	
-		$p_startup_uid = $request -> Path('startup_uid');
-		$p_uid = $request -> Path('uid');
-	
-		if(self::$log -> isTraceEnabled()) {
-			self::$log -> trace("Ajout d'un 'like' au récit '$p_uid'");
-		}
-	
-		$jsonContent = $request -> Body();
-	
-		$doc = self::$storyEntity -> factory();
-		$doc -> uid = $p_uid;
-		$doc -> startup_uid = $p_startup_uid;
-		$doc -> numberOfLikes = $doc -> castSQL("numberOfLikes + 1");
-	
-		if($doc -> update()) {
-			$doc -> find();
-			return $doc -> toArray();
-		}
-	
 		return HttpStatus::INTERNAL_SERVER_ERROR;
 	
 	}

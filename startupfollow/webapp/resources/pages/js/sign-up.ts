@@ -21,6 +21,9 @@ module startupfollows.startup {
         public constructor() {
 
             this.name.subscribe((s: string): void => {
+                
+                this.isUserNameUnique(false);
+                
                 if(!s) return;
                 clearTimeout(this.__hdlCheckIfExistsName);
                 this.__hdlCheckIfExistsName = setTimeout((): void => {
@@ -29,6 +32,9 @@ module startupfollows.startup {
             });
             
             this.email.subscribe((s: string): void => {
+                
+                this.isUserEmailUnique(false);
+                
                 if(!s) return;
                 clearTimeout(this.__hdlCheckIfExistsEmail);
                 this.__hdlCheckIfExistsEmail = setTimeout((): void => {
@@ -70,11 +76,11 @@ module startupfollows.startup {
         }
         
         public prev() {
-            $('#UserForm').unslider('prev');
+            $('#UserForm').formslider('prev');
         }
         
         public next() {
-            $('#UserForm').unslider('next');
+            $('#UserForm').formslider('next');
         }
         
         /**

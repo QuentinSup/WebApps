@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="{$host}assets/css/simpleupload.css" type="text/css" media="all" />
 <!-- Header -->
 <header id="header" class="navigation-bar-header light hidden-xs">
 	<div class="container">
@@ -14,7 +15,7 @@
 </header>
 <!-- End Header -->
 
-<section id="hero">
+<section id="hero" class="bg-color">
 	<div class="container">
 		<div class="home-bg">
 			<div class="hero-content text-center ">
@@ -73,8 +74,13 @@
 								<label>Votre image</label>
 								<div class="form-group row">
 									<div class="col-sm-5">
-										<input type="file" value="" data-bind="value: image, valueUpdate: 'input'" placeholder="" required />
-										 <p class="help-block">Fichiers autorisés : .png, .jpg. Max: 3Mb</p>
+											<div id="fileuploader">
+												<img id="fileuploader-preview" data-bind="attr: { 'src': $data.image }" />
+												<div class="upload-bar">
+													<div id="fileupload-pbar"></div>
+												</div>
+											</div>
+											<p class="help-block">Fichiers autorisés : .png, .jpg. Max: 3Mb</p>
 									</div>
 								</div>
 								<label>Liens</label>
@@ -150,7 +156,7 @@
 	</div>
 </section>
 <!-- End Hero Section -->
-
+<script src="{$host}assets/js/jquery.simpleupload.js"></script>
 <script type="text/javascript" src="{$host}/resources/pages/js/request.js"></script>
 
 <script type="text/javascript">
@@ -159,7 +165,27 @@
 	model.form.email("{$requestEmail}");
 	
 	jQuery(document).ready(function($) {
-		$('#StartupAddForm').unslider({ keys: false });
+		$('#StartupAddForm').formslider();
+	});
+	
+	$("#fileuploader").simpleupload({
+		url: '{$host}api/image',
+		acceptFiles:"image/*",
+		previewImage: '#fileuploader-preview',
+		authorizedExtensions:"png,jpg,jpeg",
+		maxFileSize:3*1024*1024,
+		onUploadProgress: function(file, e) {
+			
+			var percent = Math.round(e.loaded / e.total * 100 * 10) / 10; // round to 1 dec
+			$('#fileupload-pbar').width(percent + '%');
+			
+		},
+		onUploadComplete: function(file, status, data) {
+			if(status == 200) {
+				var json = JSON.parse(data);
+				model.form.image(json.location);
+			}
+		}
 	});
 
 </script>

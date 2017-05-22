@@ -12,6 +12,7 @@ var startupfollows;
                 this.isUserNameUnique = ko.observable(false);
                 this.isUserEmailUnique = ko.observable(false);
                 this.name.subscribe(function (s) {
+                    _this.isUserNameUnique(false);
                     if (!s)
                         return;
                     clearTimeout(_this.__hdlCheckIfExistsName);
@@ -20,6 +21,7 @@ var startupfollows;
                     }, 500);
                 });
                 this.email.subscribe(function (s) {
+                    _this.isUserEmailUnique(false);
                     if (!s)
                         return;
                     clearTimeout(_this.__hdlCheckIfExistsEmail);
@@ -53,10 +55,10 @@ var startupfollows;
                 return false;
             };
             Model.prototype.prev = function () {
-                $('#UserForm').unslider('prev');
+                $('#UserForm').formslider('prev');
             };
             Model.prototype.next = function () {
-                $('#UserForm').unslider('next');
+                $('#UserForm').formslider('next');
             };
             /**
              * check if user name is already used into database

@@ -35,7 +35,7 @@ class main extends dwBasicController {
 	 * @return boolean
 	 */
 	public function startRequest(dwHttpRequest $request, dwHttpResponse $response, dwModel $model) {
-
+		
 		if(self::$session -> has('user')) {
 			$model -> userName = self::$session -> user -> name;
 			$model -> user = self::$session -> user;
@@ -79,6 +79,11 @@ class main extends dwBasicController {
 	public function requests(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
 		
+		if(!self::$session -> has('user')) {
+			$model -> redirectTo = $request -> getUri();
+			return self::login($request, $response, $model);
+		}
+		
 		$doc = self::$requestEntity;
 		
 		$p_id = $request -> Path('id');
@@ -112,6 +117,11 @@ class main extends dwBasicController {
 	 */
 	public function startupEdit(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
+		if(!self::$session -> has('user')) {
+			$model -> redirectTo = $request -> getUri();
+			return self::login($request, $response, $model);
+		}
+		
 		$pName = $request -> Path('name');
 		$model -> name = $pName;
 			
@@ -134,7 +144,7 @@ class main extends dwBasicController {
 	 */
 	public function page(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
-		return $this -> prepareModel($request, $model, $request -> Path('pageid')) -> view();
+		return HttpStatus::NOT_FOUND;
 	}
 	
 }
