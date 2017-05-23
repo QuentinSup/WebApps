@@ -8,15 +8,12 @@ var startupfollows;
                 this.name = ko.observable();
                 this.punchLine = ko.observable();
                 this.email = ko.observable();
-                this.firstName = ko.observable();
-                this.lastName = ko.observable();
                 this.image = ko.observable();
                 this.website = ko.observable();
                 this.twitter = ko.observable();
                 this.facebook = ko.observable();
                 this.members = ko.observableArray();
                 this.nameExists = ko.observable(true);
-                this.addMember();
                 this.name.subscribe(function (v) {
                     _this.nameExists(true);
                     if (!v)
@@ -40,15 +37,14 @@ var startupfollows;
                 });
             };
             StartupAddForm.prototype.prev = function () {
-                $('#StartupAddForm').unslider('prev');
+                $('#StartupAddForm').formslider('prev');
             };
             StartupAddForm.prototype.next = function () {
-                $('#StartupAddForm').unslider('next');
+                $('#StartupAddForm').formslider('next');
             };
             StartupAddForm.prototype.addMember = function () {
                 this.members.push({
-                    firstName: ko.observable(),
-                    lastName: ko.observable(),
+                    role: ko.observable(),
                     email: ko.observable()
                 });
             };
@@ -64,18 +60,12 @@ var startupfollows;
                     link_twitter: this.twitter(),
                     link_website: this.website(),
                     link_facebook: this.facebook(),
-                    members: [{
-                            firstName: this.firstName(),
-                            lastName: this.lastName(),
-                            email: this.email(),
-                            founder: 1
-                        }]
+                    members: []
                 };
                 $.each(this.members(), function (k, v) {
                     data.members.push({
-                        firstName: v.firstName(),
-                        lastName: v.lastName(),
-                        email: v.email()
+                        invitation_email: v.email(),
+                        role: v.role()
                     });
                 });
                 var request = {
@@ -102,4 +92,4 @@ var startupfollows;
         ko.applyBindings(window.model, $('#app')[0]);
     })(request = startupfollows.request || (startupfollows.request = {}));
 })(startupfollows || (startupfollows = {}));
-//# sourceMappingURL=request.js.map
+//# sourceMappingURL=get-started.js.map

@@ -151,6 +151,66 @@ module startupfollows.startup {
             
         }
         
+        public isNameUnique(name: string, callback?: Function): void {
+            
+            var request = {
+                type: 'get',
+                url: host + 'rest/user/username/' + name,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json' 
+            };
+            
+            $.ajax(request).complete((response, status): void => {
+                if(typeof(callback) == "function") {
+                    callback.call(this, response.status == 200);    
+                }
+            });
+
+        }
+        
+        /**
+         * check if user email is already used into database
+         */
+        public isEmailUnique(email: string, callback?: Function): void {
+            
+            
+            var request = {
+                type: 'get',
+                url: host + 'rest/user/email/' + email,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json' 
+            };
+
+            
+            $.ajax(request).complete((response, status): void => {
+                if(typeof(callback) == "function") {
+                    callback.call(this, response.status == 200);    
+                }
+            });
+            
+        }
+        
+        /**
+         * Update user data
+         */
+        public update(data: string, callback?: Function): void {
+            
+            var request = {
+                type: 'put',
+                data: JSON.stringify(data),
+                url: host + 'rest/user',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json' 
+            };
+            
+            $.ajax(request).complete(function(response, status): void {
+                if(typeof(callback) == "function") {
+                    callback.apply(this, arguments);    
+                }
+            });
+            
+        }
+        
     }
 
     window.user = new UserModel();

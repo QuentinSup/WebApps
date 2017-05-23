@@ -113,6 +113,54 @@ var startupfollows;
                     }
                 });
             };
+            UserModel.prototype.isNameUnique = function (name, callback) {
+                var _this = this;
+                var request = {
+                    type: 'get',
+                    url: host + 'rest/user/username/' + name,
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json'
+                };
+                $.ajax(request).complete(function (response, status) {
+                    if (typeof (callback) == "function") {
+                        callback.call(_this, response.status == 200);
+                    }
+                });
+            };
+            /**
+             * check if user email is already used into database
+             */
+            UserModel.prototype.isEmailUnique = function (email, callback) {
+                var _this = this;
+                var request = {
+                    type: 'get',
+                    url: host + 'rest/user/email/' + email,
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json'
+                };
+                $.ajax(request).complete(function (response, status) {
+                    if (typeof (callback) == "function") {
+                        callback.call(_this, response.status == 200);
+                    }
+                });
+            };
+            /**
+             * Update user data
+             */
+            UserModel.prototype.update = function (data, callback) {
+                var request = {
+                    type: 'put',
+                    data: JSON.stringify(data),
+                    url: host + 'rest/user',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json'
+                };
+                $.ajax(request).complete(function (response, status) {
+                    if (typeof (callback) == "function") {
+                        callback.apply(this, arguments);
+                    }
+                });
+            };
             return UserModel;
         })();
         window.user = new UserModel();

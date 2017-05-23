@@ -108,35 +108,20 @@
 							<!-- /ko -->
 						</li>
 						<li>
-							<div class="h7">Votre équipe</div>
-							<p>
-								
-							</p>
-							<!-- ko with: form -->
-							<form data-role="form">
-								<label>Votre nom</label>
-								<div class="row">
-									<div class="form-group col-sm-3">
-										<input type="text" class="form-control" value="" data-bind="value: lastName, valueUpdate: 'input'" placeholder="Prénom" required />
-									</div>
-									<div class="form-group col-sm-3">
-										<input type="text" class="form-control" value="" data-bind="value: firstName, valueUpdate: 'input'" placeholder="Nom" />
-									</div>
-								</div>
-								<label>Votre équipe</label>
+							<div class="h7">Dernière étape !</div>
 								<p>
 								Invitez votre équipe à vous rejoindre !
 								</p>
+							<!-- ko with: form -->
+							<form data-role="form">
+								<label>Votre équipe</label>
 								<!-- ko foreach: members() -->
 								<div class="row">
 									<div class="form-group col-sm-6">
 										<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input'" placeholder="Email" required />
 									</div>
 									<div class="form-group col-sm-3">
-										<input type="text" class="form-control" value="" data-bind="value: lastName, valueUpdate: 'input'" placeholder="Prénom"  />
-									</div>
-									<div class="form-group col-sm-3">
-										<input type="text" class="form-control" value="" data-bind="value: firstName, valueUpdate: 'input'" placeholder="Nom" />
+										<input type="text" class="form-control" value="" data-bind="value: role, valueUpdate: 'input'" placeholder="Rôle"  />
 									</div>
 								</div>
 								<!-- /ko -->
@@ -157,7 +142,7 @@
 </section>
 <!-- End Hero Section -->
 <script src="{$host}assets/js/jquery.simpleupload.js"></script>
-<script type="text/javascript" src="{$host}/resources/pages/js/request.js"></script>
+<script type="text/javascript" src="{$host}/resources/pages/js/get-started.js"></script>
 
 <script type="text/javascript">
 

@@ -35,7 +35,7 @@ class request extends dwBasicController {
 	public static $db;
 	
 	/**
-	 * @DatabaseEntity('request')
+	 * @DatabaseEntity('startup_request')
 	 */
 	public static $requestEntity;
 	
@@ -43,6 +43,7 @@ class request extends dwBasicController {
 	 * @Mapping(method = "post", consumes="application/json", produces="application/json")
 	 */
 	public function add(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
+		
 		if (self::$log->isTraceEnabled ()) {
 			self::$log->trace ( "Creation et envoi d'une requête d'ajout à une Startup" );
 		}

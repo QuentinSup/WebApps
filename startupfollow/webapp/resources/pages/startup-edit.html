@@ -29,7 +29,7 @@
 			<div class="col-sm-9">
 				<div id="sections" class="slider" data-slider-speed="0">
 					<ul>
-						<li>
+						<li class="content">
 							<section>
 								<div class="h8">Votre Startup</div>
 								<!-- ko with: form -->
@@ -69,7 +69,7 @@
 								<!-- /ko -->
 							</section>
 						</li>
-						<li>
+						<li class="content">
 							<section>
 								<div class="h8">Votre logo</div>
 								<p>Votre logo et vos liens vers vos réseaux sociaux permettront à vos fans de vous suivre plus facilement et d'accroître votre communauté.</p>
@@ -114,46 +114,50 @@
 								<!-- /ko -->
 							</section>
 						</li>
-						<li>
+						<li class="content">
 							<section>
 								<div class="h8">Votre équipe</div>
 								<p></p>
 								<!-- ko with: form -->
-								<form data-role="form">
-									<label>Votre nom</label>
-									<div class="row">
-										<div class="form-group col-sm-3">
-											<input type="text" class="form-control" value="" data-bind="value: lastName, valueUpdate: 'input'" placeholder="Prénom" required />
-										</div>
-										<div class="form-group col-sm-3">
-											<input type="text" class="form-control" value="" data-bind="value: firstName, valueUpdate: 'input'" placeholder="Nom" />
-										</div>
-									</div>
+								<form data-role="form" class="form">
 									<label>Votre équipe</label>
 									<p>Invitez votre équipe à vous rejoindre !</p>
 									<!-- ko foreach: members() -->
-									<div class="row-fluid">
+									<div class="row">
 										<div class="col-sm-1">
 											<button class="btn" data-bind="click: function() { removeMember(); }">-</button>
 										</div>
-										<div class="col-sm-1 text-center">
+										<!-- ko if: !!$data.user() -->
+										<div class="col-sm-2 text-center">
 											<div class="img-wrapper">
-												<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/team-avatar.png' }" class="img-responsive img-circle" alt="avatar" />
+												<img data-bind="attr: { 'src': $data.user().image || host + 'assets/img/avatars/team-avatar.png' }" class="img-responsive img-circle small" alt="avatar" />
 											</div>
 										</div>
-										<div class="form-group col-sm-4">
-											<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input'" placeholder="Email" required />
+										<div class="col-sm-4">
+											<label data-bind="text: $data.user().name"></label>
 										</div>
-										<div class="form-group col-sm-3">
-											<input type="text" class="form-control" value="" data-bind="value: lastName, valueUpdate: 'input'" placeholder="Prénom" />
+										<!-- /ko -->
+										<!-- ko ifnot: !!$data.user() -->
+										<div class="col-sm-2 text-center">
+											<div class="img-wrapper">
+												<img src="{$host}assets/img/avatars/team-avatar.png" class="img-responsive img-circle small" alt="avatar" />
+											</div>
 										</div>
-										<div class="form-group col-sm-3">
-											<input type="text" class="form-control" value="" data-bind="value: firstName, valueUpdate: 'input'" placeholder="Nom" />
+										<div class="col-sm-4">
+											<div class="form-group">
+												<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input', disable: !!$data.invitationSentAt(), attr: { 'title': $data.invitationSentAt()?'Invitation envoyée le ' + $data.invitationSentAt():'' }" placeholder="Email" required />
+											</div>
+										</div>
+										<!-- /ko -->
+										<div class="col-sm-3">
+											<div class="form-group">
+												<input type="text" class="form-control" value="" data-bind="value: role, valueUpdate: 'input'" placeholder="Rôle" />
+											</div>
 										</div>
 									</div>
 									<!-- /ko -->
 									<div class="form-group">
-										<button data-bind="click: function() { addMember(); }" class="btn">+</button>
+										<button data-bind="click: function() { addMember(); }" class="btn col-sm-1">+</button>
 									</div>
 									<div class="form-submit">
 										<button data-bind="click: function() { submit(); }" class="btn btn-default">Enregistrer</button>
@@ -162,10 +166,10 @@
 								<!-- /ko -->
 							</section>
 						</li>
-						<li>
+						<li class="content">
 							<section>
 								<div class="h8">Votre histoire</div>
-								<button data-bind="click: function() { newStory(); }" class="btn blank">Ajouter</button>
+								<button data-bind="click: function() { newStory(); }" class="btn white">Ajouter</button>
 								<div id="stories" class="slider">
 									<ul>
 										<li>
@@ -178,7 +182,7 @@
 												<!-- /ko -->
 											</ul>
 										</li>
-										<li>
+										<li class="content">
 											<!-- ko with: storyform -->
 											<form data-role="form">
 												<label></label>
@@ -218,7 +222,7 @@
 
 <script type="text/javascript">
 
-	model.load("{$name}");
+	model.load("{$ref}");
 	
 	jQuery(document).ready(function($) {
 		$('.slider').each(function() {

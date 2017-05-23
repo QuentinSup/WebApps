@@ -47,7 +47,7 @@ class user extends dwBasicController {
 	public static $storyLikeEntity;
 	
 	/**
-	 * @DatabaseEntity('startup_user_subscription')
+	 * @DatabaseEntity('startup_follower')
 	 */
 	public static $startupUserSubscriptionEntity;
 	
@@ -95,9 +95,17 @@ class user extends dwBasicController {
 		$doc->password = md5 ( $json->password );
 		
 		if ($doc->find ()) {
+			
 			self::$session->start ();
 			$data = $doc->toArray ();
 			self::$session->user = new dwObject($data);
+			
+			// Update date of connection
+			$docUpdate = self::$userEntity->factory ();
+			$docUpdate -> uid = $doc -> uid;
+			$docUpdate -> lastConnection = $docUpdate -> castSQL('CURRENT_TIMESTAMP');
+			$docUpdate -> update();
+			
 			return $data;
 		}
 		
@@ -205,19 +213,23 @@ class user extends dwBasicController {
 			self::$log->trace ( "Modification du compte utilisateur n°$p_uid" );
 		}
 		
-		$jsonContent = $request->Body ();
+		$json = $request->Body ();
 		
 		$doc = self::$userEntity->factory ();
 		$doc->uid = $p_uid;
-		$doc->firstName = $json->firstName;
-		$doc->lastName = $json->lastName;
+		$doc->firstName = @$json->firstName;
+		$doc->lastName = @$json->lastName;
 		$doc->email = $json->email;
-		if ($json->has ( 'password' )) {
+		$doc->image = @$json->image;
+		$doc->link_twitter = @$json->link_twitter;
+		$doc->link_website = @$json->link_website;
+		$doc->link_facebook =@$json->link_facebook;
+		if (@$json -> password) {
 			$doc->password = md5 ( $json->password );
 		}
 		
 		if ($doc->update ()) {
-			$doc->find ();
+			$doc->find();
 			return $doc->toArray ();
 		}
 		

@@ -12,8 +12,6 @@ module startupfollows.request {
         public name      = ko.observable();
         public punchLine = ko.observable();
         public email     = ko.observable();
-        public firstName = ko.observable();
-        public lastName  = ko.observable();
         public image     = ko.observable();
         public website   = ko.observable();
         public twitter   = ko.observable();
@@ -24,7 +22,6 @@ module startupfollows.request {
         private __hdlCheckIfExists;
         
         public constructor() {
-            this.addMember();
             
             this.name.subscribe((v: string): void => {
                 this.nameExists(true);
@@ -53,17 +50,16 @@ module startupfollows.request {
         }
            
         public prev() {
-            $('#StartupAddForm').unslider('prev');
+            $('#StartupAddForm').formslider('prev');
         }
         
         public next() {
-            $('#StartupAddForm').unslider('next');
+            $('#StartupAddForm').formslider('next');
         }
         
         public addMember() {
             this.members.push({
-                firstName: ko.observable(),
-                lastName: ko.observable(),
+                role: ko.observable(),
                 email: ko.observable()
             });
         }
@@ -81,19 +77,13 @@ module startupfollows.request {
                 link_twitter: this.twitter(),
                 link_website: this.website(),
                 link_facebook: this.facebook(),
-                members: [{
-                    firstName: this.firstName(),
-                    lastName: this.lastName(),
-                    email: this.email(),
-                    founder: 1
-                }]
+                members: []
             };
             
             $.each(this.members(), function(k, v) {
                 data.members.push({
-                    firstName: v.firstName(),
-                    lastName: v.lastName(),
-                    email: v.email()
+                    invitation_email: v.email(),
+                    role: v.role()
                 });
             });
             

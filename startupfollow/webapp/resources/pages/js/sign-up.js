@@ -47,9 +47,11 @@ var startupfollows;
                 };
                 $.ajax(request).complete(function (response, status) {
                     if (response.status == 200) {
+                        success("Votre compte a été créé. Veuillez patientez durant que nous vous redirigeons vers la page d'accueil... ", "Welcome !", { showConfirmButton: false });
+                        document.location.href = host;
                     }
                     else {
-                        alert(status);
+                        error("Holy s**t ! Une erreur est apparue durant la création de votre compte :(<br />Essayez de recommencer dans quelques minutes !");
                     }
                 });
                 return false;
@@ -65,20 +67,9 @@ var startupfollows;
              */
             Model.prototype.verifyUserName = function () {
                 var _this = this;
-                var request = {
-                    type: 'get',
-                    url: host + 'rest/user/username/' + this.name(),
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json'
-                };
                 this.isUserNameUnique(false);
-                $.ajax(request).complete(function (response, status) {
-                    if (response.status == 200) {
-                        _this.isUserNameUnique(true);
-                    }
-                    else {
-                        alert(status);
-                    }
+                user.isNameUnique(this.name(), function (b) {
+                    _this.isUserNameUnique(b);
                 });
                 return false;
             };
@@ -87,20 +78,8 @@ var startupfollows;
              */
             Model.prototype.verifyUserEmail = function () {
                 var _this = this;
-                var request = {
-                    type: 'get',
-                    url: host + 'rest/user/email/' + this.email(),
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json'
-                };
-                this.isUserEmailUnique(false);
-                $.ajax(request).complete(function (response, status) {
-                    if (response.status == 200) {
-                        _this.isUserEmailUnique(true);
-                    }
-                    else {
-                        alert(status);
-                    }
+                user.isEmailUnique(this.email(), function (b) {
+                    _this.isUserEmailUnique(b);
                 });
                 return false;
             };

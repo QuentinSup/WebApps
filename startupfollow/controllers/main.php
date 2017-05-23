@@ -17,7 +17,7 @@ use dw\classes\controllers\dwBasicController;
 class main extends dwBasicController {
 
 	/**
-	 * @DatabaseEntity('request')
+	 * @DatabaseEntity('startup_request')
 	 */
 	public static $requestEntity;
 
@@ -71,6 +71,19 @@ class main extends dwBasicController {
 	{
 		return $this -> prepareModel($request, $model, 'log-in') -> view();
 	}
+	
+	/**
+	 * @Mapping(method = "get", value = "account")
+	 */
+	public function account(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	{
+		if(!self::$session -> has('user')) {
+			$model -> redirectTo = $request -> getUri();
+			return self::login($request, $response, $model);
+		}
+		
+		return $this -> prepareModel($request, $model, 'user-edit') -> view();
+	}
 		
 	/**
 	 * @Mapping(method = "get", value= "request/:id")
@@ -96,24 +109,24 @@ class main extends dwBasicController {
 			}
 		}
 		
-		return $this -> prepareModel($request, $model, 'startup_add') -> view();
+		return $this -> prepareModel($request, $model, 'startup-create') -> view();
 	}
 	
 
 	/**
-	 * @Mapping(method = "get", value= "startup/:id")
-	 * @Mapping(method = "get", value= "follow/:id")
+	 * @Mapping(method = "get", value= "startup/:ref")
+	 * @Mapping(method = "get", value= "follow/:ref")
 	 */
 	public function landingPage(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
-		$p_id = $request -> Path('id');
-		$model -> id = $p_id;
+		$ref = $request -> Path('ref');
+		$model -> ref = $ref;
 			
-		return $this -> prepareModel($request, $model, 'startup_landingPage') -> view();
+		return $this -> prepareModel($request, $model, 'startup-landingPage') -> view();
 	}
 	
 	/**
-	 * @Mapping(method = "get", value= "startup/edit/:name")
+	 * @Mapping(method = "get", value= "startup/edit/:ref")
 	 */
 	public function startupEdit(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
@@ -122,21 +135,10 @@ class main extends dwBasicController {
 			return self::login($request, $response, $model);
 		}
 		
-		$pName = $request -> Path('name');
-		$model -> name = $pName;
+		$ref = $request -> Path('ref');
+		$model -> ref = $ref;
 			
-		return $this -> prepareModel($request, $model, 'startup_edit') -> view();
-	}
-	
-	/**
-	 * @Mapping(method = "get", value= "startup/:name/story")
-	 */
-	public function startupStories(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
-	{
-		$pName = $request -> Path('name');
-		$model -> name = $pName;
-			
-		return $this -> prepareModel($request, $model, 'startup_stories') -> view();
+		return $this -> prepareModel($request, $model, 'startup-edit') -> view();
 	}
 	
 	/**

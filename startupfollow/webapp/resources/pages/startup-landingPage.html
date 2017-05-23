@@ -5,16 +5,18 @@
 			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
-			<ul class="navigation-bar navigation-bar-left">
+			<ul class="navigation-bar col-sm-10">
 				<li><a href="#about">A propos</a></li>
 				<li><a href="#members">L'équipe</a></li>
 			</ul>
+			<div class="col-sm-2">
 			<!-- ko if: $data.isFollowedByUser() -->
-			<button data-bind="click: function() { $data.unfollow(); }" class="btn blank">ne plus suivre</button>
+			<button data-bind="click: function() { $data.unfollow(); }" class="btn white">ne plus suivre</button>
 			<!-- /ko -->
 			<!-- ko ifnot: $data.isFollowedByUser() -->
-			<button data-bind="click: function() { $data.follow(); }" class="btn blank">suivre</button>
+			<button data-bind="click: function() { $data.follow(); }" class="btn white">suivre</button>
 			<!-- /ko -->
+			</div>
 		</nav>
 	</div>
 </header>
@@ -24,6 +26,9 @@
 	<div class="container">
 		<div class="home-bg">
 			<div class="hero-content text-center ">
+				<div class="img-wrapper">
+					<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/project-avatar.svg' }" class="img-responsive img-circle" alt="startup" />
+				</div>
 				<div class="hero-big">
 					<span class="sublime-text" data-bind="text: $data.name"></span>
 				</div>
@@ -42,27 +47,27 @@
 		<div class="sub-title"></div>
 		<br />
 		<section class="row" class="animated hiding" data-animation="fadeInUp" data-delay="1000">
-			<!-- ko foreach: $data.founders -->
-			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-				<div class="speaker-item">
-					<div>
-						<div class="img-wrapper">
-							<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/team-avatar-founder.png' }" class="img-responsive img-circle" alt="team member" />
-						</div>
-						<div class="name" data-bind="text: $data.lastName + ' ' + $data.firstName"></div>
-					</div>
-				</div>
-			</div>
-			<!-- /ko -->
 			<!-- ko foreach: $data.members -->
-			<!-- ko if: $data.firstName -->
+			<!-- ko if: $data.user -->
 			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
 				<div class="speaker-item">
 					<div>
 						<div class="img-wrapper">
-							<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/team-avatar.png' }" class="img-responsive img-circle" alt="speaker-1" />
+							<img data-bind="attr: { 'src': $data.user.image || host + 'assets/img/avatars/team-avatar.png' }" class="img-responsive img-circle" alt="speaker-1" />
 						</div>
-						<div class="name" data-bind="text: $data.lastName + ' ' + $data.firstName"></div>
+						<div class="name title" data-bind="text: $data.user.name"></div>
+						<div class="sub" data-bind="text: $data.role"></div>
+						<div class="social-link">
+							<!-- ko if: $data.user.link_twitter -->
+							<a href="" data-bind="attr: { 'href': $data.user.link_twitter }"><span class="fa fa-twitter"></span></a>
+							<!-- /ko -->
+							<!-- ko if: $data.user.link_facebook -->
+							<a href="" data-bind="attr: { 'href': $data.user.link_facebook }"><span class="fa fa-facebook"></span></a>
+							<!-- /ko -->
+							<!-- ko if: $data.user.link_website -->
+							<a href="" data-bind="attr: { 'href': $data.user.link_website }"><span class="fa fa-link"></span></a>
+							<!-- /ko -->
+						</div>
 					</div>
 				</div>
 			</div>
@@ -93,6 +98,6 @@
 <script type="text/javascript" src="{$host}/resources/pages/js/startup.js"></script>
 <script type="text/javascript">
 
-	model.find('{$id}');
+	model.find('{$ref}');
 	
 </script>

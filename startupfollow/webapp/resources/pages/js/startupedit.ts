@@ -6,6 +6,8 @@ module startupfollows.startupEdit {
     declare var window;
     declare var host;
     declare var tinymce;
+    declare function error(message, title?);
+    declare function success(message, title?);
 
 
     class StartupStoryForm {
@@ -66,8 +68,18 @@ module startupfollows.startupEdit {
             $.ajax(request).complete((response, status): void => {
                 if(response.status == 200) {
                     this.cancel();
+                    
+                    if(!this.uid()) {
+                         success("Well done ! Vos fans seront prochainement informés de votre nouvelle !");    
+                    }
+                    
                     window.model.listStories();    
+                } else {
+                    
+                    error("Mince, une erreur est apparue durant la sauvegarde de votre nouvelle :(");
+                    
                 }
+                    
             });
 
             return false;
@@ -82,8 +94,6 @@ module startupfollows.startupEdit {
         public name = ko.observable();
         public punchLine = ko.observable();
         public email = ko.observable();
-        public firstName = ko.observable();
-        public lastName = ko.observable();
         public image = ko.observable();
         public website = ko.observable();
         public twitter = ko.observable();
@@ -94,7 +104,6 @@ module startupfollows.startupEdit {
         private __hdlCheckIfExists;
 
         public constructor() {
-            this.addMember();
 
             this.name.subscribe((v: string): void => {
                 this.nameExists(true);
@@ -124,11 +133,12 @@ module startupfollows.startupEdit {
 
         public addMember() {
             this.members.push({
-                uid: '',
-                firstName: ko.observable(),
-                lastName: ko.observable(),
-                
-                email: ko.observable()
+                    uid: ko.observable(),
+                    user_uid: ko.observable(),
+                    role: ko.observable(),
+                    email: ko.observable(),
+                    user: ko.observable(),
+                    invitationSentAt: ko.observable()
             });
         }
 
@@ -137,8 +147,6 @@ module startupfollows.startupEdit {
             this.name(data.name);
             this.email(data.email);
             this.punchLine(data.punchLine);
-            this.firstName(data.firstName);
-            this.lastName(data.lastName);
             this.image(data.image);
             this.website(data.link_website);
             this.twitter(data.link_twitter);
@@ -149,15 +157,19 @@ module startupfollows.startupEdit {
             $.each(data.members, (k, v): void => {
                 var member = {
                     uid: ko.observable(),
-                    firstName: ko.observable(),
-                    lastName: ko.observable(),
-                    email: ko.observable()
+                    user_uid: ko.observable(),
+                    role: ko.observable(),
+                    email: ko.observable(),
+                    user: ko.observable(),
+                    invitationSentAt: ko.observable()
                 };
 
                 member.uid(v.uid);
-                member.firstName(v.firstName);
-                member.lastName(v.lastName);
-                member.email(v.email);
+                member.user_uid(v.user_uid);
+                member.role(v.role);
+                member.email(v.invitation_email);
+                member.invitationSentAt(v.invitationSentAt);
+                member.user(v.user);
 
                 this.members.push(member);
             });
@@ -177,20 +189,14 @@ module startupfollows.startupEdit {
                 link_twitter: this.twitter(),
                 link_website: this.website(),
                 link_facebook: this.facebook(),
-                members: [{
-                    firstName: this.firstName(),
-                    lastName: this.lastName(),
-                    email: this.email(),
-                    founder: 1
-                }]
+                members: []
             };
 
             $.each(this.members(), function(k, v) {
                 data.members.push({
                     uid: v.uid(),
-                    firstName: v.firstName(),
-                    lastName: v.lastName(),
-                    email: v.email()
+                    role: v.role(),
+                    invitation_email: v.email()
                 });
             });
 
@@ -204,7 +210,9 @@ module startupfollows.startupEdit {
 
             $.ajax(request).complete(function(response, status) {
                 if(response.status != 200) {
-                      alert(status);
+                      error("Mince, une erreur est apparue est nous n'avons pas pu mettre à jour les informations :(");
+                } else {
+                    success("Well done, vos informations sont à jour !");    
                 }
             });
 
@@ -248,6 +256,8 @@ module startupfollows.startupEdit {
             $.ajax(request).complete((response, status): void => {
                 if (response.status == 200) {
                     this.startup(response.responseJSON);
+                } else {
+                    error("Mince, une erreur est apparue et il nous est impossible de charger vos informations :(");    
                 }
             });
 

@@ -5,7 +5,10 @@ module startupfollows.startup {
     declare var $;
     declare var window;
     declare var host;
-
+    declare var user;
+    declare function error(message, title?);
+    declare function success(message, title?, opts?);
+    
     class Model {
 
         public name = ko.observable();
@@ -64,10 +67,13 @@ module startupfollows.startup {
             
             $.ajax(request).complete((response, status): void => {
                 if(response.status == 200) {
-                        
+                    
+                    success("Votre compte a été créé. Veuillez patientez durant que nous vous redirigeons vers la page d'accueil... ", "Welcome !", { showConfirmButton: false });
+                    document.location.href = host;
+                    
                     
                 } else {
-                    alert(status);    
+                    error("Holy s**t ! Une erreur est apparue durant la création de votre compte :(<br />Essayez de recommencer dans quelques minutes !");
                 }
             });
             
@@ -88,59 +94,29 @@ module startupfollows.startup {
          */
         public verifyUserName(): boolean {
             
-            
-            var request = {
-                type: 'get',
-                url: host + 'rest/user/username/' + this.name(),
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json' 
-            };
-            
             this.isUserNameUnique(false);
             
-            $.ajax(request).complete((response, status): void => {
-                if(response.status == 200) {
-                    this.isUserNameUnique(true);        
-                } else {
-                    alert(status);    
-                }
+            user.isNameUnique(this.name(), (b: boolean): void => {
+                this.isUserNameUnique(b);         
             });
             
             return false;
             
         }
         
- 
+
         /**
          * check if user email is already used into database
          */
         public verifyUserEmail(): boolean {
             
-            
-            var request = {
-                type: 'get',
-                url: host + 'rest/user/email/' + this.email(),
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json' 
-            };
-            
-            this.isUserEmailUnique(false);
-            
-            $.ajax(request).complete((response, status): void => {
-                if(response.status == 200) {
-                    this.isUserEmailUnique(true);        
-                } else {
-                    alert(status);    
-                }
+             user.isEmailUnique(this.email(), (b: boolean): void => {
+                this.isUserEmailUnique(b);         
             });
             
             return false;
             
         }
-        
-        
-        
-
 
     }
 

@@ -125,21 +125,21 @@
 			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
 				<div class="speaker-item">
 					<div>
-						<div class="img-wrapper clickable" data-bind="click: function() { document.location = host + 'startup/' + $data.uri }">
+						<div class="img-wrapper clickable" data-bind="click: function() { document.location = host + 'startup/' + $data.ref }">
 							<img data-bind="attr: { 'src': $data.image || (host + 'assets/img/avatars/project-avatar.svg') }" class="img-responsive img-circle" alt="project" />
 						</div>
 						<div class="name" data-bind="text: $data.name"></div>
 						<div class="sub" data-bind="text: $data.punchLine"></div>
 						<p class="small" data-bind="text: $data.description"></p>
 						<div class="social-link">
-							<!-- ko if: link_twitter -->
+							<!-- ko if: $data.link_twitter -->
 							<a href="" data-bind="attr: { 'href': $data.link_twitter }"><span class="fa fa-twitter"></span></a>
 							<!-- /ko -->
-							<!-- ko if: link_facebook -->
+							<!-- ko if: $data.link_facebook -->
 							<a href="" data-bind="attr: { 'href': $data.link_facebook }"><span class="fa fa-facebook"></span></a>
 							<!-- /ko -->
-							<!-- ko if: link_website -->
-							<a href="" data-bind="attr: { 'href': link_website }"><span class="fa fa-link"></span></a>
+							<!-- ko if: $data.link_website -->
+							<a href="" data-bind="attr: { 'href': $data.link_website }"><span class="fa fa-link"></span></a>
 							<!-- /ko -->
 						</div>
 					</div>

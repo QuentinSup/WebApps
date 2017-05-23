@@ -52,7 +52,13 @@ var startupfollows;
                 $.ajax(request).complete(function (response, status) {
                     if (response.status == 200) {
                         _this.cancel();
+                        if (!_this.uid()) {
+                            success("Well done ! Vos fans seront prochainement informés de votre nouvelle !");
+                        }
                         window.model.listStories();
+                    }
+                    else {
+                        error("Mince, une erreur est apparue durant la sauvegarde de votre nouvelle :(");
                     }
                 });
                 return false;
@@ -66,15 +72,12 @@ var startupfollows;
                 this.name = ko.observable();
                 this.punchLine = ko.observable();
                 this.email = ko.observable();
-                this.firstName = ko.observable();
-                this.lastName = ko.observable();
                 this.image = ko.observable();
                 this.website = ko.observable();
                 this.twitter = ko.observable();
                 this.facebook = ko.observable();
                 this.members = ko.observableArray();
                 this.nameExists = ko.observable(true);
-                this.addMember();
                 this.name.subscribe(function (v) {
                     _this.nameExists(true);
                     if (!v)
@@ -99,10 +102,12 @@ var startupfollows;
             };
             StartupForm.prototype.addMember = function () {
                 this.members.push({
-                    uid: '',
-                    firstName: ko.observable(),
-                    lastName: ko.observable(),
-                    email: ko.observable()
+                    uid: ko.observable(),
+                    user_uid: ko.observable(),
+                    role: ko.observable(),
+                    email: ko.observable(),
+                    user: ko.observable(),
+                    invitationSentAt: ko.observable()
                 });
             };
             StartupForm.prototype.fill = function (data) {
@@ -111,8 +116,6 @@ var startupfollows;
                 this.name(data.name);
                 this.email(data.email);
                 this.punchLine(data.punchLine);
-                this.firstName(data.firstName);
-                this.lastName(data.lastName);
                 this.image(data.image);
                 this.website(data.link_website);
                 this.twitter(data.link_twitter);
@@ -121,14 +124,18 @@ var startupfollows;
                 $.each(data.members, function (k, v) {
                     var member = {
                         uid: ko.observable(),
-                        firstName: ko.observable(),
-                        lastName: ko.observable(),
-                        email: ko.observable()
+                        user_uid: ko.observable(),
+                        role: ko.observable(),
+                        email: ko.observable(),
+                        user: ko.observable(),
+                        invitationSentAt: ko.observable()
                     };
                     member.uid(v.uid);
-                    member.firstName(v.firstName);
-                    member.lastName(v.lastName);
-                    member.email(v.email);
+                    member.user_uid(v.user_uid);
+                    member.role(v.role);
+                    member.email(v.invitation_email);
+                    member.invitationSentAt(v.invitationSentAt);
+                    member.user(v.user);
                     _this.members.push(member);
                 });
             };
@@ -144,19 +151,13 @@ var startupfollows;
                     link_twitter: this.twitter(),
                     link_website: this.website(),
                     link_facebook: this.facebook(),
-                    members: [{
-                            firstName: this.firstName(),
-                            lastName: this.lastName(),
-                            email: this.email(),
-                            founder: 1
-                        }]
+                    members: []
                 };
                 $.each(this.members(), function (k, v) {
                     data.members.push({
                         uid: v.uid(),
-                        firstName: v.firstName(),
-                        lastName: v.lastName(),
-                        email: v.email()
+                        role: v.role(),
+                        invitation_email: v.email()
                     });
                 });
                 var request = {
@@ -168,7 +169,10 @@ var startupfollows;
                 };
                 $.ajax(request).complete(function (response, status) {
                     if (response.status != 200) {
-                        alert(status);
+                        error("Mince, une erreur est apparue est nous n'avons pas pu mettre à jour les informations :(");
+                    }
+                    else {
+                        success("Well done, vos informations sont à jour !");
                     }
                 });
                 return false;
@@ -203,6 +207,9 @@ var startupfollows;
                 $.ajax(request).complete(function (response, status) {
                     if (response.status == 200) {
                         _this.startup(response.responseJSON);
+                    }
+                    else {
+                        error("Mince, une erreur est apparue et il nous est impossible de charger vos informations :(");
                     }
                 });
             };

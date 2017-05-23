@@ -7,9 +7,11 @@ var startupfollows;
                 var _this = this;
                 this.data = ko.observable();
                 this.stories = ko.observableArray();
+                this.events = ko.observableArray();
                 this.isFollowedByUser = ko.observable(false);
                 this.data.subscribe(function (s) {
                     _this.listStories();
+                    _this.listEvents();
                     user.ready(function (user) {
                         if (user.isFollowingStartup(s.uid)) {
                             _this.isFollowedByUser(true);
@@ -49,11 +51,28 @@ var startupfollows;
                     }
                 });
             };
+            Model.prototype.listEvents = function () {
+                var _this = this;
+                var request = {
+                    type: 'get',
+                    url: host + 'rest/startup/' + this.data().uid + '/event/all',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json'
+                };
+                $.ajax(request).complete(function (response, status) {
+                    if (response.status == 200) {
+                        _this.events(ko.mapping.fromJS(response.responseJSON)());
+                    }
+                });
+            };
             Model.prototype.addStoryLike = function (uid, index) {
                 var _this = this;
                 user.likeStory(uid, function (response, status) {
                     if (response.status == 204) {
                         _this.stories()[index].numberOfLikes((_this.stories()[index].numberOfLikes() * 1) + 1);
+                    }
+                    else {
+                        error("Mince, une erreur est apparue et nous n'avons pas pu vous permettre d'aimer cette news ;(");
                     }
                 });
             };
@@ -62,6 +81,10 @@ var startupfollows;
                 user.follow(this.data().uid, function (response, status) {
                     if (response.status == 204) {
                         _this.isFollowedByUser(true);
+                        toast("Vous suivez désormais " + _this.data().name, { title: 'Félicitations!' });
+                    }
+                    else {
+                        error("Mince, une erreur est apparue et nous n'avons pas pu vous permettre de suivre cette startup ;(");
                     }
                 });
             };
@@ -70,6 +93,10 @@ var startupfollows;
                 user.unfollow(this.data().uid, function (response, status) {
                     if (response.status == 204) {
                         _this.isFollowedByUser(false);
+                        toast("Vous ne suivez plus " + _this.data().name, { title: 'Dommage!' });
+                    }
+                    else {
+                        error("Mince, une erreur est apparue et nous n'avons pas pu vous désinscrire de cette startup ;(");
                     }
                 });
             };
