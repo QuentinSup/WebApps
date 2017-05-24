@@ -5,30 +5,49 @@
 			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
-			<ul class="navigation-bar col-sm-10">
+			<div class="col-sm-1">
+				<!-- ko with: data() -->
+				<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/project-avatar.svg' }" class="img-responsive img-circle" alt="startup" />
+				<!-- /ko -->
+			</div>
+			<ul class="navigation-bar col-sm-7">
 				<li><a href="#about">A propos</a></li>
 				<li><a href="#members">L'équipe</a></li>
 			</ul>
-			<div class="col-sm-2">
-			<!-- ko if: $data.isFollowedByUser() -->
-			<button data-bind="click: function() { $data.unfollow(); }" class="btn white">ne plus suivre</button>
-			<!-- /ko -->
-			<!-- ko ifnot: $data.isFollowedByUser() -->
-			<button data-bind="click: function() { $data.follow(); }" class="btn white">suivre</button>
-			<!-- /ko -->
-			</div>
+			<div class="col-sm-4 text-right">
+				<div class="col-sm-10">
+				<!-- ko if: $data.isFollowedByUser() -->
+				<button data-bind="click: function() { $data.unfollow(); }" class="btn white">ne plus suivre</button>
+				<!-- /ko -->
+				<!-- ko ifnot: $data.isFollowedByUser() -->
+				<button data-bind="click: function() { $data.follow(); }" class="btn white">suivre</button>
+				<!-- /ko -->
+				</div>
+				<!-- ko if: user.data() -->
+				<div class="col-sm-2">
+					<a href="{$host}account">
+						<img data-bind="attr: { 'src': user.data().image || host + 'assets/img/avatars/project-avatar.svg' }" class="img-responsive img-circle" alt="user" />
+					</a>
+				</div>
+				<!-- /ko -->
+				</div>
 		</nav>
 	</div>
 </header>
 
 <!-- ko with: data() -->
-<section id="hero" class="light">
+<section id="hero" class="light bg-video">
+	<video autoplay loop>
+		
+    	<!-- Source vidéo -->
+    	<source type="video/mp4" src="{$host}assets/videos/sketch.mp4" media="(orientation: landscape)">
+    	<source type="video/mp4" src="{$host}assets/videos/office.mp4" media="(orientation: landscape)">
+    	<source type="video/mp4" src="{$host}assets/videos/whiteboard.mp4" media="(orientation: landscape)">
+    	
+	</video>
 	<div class="container">
 		<div class="home-bg">
 			<div class="hero-content text-center ">
-				<div class="img-wrapper">
-					<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/project-avatar.svg' }" class="img-responsive img-circle" alt="startup" />
-				</div>
 				<div class="hero-big">
 					<span class="sublime-text" data-bind="text: $data.name"></span>
 				</div>
@@ -47,8 +66,10 @@
 		<div class="sub-title"></div>
 		<br />
 		<section class="row" class="animated hiding" data-animation="fadeInUp" data-delay="1000">
+			<!-- ko if: $data.members.length == 0 -->
+			<h6>Aucun membre actif n'a encore rejoint l'équipe</h6>
+			<!-- /ko -->
 			<!-- ko foreach: $data.members -->
-			<!-- ko if: $data.user -->
 			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
 				<div class="speaker-item">
 					<div>
@@ -71,7 +92,6 @@
 					</div>
 				</div>
 			</div>
-			<!-- /ko -->
 			<!-- /ko -->
 		</section>
 	</div>

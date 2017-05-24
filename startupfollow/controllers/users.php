@@ -64,17 +64,46 @@ class user extends dwBasicController {
 		
 		$doc = self::$userEntity->factory ();
 		$doc->uid = $p_uid;
-		if ($doc->find ()) {
-			$data = $doc->toArray ();
-			
+		if ($data = $doc->get()) {
+
 			$docSubscriptions = self::$startupUserSubscriptionEntity -> factory();
 			$docSubscriptions -> user_uid = $doc -> uid;
-			$data['subscriptions'] = $docSubscriptions -> getAll();
+			$data -> subscriptions = $docSubscriptions -> getAll();
 			
-			return $data;
+			return $data -> toArray();
 		}
 		
 		$response->statusCode = HttpStatus::NOT_FOUND;
+	}
+	
+	/**
+	 * Search
+	 * @Mapping(method = "get", value="search", consumes="application/x-www-form-urlencoded", produces="application/json; charset=utf-8")
+	 */
+	public function search(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
+	
+		if(!self::$session -> has('user')) {
+			return HttpStatus::FORBIDDEN;
+		}
+
+		$doc = self::$userEntity->factory ();
+
+		$doc -> email 		= $request -> Param('email');
+		$doc -> name 		= $request -> Param('name');
+		$doc -> firstName 	= $request -> Param('firstName');
+		$doc -> lastName 	= $request -> Param('lastName');
+				
+		if ($doc->find ()) {
+			
+			$data = array();
+			do {
+				$data[] = $doc -> export("uid name email image firstName lastName") -> toArray();
+			} while($doc -> fetch());
+
+			return $data;
+		}
+	
+		$response -> status(HttpStatus::NOT_FOUND);
 	}
 	
 	/**

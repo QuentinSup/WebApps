@@ -86,6 +86,11 @@ var toast = function(message, opts) {
 
 };
 
+var isValidEmail = function(emailAddress) {
+    var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+    return pattern.test(emailAddress);
+};
+
 (function() {
 
 	// Init global DOM elements, functions and arrays
@@ -99,11 +104,6 @@ var toast = function(message, opts) {
 	app.el['html-body'] = $('html,body');
 	app.el['loader'] = $('#loader');
 	app.el['mask'] = $('#mask');
-
-	setTimeout(function() {
-		$('*[title]').tooltipster();
-	}, 1000);
-	
 
 	app.fn.screenSize = function() {
 		var size,
@@ -155,6 +155,7 @@ var toast = function(message, opts) {
 		$('#mobileheader').html($('#header').html());
 
 		function heroInit() {
+						
 			var hero = jQuery('#hero'),
 				winHeight = jQuery(window).height(),
 				heroHeight = winHeight;
@@ -169,6 +170,12 @@ var toast = function(message, opts) {
 		jQuery(document).on("ready", heroInit);
 		jQuery(document).on("unsyncready", heroInit);
 
+		jQuery(document).on("ready", function() {
+			setTimeout(function() {
+				$('*[title]').tooltipster();
+			}, 1000);
+		});
+		
 		$('.navigation-bar').onePageNav({
 			currentClass : 'active',
 			changeHash : true,

@@ -100,15 +100,62 @@ var startupfollows;
                     _this.nameExists(response.status == 200);
                 });
             };
-            StartupForm.prototype.addMember = function () {
-                this.members.push({
+            StartupForm.prototype.createMember = function () {
+                var member = {
                     uid: ko.observable(),
-                    user_uid: ko.observable(),
                     role: ko.observable(),
                     email: ko.observable(),
                     user: ko.observable(),
-                    invitationSentAt: ko.observable()
+                    invitationSentAt: ko.observable(),
+                    joined: ko.observable(false),
+                    deleted: ko.observable(false)
+                };
+                return member;
+            };
+            StartupForm.prototype.addMember = function () {
+                var _this = this;
+                var member = this.createMember();
+                this.members.push(member);
+                member.email.subscribe(function (s) {
+                    if (s && isValidEmail(s)) {
+                        if (_this.isCurrentMember(s, member)) {
+                            member.email('');
+                            toast("Ce membre est déjà présent dans la liste");
+                            return;
+                        }
+                        user.search({ email: s }, function (response, status) {
+                            if (response.status == 200) {
+                                var data = response.responseJSON;
+                                member.user(data[0]);
+                            }
+                        });
+                    }
                 });
+            };
+            StartupForm.prototype.removeMember = function (ind) {
+                var members = this.members();
+                var member = members[ind];
+                if (!member)
+                    return;
+                if (member.uid()) {
+                    member.deleted(true);
+                }
+                else {
+                    this.members().splice(ind, 1);
+                }
+                this.members.valueHasMutated();
+            };
+            StartupForm.prototype.isCurrentMember = function (email, member) {
+                if (!email)
+                    return;
+                email = email.toLowerCase();
+                var members = this.members();
+                for (var i = 0; i < members.length; i++) {
+                    if (member != members[i] && members[i].email().toLowerCase() == email) {
+                        return true;
+                    }
+                }
+                return false;
             };
             StartupForm.prototype.fill = function (data) {
                 var _this = this;
@@ -122,20 +169,13 @@ var startupfollows;
                 this.facebook(data.link_facebook);
                 this.members([]);
                 $.each(data.members, function (k, v) {
-                    var member = {
-                        uid: ko.observable(),
-                        user_uid: ko.observable(),
-                        role: ko.observable(),
-                        email: ko.observable(),
-                        user: ko.observable(),
-                        invitationSentAt: ko.observable()
-                    };
+                    var member = _this.createMember();
                     member.uid(v.uid);
-                    member.user_uid(v.user_uid);
                     member.role(v.role);
                     member.email(v.invitation_email);
                     member.invitationSentAt(v.invitationSentAt);
                     member.user(v.user);
+                    member.joined(v.joined == 1);
                     _this.members.push(member);
                 });
             };
@@ -143,6 +183,7 @@ var startupfollows;
              * Submit data
              */
             StartupForm.prototype.submit = function () {
+                var _this = this;
                 var data = {
                     name: this.name(),
                     email: this.email(),
@@ -156,8 +197,10 @@ var startupfollows;
                 $.each(this.members(), function (k, v) {
                     data.members.push({
                         uid: v.uid(),
+                        user_uid: v.user() ? v.user().uid : null,
                         role: v.role(),
-                        invitation_email: v.email()
+                        invitation_email: v.email(),
+                        deleted: v.deleted()
                     });
                 });
                 var request = {
@@ -168,11 +211,12 @@ var startupfollows;
                     dataType: 'json'
                 };
                 $.ajax(request).complete(function (response, status) {
-                    if (response.status != 200) {
+                    if (response.status != 204) {
                         error("Mince, une erreur est apparue est nous n'avons pas pu mettre à jour les informations :(");
                     }
                     else {
                         success("Well done, vos informations sont à jour !");
+                        model.load(_this.uid());
                     }
                 });
                 return false;
@@ -201,6 +245,7 @@ var startupfollows;
                 var request = {
                     type: 'get',
                     url: host + 'rest/startup/' + name,
+                    data: { norestrict: true },
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json'
                 };

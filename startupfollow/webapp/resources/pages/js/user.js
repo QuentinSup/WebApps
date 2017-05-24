@@ -161,6 +161,22 @@ var startupfollows;
                     }
                 });
             };
+            /**
+             * Search users
+             */
+            UserModel.prototype.search = function (data, callback) {
+                var request = {
+                    type: 'get',
+                    data: data,
+                    url: host + 'rest/user/search',
+                    dataType: 'json'
+                };
+                $.ajax(request).complete(function (response, status) {
+                    if (typeof (callback) == "function") {
+                        callback.apply(this, arguments);
+                    }
+                });
+            };
             return UserModel;
         })();
         window.user = new UserModel();

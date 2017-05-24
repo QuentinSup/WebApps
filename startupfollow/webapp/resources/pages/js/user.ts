@@ -211,6 +211,26 @@ module startupfollows.startup {
             
         }
         
+        /**
+         * Search users
+         */
+        public search(data: string, callback?: Function): void {
+            
+            var request = {
+                type: 'get',
+                data: data,
+                url: host + 'rest/user/search',
+                dataType: 'json' 
+            };
+            
+            $.ajax(request).complete(function(response, status): void {
+                if(typeof(callback) == "function") {
+                    callback.apply(this, arguments);    
+                }
+            });
+            
+        }
+        
     }
 
     window.user = new UserModel();

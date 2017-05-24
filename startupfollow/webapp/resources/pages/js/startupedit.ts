@@ -6,6 +6,9 @@ module startupfollows.startupEdit {
     declare var window;
     declare var host;
     declare var tinymce;
+    declare var user;
+    declare function isValidEmail(email);
+    declare function toast(message, opts?);
     declare function error(message, title?);
     declare function success(message, title?);
 
@@ -131,15 +134,72 @@ module startupfollows.startupEdit {
 
         }
 
-        public addMember() {
-            this.members.push({
+        private createMember() {
+            var member = {
                     uid: ko.observable(),
-                    user_uid: ko.observable(),
                     role: ko.observable(),
                     email: ko.observable(),
                     user: ko.observable(),
-                    invitationSentAt: ko.observable()
+                    invitationSentAt: ko.observable(),
+                    joined: ko.observable(false),
+                    deleted: ko.observable(false)
+            };
+            return member;
+        }
+        
+        public addMember() {
+            
+            var member = this.createMember();
+            
+            this.members.push(member);
+            
+            member.email.subscribe((s: string): void => {
+                if(s && isValidEmail(s)) {
+                    
+                    if(this.isCurrentMember(s, member)) {
+                        member.email('');
+                        toast("Ce membre est déjà présent dans la liste");
+                        return;
+                    }
+                    
+                    user.search({ email: s }, (response, status): void => {
+                        if(response.status == 200) { 
+                            var data = response.responseJSON;
+                            member.user(data[0]);
+                        }
+                    });    
+                }
             });
+            
+        }
+        
+        public removeMember(ind: number): void {
+        
+            var members = this.members();
+            var member = members[ind];
+            
+            if(!member) return;
+            
+            if(member.uid()) {
+                member.deleted(true);
+            } else {
+                this.members().splice(ind, 1);    
+            }
+
+            this.members.valueHasMutated();
+            
+        }
+        
+        public isCurrentMember(email, member): boolean {
+            if(!email) return;
+            email = email.toLowerCase();
+            var members = this.members();
+            for(var i = 0; i < members.length; i++) {
+                if(member != members[i] && members[i].email().toLowerCase() == email) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public fill(data: any): void {
@@ -155,21 +215,15 @@ module startupfollows.startupEdit {
             this.members([]);
 
             $.each(data.members, (k, v): void => {
-                var member = {
-                    uid: ko.observable(),
-                    user_uid: ko.observable(),
-                    role: ko.observable(),
-                    email: ko.observable(),
-                    user: ko.observable(),
-                    invitationSentAt: ko.observable()
-                };
+                
+                var member = this.createMember();
 
                 member.uid(v.uid);
-                member.user_uid(v.user_uid);
                 member.role(v.role);
                 member.email(v.invitation_email);
                 member.invitationSentAt(v.invitationSentAt);
                 member.user(v.user);
+                member.joined(v.joined == 1);
 
                 this.members.push(member);
             });
@@ -195,8 +249,10 @@ module startupfollows.startupEdit {
             $.each(this.members(), function(k, v) {
                 data.members.push({
                     uid: v.uid(),
+                    user_uid: v.user()?v.user().uid:null,
                     role: v.role(),
-                    invitation_email: v.email()
+                    invitation_email: v.email(),
+                    deleted: v.deleted()
                 });
             });
 
@@ -208,11 +264,12 @@ module startupfollows.startupEdit {
                 dataType: 'json'
             };
 
-            $.ajax(request).complete(function(response, status) {
-                if(response.status != 200) {
+            $.ajax(request).complete((response, status): void => {
+                if(response.status != 204) {
                       error("Mince, une erreur est apparue est nous n'avons pas pu mettre à jour les informations :(");
                 } else {
-                    success("Well done, vos informations sont à jour !");    
+                    success("Well done, vos informations sont à jour !");
+                    model.load(this.uid());   
                 }
             });
 
@@ -249,6 +306,7 @@ module startupfollows.startupEdit {
             var request = {
                 type: 'get',
                 url: host + 'rest/startup/' + name,
+                data: { norestrict: true },
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json'
             };

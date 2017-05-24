@@ -7,6 +7,7 @@ use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
 use dw\enums\HttpStatus;
 use dw\helpers\dwFile;
+use dw\helpers\dwString;
 use dw\classes\dwObject;
 use dw\classes\controllers\dwBasicController;
 use dw\adapters\template\dwSmartyTemplate;
@@ -156,10 +157,17 @@ class startup extends dwBasicController {
 	 */
 	public function get(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
 		
-		$ref = $this -> convertName($request -> Path('ref'));
+		$p_ref = $request -> Path('ref');
+		$p_norestrict = $request -> Param('norestrict');
 		
 		$doc = self::$startupEntity -> factory();
-		$doc -> ref = $ref;
+		
+		if(is_numeric($p_ref)) {
+			$doc -> uid = $p_ref;
+		} else {
+			$ref = $this -> convertName($p_ref);
+			$doc -> ref = $ref;
+		}
 		
 		$data = array();
 		
@@ -172,16 +180,19 @@ class startup extends dwBasicController {
 			$members = array();
 			if($memberDoc -> find()) {
 				do {
-					$member = &$members[];
-					$member = $memberDoc -> toArray();
-					if($memberDoc -> user_uid) {
+					if(($p_norestrict || $memberDoc -> joined) && $memberDoc -> user_uid) {
+						$member = &$members[];
+						$member = $memberDoc -> toArray();
 						$userDoc = self::$userEntity -> factory();
 						$userDoc -> uid = $memberDoc -> user_uid;
-						if($userDoc -> get()) {
-							$member['user'] = $userDoc -> toArray();
+						if($user = $userDoc -> get()) {
+							$user -> password = null; // Clean password !!
+							$member['user'] = $user -> toArray();
+						} else {
+							
+							self::$log -> warn("User (uid=".$userDoc -> uid.") not found !");
+							
 						}
-					} else {
-						
 					}
 				} while($memberDoc -> fetch());
 			}
@@ -232,6 +243,7 @@ class startup extends dwBasicController {
 			$memberDoc -> startup_uid = $uid;
 			$memberDoc -> user_uid = self::$session -> user -> uid;
 			$memberDoc -> founder = 1;
+			$memberDoc -> joined = 1;
 			$memberDoc -> insert();
 			
 			// Add other member and send invitation to member with no account
@@ -243,7 +255,7 @@ class startup extends dwBasicController {
 				$memberDoc -> invitation_email = $member -> invitation_email;
 				$memberDoc -> insert();
 				
-				if(!$memberDoc -> user_uid && $memberDoc -> invitation_email) {
+				if($memberDoc -> invitation_email) {
 					// Send invitation email
 					$mail_model = new dwObject();
 					$userName = self::$session -> user -> name;
@@ -318,7 +330,7 @@ class startup extends dwBasicController {
 		if($doc -> update()) {
 		
 			// Add event update
-			$this -> addEvent($uid, self::$session -> user -> uid, self::EVENT_UPDATE_SETTINGS, null);
+			$this -> addEvent($p_id, self::$session -> user -> uid, self::EVENT_UPDATE_SETTINGS, null);
 			
 			foreach($jsonContent -> members as $member) {
 				
@@ -330,32 +342,41 @@ class startup extends dwBasicController {
 				$memberDoc -> invitation_email 	= @$member -> invitation_email;
 				
 				if($memberDoc -> uid) {
-					$memberDoc -> update();
-					$uid = $memberDoc -> uid;
+					
+					if($member -> deleted == true) {
+						$memberDoc -> delete();
+					} else {
+						$memberDoc -> update();
+						$uid = $memberDoc -> uid;
+					}
+					
 				} else {
 					$memberDoc -> insert();
 					$uid = $memberDoc -> getLastInsertId();
 				}
 				
-				$memberDoc -> find(array('uid' => $uid));
-				
-				if(!$memberDoc -> user_uid && $memberDoc -> invitation_email && !$memberDoc -> invitationSentAt) {
-					// Send invitation email
-					$mail_model = new dwObject();
-					$userName = self::$session -> user -> name;
-					$mail_model -> email = $memberDoc -> invitation_email;
-					$mail_model -> founderName = $userName;
-					$mail_model -> startupName = $doc -> name;
-					$mail_model -> memberRole  = $memberDoc -> role;
-					$mail_model -> url = $request -> getBaseUri()."/startup/".$doc -> ref."/join/".$uid;
-				
-					if($this -> sendInvitationEmail($mail_model)) {
-						$memberUpdateDoc = $memberDoc -> factory();
-						$memberUpdateDoc -> uid = $memberDoc -> uid;
-						$memberUpdateDoc -> invitationSentAt = $memberUpdateDoc -> castSQL('CURRENT_TIMESTAMP');
-						$memberUpdateDoc -> update();
+				if($uid) {
+					
+					$memberDoc -> get(array('uid' => $uid));
+					
+					if(!$memberDoc -> joined && $memberDoc -> invitation_email && !$memberDoc -> invitationSentAt) {
+						// Send invitation email
+						$mail_model = new dwObject();
+						$userName = self::$session -> user -> name;
+						$mail_model -> email = $memberDoc -> invitation_email;
+						$mail_model -> founderName = $userName;
+						$mail_model -> startupName = $doc -> name;
+						$mail_model -> memberRole  = $memberDoc -> role;
+						$mail_model -> url = $request -> getBaseUri()."/startup/".$doc -> ref."/join/".$uid;
+					
+						if($this -> sendInvitationEmail($mail_model)) {
+							$memberUpdateDoc = $memberDoc -> factory();
+							$memberUpdateDoc -> uid = $memberDoc -> uid;
+							$memberUpdateDoc -> invitationSentAt = $memberUpdateDoc -> castSQL('CURRENT_TIMESTAMP');
+							$memberUpdateDoc -> update();
+						}
+					
 					}
-				
 				}
 				
 			}

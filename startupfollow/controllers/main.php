@@ -22,6 +22,11 @@ class main extends dwBasicController {
 	public static $requestEntity;
 
 	/**
+	 * @DatabaseEntity('startup_member')
+	 */
+	public static $memberEntity;
+	
+	/**
 	 * @Session()
 	 */
 	public static $session;
@@ -123,6 +128,56 @@ class main extends dwBasicController {
 		$model -> ref = $ref;
 			
 		return $this -> prepareModel($request, $model, 'startup-landingPage') -> view();
+	}
+	
+	/**
+	 * @Mapping(method = "get", value= "startup/:ref/join/:uid")
+	 */
+	public function joinTeam(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	{
+		
+		if(!self::$session -> has('user')) {
+			$model -> redirectTo = $request -> getUri();
+			return self::login($request, $response, $model);
+		}
+		
+		$user = self::$session -> user;
+		
+		$ref = $request -> Path('ref');
+		$uid = $request -> Path('uid');
+		
+		$memberE = self::$memberEntity -> factory();
+		$memberE -> uid = $uid;
+		if($member = $memberE -> get()) {
+			
+			if(!$member -> joined) {
+				
+				if(!$member -> user_uid || $member -> user_uid == $user -> uid) {
+					$memberE -> user_uid = $user -> uid;
+					$memberE -> joined = 1;
+					$memberE -> joinedAt = $memberE -> castSQL('CURRENT_TIMESTAMP');
+					if(!$memberE -> update()) {
+						// Error during update !
+						return HttpStatus::INTERNAL_SERVER_ERROR;
+					}
+					
+				} else {
+					// The current user do not match with the selected user id !
+					return HttpStatus::INTERNAL_SERVER_ERROR;
+				}
+			} elseif($member -> user_uid != $user -> uid) {
+				// The member already joined, bu is not the current connected user !
+				return HttpStatus::INTERNAL_SERVER_ERROR;
+			}
+			
+			return "redirect:/startup/".$member -> startup_uid;
+			
+		}
+		
+		// No member uid found !
+		return HttpStatus::INTERNAL_SERVER_ERROR;
+		
+		//return $this -> prepareModel($request, $model, 'startup-join') -> view();
 	}
 	
 	/**

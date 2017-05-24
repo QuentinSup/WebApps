@@ -5,6 +5,7 @@ module startupfollows.startup {
     declare var $;
     declare var window;
     declare var host;
+    declare function toast(message, opts?);
 
     class Model {
 
@@ -34,6 +35,7 @@ module startupfollows.startup {
 
             $.ajax(request).complete((response, status): void => {
                 if (response.status == 200) {
+                    toast("Bienvenue " + this.name() + " ;)");
                     document.location.href = host + this.redirectTo() || '';
                 }
             });

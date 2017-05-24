@@ -23,6 +23,7 @@ var startupfollows;
                 };
                 $.ajax(request).complete(function (response, status) {
                     if (response.status == 200) {
+                        toast("Bienvenue " + _this.name() + " ;)");
                         document.location.href = host + _this.redirectTo() || '';
                     }
                 });

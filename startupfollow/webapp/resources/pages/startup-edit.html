@@ -123,9 +123,10 @@
 									<label>Votre équipe</label>
 									<p>Invitez votre équipe à vous rejoindre !</p>
 									<!-- ko foreach: members() -->
+									<!-- ko ifnot: deleted() -->
 									<div class="row">
 										<div class="col-sm-1">
-											<button class="btn" data-bind="click: function() { removeMember(); }">-</button>
+											<button class="btn" data-bind="click: function() { $parent.removeMember($index()); }">-</button>
 										</div>
 										<!-- ko if: !!$data.user() -->
 										<div class="col-sm-2 text-center">
@@ -134,7 +135,16 @@
 											</div>
 										</div>
 										<div class="col-sm-4">
-											<label data-bind="text: $data.user().name"></label>
+											<label>
+											<span data-bind="text: $data.user().name"></span>
+											<br />
+											<!-- ko if: joined() -->
+											<strong>accepté</strong>
+											<!-- /ko -->
+											<!-- ko ifnot: joined() -->
+											<strong data-bind="attr: { 'title': 'Invitation envoyée le ' + $data.invitationSentAt() }">invitation en attente</strong>
+											<!-- /ko -->
+											</label>
 										</div>
 										<!-- /ko -->
 										<!-- ko ifnot: !!$data.user() -->
@@ -145,7 +155,16 @@
 										</div>
 										<div class="col-sm-4">
 											<div class="form-group">
-												<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input', disable: !!$data.invitationSentAt(), attr: { 'title': $data.invitationSentAt()?'Invitation envoyée le ' + $data.invitationSentAt():'' }" placeholder="Email" required />
+												<!-- ko if: !$data.invitationSentAt -->
+												<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input', disable: !!$data.uid(), attr: { 'title': $data.invitationSentAt()?'Invitation envoyée le ' + $data.invitationSentAt():'' }" placeholder="Email" required />
+												<!-- /ko -->
+												<!-- ko if: $data.invitationSentAt -->
+												<label>
+												<span data-bind="text: $data.user().email"></span>
+												<br />
+												<strong>invitation en attente</strong>*
+												</label>
+												<!-- /ko -->
 											</div>
 										</div>
 										<!-- /ko -->
@@ -155,6 +174,7 @@
 											</div>
 										</div>
 									</div>
+									<!-- /ko -->
 									<!-- /ko -->
 									<div class="form-group">
 										<button data-bind="click: function() { addMember(); }" class="btn col-sm-1">+</button>
