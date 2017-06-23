@@ -69,8 +69,9 @@ module startupfollows.startup {
                 if(response.status == 200) {
                     
                     success("Votre compte a été créé. Veuillez patientez durant que nous vous redirigeons vers la page d'accueil... ", "Welcome !", { showConfirmButton: false });
-                    document.location.href = host;
-                    
+                    setTimeout(function() {
+                        document.location.href = host + 'login';
+                    }, 2000);
                     
                 } else {
                     error("Holy s**t ! Une erreur est apparue durant la création de votre compte :(<br />Essayez de recommencer dans quelques minutes !");

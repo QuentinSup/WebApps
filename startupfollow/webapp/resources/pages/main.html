@@ -49,7 +49,7 @@
 		<form class="form-register" data-role="form">
 			<div class="form-group relative">
 				<input type="text" value="" class="form-control" data-bind="value: searchValue, valueUpdate: 'keyup'" placeholder="nom du projet..." />
-				<ul class="search-list" data-bind="visible: R().length > 0">
+				<ul class="search-list">
 					<!-- ko foreach: R -->
 					<li><span class="strong" data-bind="text: name"></span> <span data-bind="text: description"></span></li>
 					<!-- /ko -->

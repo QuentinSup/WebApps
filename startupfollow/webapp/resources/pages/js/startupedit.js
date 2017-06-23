@@ -151,8 +151,16 @@ var startupfollows;
                 email = email.toLowerCase();
                 var members = this.members();
                 for (var i = 0; i < members.length; i++) {
-                    if (member != members[i] && members[i].email().toLowerCase() == email) {
-                        return true;
+                    var current = members[i];
+                    if (member != current) {
+                        if (current.user()) {
+                            if (current.user().email.toLowerCase() == email) {
+                                return true;
+                            }
+                        }
+                        else if (current.email().toLowerCase() == email) {
+                            return true;
+                        }
                     }
                 }
                 return false;
@@ -229,12 +237,14 @@ var startupfollows;
                 this.index = ko.observable(1);
                 this.startup = ko.observable();
                 this.stories = ko.observableArray();
+                this.events = ko.observableArray();
                 this.form = new StartupForm();
                 this.storyform = new StartupStoryForm();
                 this.startup.subscribe(function (s) {
                     _this.form.fill(s);
                     _this.storyform.new(s.uid);
                     _this.listStories();
+                    _this.listEvents();
                 });
                 this.index.subscribe(function (i) {
                     $('#sections').formslider('animate:' + (i - 1));
@@ -283,6 +293,9 @@ var startupfollows;
             Model.prototype.showSection = function (i) {
                 this.index(i);
             };
+            /**
+             * Load stories
+             */
             Model.prototype.listStories = function () {
                 var _this = this;
                 var request = {
@@ -297,6 +310,26 @@ var startupfollows;
                     }
                 });
             };
+            /**
+             * Load events
+             */
+            Model.prototype.listEvents = function () {
+                var _this = this;
+                var request = {
+                    type: 'get',
+                    url: host + 'rest/startup/' + this.startup().uid + '/event/all',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json'
+                };
+                $.ajax(request).complete(function (response, status) {
+                    if (response.status == 200) {
+                        _this.events(response.responseJSON);
+                    }
+                });
+            };
+            /**
+             * Init story text editor
+             */
             Model.prototype.initMCE = function () {
                 tinymce.init({
                     setup: function (ed) {

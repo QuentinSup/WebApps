@@ -69,7 +69,7 @@ class request extends dwBasicController {
 		$mail_model = new dwObject ();
 		$mail_model->img_logo = dwFile::getBase64File ( 'assets/img/logo.png' );
 		$mail_model->projectName = $doc->name;
-		$mail_model->url = $request->getBaseUri () . "/get-started/" . $p_id;
+		$mail_model->url = $request->getBaseUri () . "/request/" . $p_id;
 		
 		$str = dwSmartyTemplate::renderize ( "../emails/startupRequest.html", $mail_model->toArray () );
 		

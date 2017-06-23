@@ -3,6 +3,8 @@ module startupfollows.main {
     declare var projects;
     declare var ko;
     declare var $;
+    declare function error(message, title?);
+    declare function success(message, title?, opts?);
     
     class StartupFormRequest {
      
@@ -29,8 +31,14 @@ module startupfollows.main {
                 dataType: 'json' 
             };
             
-            $.ajax(request).complete(function(response, status) {
-                   console.log(status, response);
+            $.ajax(request).complete((response, status): void => {
+                if(response.status == 201) {
+                    success("Un email a été envoyé au porteur du projet '" + this.name() + "' ;)", "Super !");
+                    this.name('');
+                    this.email('');
+                } else {
+                    error("Holy s**t !<br />Une erreur est apparue durant le traitement de la requête. Essayez de recommencer dans quelques minutes (on sait jamais) !");
+                }
             });
             
             return false;

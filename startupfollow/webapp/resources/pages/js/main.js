@@ -11,6 +11,7 @@ var startupfollows;
              * Submit data
              */
             StartupFormRequest.prototype.submit = function () {
+                var _this = this;
                 var data = {
                     name: this.name(),
                     email: this.email()
@@ -23,7 +24,14 @@ var startupfollows;
                     dataType: 'json'
                 };
                 $.ajax(request).complete(function (response, status) {
-                    console.log(status, response);
+                    if (response.status == 201) {
+                        success("Un email a été envoyé au porteur du projet '" + _this.name() + "' ;)", "Super !");
+                        _this.name('');
+                        _this.email('');
+                    }
+                    else {
+                        error("Holy s**t !<br />Une erreur est apparue durant le traitement de la requête. Essayez de recommencer dans quelques minutes (on sait jamais) !");
+                    }
                 });
                 return false;
             };

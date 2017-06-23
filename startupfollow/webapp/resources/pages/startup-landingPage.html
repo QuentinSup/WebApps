@@ -11,7 +11,7 @@
 				<!-- /ko -->
 			</div>
 			<ul class="navigation-bar col-sm-7">
-				<li><a href="#about">A propos</a></li>
+				<li><a href="#" data-bind="click: function() { document.location = host }">Accueil</a></li>
 				<li><a href="#members">L'équipe</a></li>
 			</ul>
 			<div class="col-sm-4 text-right">
@@ -102,6 +102,9 @@
 <section id="story" class="section">
 	<div class="container">
 		<h5>Dernières nouvelles !</h5>
+		<!-- ko if: stories().length == 0 -->
+		<div class="h7">Le projet n'a pas encore donné de nouvelle :( !<br />Suivez le projet pour être informés dès que le projet évolue !</div>
+		<!-- /ko -->
 		<!-- ko foreach: stories -->
 		<article>
 			<label class="strong text-center" data-bind="text: $data.shortLine"></label>

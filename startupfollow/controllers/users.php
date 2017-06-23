@@ -52,6 +52,17 @@ class user extends dwBasicController {
 	public static $startupUserSubscriptionEntity;
 	
 	/**
+	 * @DatabaseEntity('startup_member')
+	 */
+	public static $memberEntity;
+	
+	/**
+	 * @DatabaseEntity('startup_follower')
+	 */
+	public static $startupFollowerEntity;
+	
+	
+	/**
 	 * @Mapping(method = "get", consumes="application/json", produces="application/json; charset=utf-8")
 	 */
 	public function get(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
@@ -60,20 +71,8 @@ class user extends dwBasicController {
 			return HttpStatus::FORBIDDEN;
 		}
 		
-		$p_uid = self::$session -> user -> uid;
-		
-		$doc = self::$userEntity->factory ();
-		$doc->uid = $p_uid;
-		if ($data = $doc->get()) {
+		return self::$session -> user -> toArray();
 
-			$docSubscriptions = self::$startupUserSubscriptionEntity -> factory();
-			$docSubscriptions -> user_uid = $doc -> uid;
-			$data -> subscriptions = $docSubscriptions -> getAll();
-			
-			return $data -> toArray();
-		}
-		
-		$response->statusCode = HttpStatus::NOT_FOUND;
 	}
 	
 	/**
@@ -123,23 +122,63 @@ class user extends dwBasicController {
 		$doc->name = strtolower($json->name);
 		$doc->password = md5 ( $json->password );
 		
-		if ($doc->find ()) {
+		if ($user = $doc->get()) {
 			
-			self::$session->start ();
-			$data = $doc->toArray ();
-			self::$session->user = new dwObject($data);
+			self::$session->start();
 			
 			// Update date of connection
 			$docUpdate = self::$userEntity->factory ();
-			$docUpdate -> uid = $doc -> uid;
+			$docUpdate -> uid = $user -> uid;
 			$docUpdate -> lastConnection = $docUpdate -> castSQL('CURRENT_TIMESTAMP');
 			$docUpdate -> update();
 			
-			return $data;
+			if($this -> updateUserDataSession($user -> uid)) {
+				return self::$session -> user -> toArray();
+			}
+
 		}
 		
 		self::$session->destroy ();
 		return HttpStatus::NOT_FOUND;
+	}
+	
+	/**
+	 * Update data user into session
+	 * @param unknown $uid
+	 */
+	private function updateUserDataSession($uid) {
+		
+		$doc = self::$userEntity->factory ();
+		$doc-> uid = $uid;
+		
+		if ($doc->find()) {
+				
+			$user = $doc-> export();
+			$user -> password = null; // Hide password !
+		
+			// Look for member teams
+			$docMemberTeam = self::$memberEntity->factory ();
+			$docMemberTeam -> user_uid = $user -> uid;
+			$memberOf = array();
+			if($docMemberTeam -> find()) {
+				do {
+					$memberOf[] = $docMemberTeam -> startup_uid;
+				} while($docMemberTeam -> fetch());
+			}
+			$user -> memberOf = $memberOf;
+				
+			// List for subscriptions
+			$docSubscriptions = self::$startupUserSubscriptionEntity -> factory();
+			$docSubscriptions -> user_uid = $doc -> uid;
+			$user -> subscriptions = $docSubscriptions -> getAll();
+		
+			self::$session->user = $user;
+			
+			return true;
+		}
+		
+		return false;
+		
 	}
 	
 	/**
@@ -257,9 +296,10 @@ class user extends dwBasicController {
 			$doc->password = md5 ( $json->password );
 		}
 		
-		if ($doc->update ()) {
-			$doc->find();
-			return $doc->toArray ();
+		if ($doc->update()) {
+			if($this -> updateUserDataSession($user -> uid)) {
+				return self::$session -> user -> toArray();
+			}
 		}
 		
 		return HttpStatus::INTERNAL_SERVER_ERROR;
@@ -291,6 +331,8 @@ class user extends dwBasicController {
 			return HttpStatus::INTERNAL_SERVER_ERROR;
 		}
 	}
+	
+	
 }
 
 ?>

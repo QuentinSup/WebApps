@@ -6,11 +6,13 @@ use dw\classes\dwHttpRequest;
 use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
 use dw\enums\HttpStatus;
+use dw\accessors\ary;
 use dw\helpers\dwFile;
-use dw\helpers\dwString;
 use dw\classes\dwObject;
 use dw\classes\controllers\dwBasicController;
 use dw\adapters\template\dwSmartyTemplate;
+
+include_once '../classes/StartupEntity.class.php';
 
 /**
  * @Mapping(value = '/rest/startup')
@@ -86,7 +88,7 @@ class startup extends dwBasicController {
 	 * @return boolean
 	 */
 	public function startRequest(dwHttpRequest $request, dwHttpResponse $response, dwModel $model) {
-	
+
 		$method = strtolower($request -> getMethod());
 		
 		if($method == "post" 
@@ -101,20 +103,46 @@ class startup extends dwBasicController {
 	}
 	
 	/**
-	 * @Mapping(method = "GET", value="/exists/:name", consumes="application/json", produces="application/json")
+	 * Charge les informations d'un compte startup
+	 * @param unknown $uid
+	 * @return unknown|NULL
+	 */
+	private function loadStartup($uid) {
+		
+		$startupE = new classes\StartupEntity(self::$startupEntity);
+		return $startupE -> get($uid);
+
+	}
+	
+	/**
+	 * Vérifie si l'utilisateur connecté à les droits suffisants pour effectuer une opération
+	 * @param unknown $uid
+	 * @return unknown|NULL
+	 */
+	private function isCurrentUserAllowed($uid) {
+	
+		if(self::$session -> has('user')) {
+			if(ary::exists(self::$session -> user -> memberOf, $uid)) {
+				return true;
+			}
+		}
+		return false;
+
+	}
+	
+	/**
+	 * @Mapping(method = "GET", value="/exists/:ref", consumes="application/json", produces="application/json")
 	 */
 	public function exists(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
 		
-		$ref = $this -> convertName($request -> Path('name'));
+		$ref = $request -> Path('ref');
 		
 		if(self::$log -> isTraceEnabled()) {
 			self::$log -> trace("Vérification de l'existence du compte pour la Startup '$ref'");
 		}
 		
-		$doc = self::$startupEntity -> factory();
-		$doc -> ref = $ref;
-		if($doc -> find()) {
+		if($this -> loadStartup($ref)) {
 			$response -> statusCode = HttpStatus::OK;
 		} else {
 			$response -> statusCode = HttpStatus::NOT_FOUND;
@@ -145,7 +173,7 @@ class startup extends dwBasicController {
 				$data[] = $doc -> toArray();	
 			} while($doc -> fetch());
 		} else {
-			$response -> statusCode = HttpStatus::NO_CONTENT;
+			return HttpStatus::NO_CONTENT;
 		}
 
 		return $data;
@@ -160,51 +188,44 @@ class startup extends dwBasicController {
 		$p_ref = $request -> Path('ref');
 		$p_norestrict = $request -> Param('norestrict');
 		
-		$doc = self::$startupEntity -> factory();
+		$startup = $this -> loadStartup($p_ref);
 		
-		if(is_numeric($p_ref)) {
-			$doc -> uid = $p_ref;
-		} else {
-			$ref = $this -> convertName($p_ref);
-			$doc -> ref = $ref;
+		if(is_null($startup)) {
+			return HttpStatus::NOT_FOUND;
 		}
 		
-		$data = array();
-		
-		if($doc -> get()) {
-			$data = new dwObject($doc -> toArray());
+		// List for members
+		$memberDoc = self::$memberEntity -> factory();
+		$memberDoc -> startup_uid = $startup -> uid;
 			
-			$memberDoc = self::$memberEntity -> factory();
-			$memberDoc -> startup_uid = $doc -> uid;
-			
-			$members = array();
-			if($memberDoc -> find()) {
-				do {
-					if(($p_norestrict || $memberDoc -> joined) && $memberDoc -> user_uid) {
-						$member = &$members[];
-						$member = $memberDoc -> toArray();
-						$userDoc = self::$userEntity -> factory();
-						$userDoc -> uid = $memberDoc -> user_uid;
-						if($user = $userDoc -> get()) {
-							$user -> password = null; // Clean password !!
-							$member['user'] = $user -> toArray();
-						} else {
-							
-							self::$log -> warn("User (uid=".$userDoc -> uid.") not found !");
-							
-						}
+		$members = array();
+		if($memberDoc -> find()) {
+			do {
+				if(($p_norestrict || $memberDoc -> joined) && $memberDoc -> user_uid) {
+					$member = &$members[];
+					$member = $memberDoc -> toArray();
+					$userDoc = self::$userEntity -> factory();
+					$userDoc -> uid = $memberDoc -> user_uid;
+					if($user = $userDoc -> get()) {
+						$user -> password = null; // Clean password !!
+						$member['user'] = $user -> toArray();
+					} else {
+						
+						self::$log -> warn("User (uid=".$userDoc -> uid.") not found !");
+						
 					}
-				} while($memberDoc -> fetch());
-			}
-			
-			$data -> members = $members;
-			
-			
-		} else {
-			$response -> statusCode = HttpStatus::NOT_FOUND;
+				}
+			} while($memberDoc -> fetch());
 		}
 		
-		return $data ->  toArray();
+		$startup -> members = $members;
+		
+		// List for subscriptions
+		$docSubscriptions = self::$startupFollowerEntity -> factory();
+		$docSubscriptions -> startup_uid = $startup -> uid;
+		$startup -> subscriptions = $docSubscriptions -> getAll();
+		
+		return $startup ->  toArray();
 		
 	}
 	
@@ -298,26 +319,35 @@ class startup extends dwBasicController {
 	 * @param unknown $name
 	 */
 	private function convertName($name) {
-		return strtolower(dwString::f2link($name));
+		return StartupEntity::convertName($name);
 	}
 	
 	/**
-	 * @Mapping(method = "put", value=":id", consumes="application/json")
+	 * @Mapping(method = "put", value=":uid", consumes="application/json")
 	 */
 	public function update(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
-		$p_id = strtolower($request -> Path('id'));
+		$p_id = strtolower($request -> Path('uid'));
 	
 		if(self::$log -> isTraceEnabled()) {
 			self::$log -> trace("Modification du compte '$p_id'");
 		}
 	
+		$startup = $this -> loadStartup($p_id);
+		if(is_null($startup)) {
+			return HttpStatus::NOT_FOUND;
+		}
+		
+		if(!$this -> isCurrentUserAllowed($startup -> uid)) {
+			return HttpStatus::FORBIDDEN;
+		}
+		
 		$jsonContent = $request -> Body();
 		
 		$ref = $this -> convertName($jsonContent -> name);
 		
 		$doc = self::$startupEntity -> factory();
-		$doc -> uid = $p_id;
+		$doc -> uid = $startup -> uid;
 		$doc -> name = $jsonContent -> name;
 		$doc -> image = $jsonContent -> image;
 		$doc -> email = $jsonContent -> email;
@@ -408,77 +438,27 @@ class startup extends dwBasicController {
 			
 			return true;
 	}
-	
-	/**
-	 * @Mapping(method = "post", value=":uid/subscribe", consumes="application/json")
-	 */
-	public function addSubscription(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
-	{
-		
-		$p_startup_uid = $request -> Path('uid');
-		$p_uid = self::$session -> user -> uid;
-		
-		if(self::$log -> isTraceEnabled()) {
-			self::$log -> trace("Creation d'un souscription au compte Startup");
-		}
 
-		$doc = self::$startupFollowerEntity -> factory();
-		$doc -> startup_uid = $p_startup_uid;
-		$doc -> user_uid = $p_uid;
-		
-		if($doc -> insert()) {
-			
-			// Add event follow
-			$this -> addEvent($p_startup_uid, $p_uid, self::EVENT_FOLLOW, null);
-			
-			$uid = $doc -> getLastInsertId();
-		} else {
-			$response -> statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
-		}
-	
-	}
-	
 	/**
-	 * @Mapping(method = "delete", value=":uid/subscribe", consumes="application/json")
-	 */
-	public function removeSubscription(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
-	{
-	
-		$p_startup_uid = $request -> Path('uid');
-		$p_uid = self::$session -> user -> uid;
-	
-		if(self::$log -> isTraceEnabled()) {
-			self::$log -> trace("Suppression d'une souscription au compte Startup");
-		}
-	
-		$doc = self::$startupFollowerEntity -> factory();
-		$doc -> startup_uid = $p_startup_uid;
-		$doc -> user_uid = $p_uid;
-	
-		if($doc -> delete()) {
-			// Add event unfollow
-			$this -> addEvent($p_startup_uid, $p_uid, self::EVENT_UNFOLLOW, null);
-		} else {
-			$response -> statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
-		}
-	
-	}
-	
-	/**
-	 * @Mapping(method = "post", value=":uid/event", consumes="application/json")
+	 * @Mapping(method = "post", value=":ref/event", consumes="application/json")
 	 */
 	public function postEvent(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
-		$p_startup_uid = $request -> Path('uid');
+		$p_ref = $request -> Path('ref');
 	
 		if(self::$log -> isTraceEnabled()) {
-			self::$log -> trace("Creation d'un événement associé au compte Startup n°'$p_startup_uid'");
+			self::$log -> trace("Creation d'un événement associé au compte Startup n°'$p_ref'");
+		}
+		
+		$startup = $this -> loadStartup($p_ref);
+		if(is_null($startup)) {
+			return HttpStatus::NOT_FOUND;
 		}
 
 		$user_uid = self::$session -> user -> uid;
 		$json = $request -> Body();
 		
-		if($this -> addEvent($p_startup_uid, $user_uid, $json -> type, @$json -> data) == null) {
+		if($this -> addEvent($startup -> uid, $user_uid, $json -> type, @$json -> data) == null) {
 			$response -> statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
 		}
 	
@@ -508,6 +488,38 @@ class startup extends dwBasicController {
 	}
 	
 	/**
+	 * 
+	 * @param unknown $data
+	 * @return unknown
+	 */
+	function __mapEvent($data) {
+		
+		static $users = array();
+		
+		$user_uid = $data['user_uid'];
+		if($user_uid) {
+			$user = ary::get($users, $user_uid);
+			if(!$user) {
+				
+				if(self::$log -> isTraceEnabled()) {
+					self::$log -> trace("Récupération des données de l'utilisateur '$user_uid' pour l'événement");
+				}
+				
+				$docUser = self::$userEntity -> factory();
+				$docUser -> uid = $user_uid;
+				if($user = $docUser -> get()) {
+					$user -> password = null;
+					$users[$user_uid] = $user -> export("name") -> toArray();
+				}
+			}
+			
+			$data['user'] = $user;
+			
+		}
+		return $data;
+	}
+	
+	/**
 	 * @Mapping(method = "get", value=":uid/event/all", consumes="application/json", produces="application/json")
 	 */
 	public function getAllEvents(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
@@ -523,9 +535,9 @@ class startup extends dwBasicController {
 		$doc = self::$startupEventEntity -> factory();
 		$doc -> startup_uid = $p_startup_uid;
 		$doc -> type = $p_type;
-	
+
 		if($doc -> plist('date DESC')) {
-			return $doc -> fetchAll();
+			return $doc -> fetchAll(array($this, "__mapEvent"));
 		} else {
 			$response -> statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
 		}
@@ -656,19 +668,28 @@ class startup extends dwBasicController {
 	}
 	
 	/**
-	 * @Mapping(method = "post", value=":startup_uid/story", consumes="application/json", produces="application/json; charset=utf-8")
+	 * @Mapping(method = "post", value=":ref/story", consumes="application/json", produces="application/json; charset=utf-8")
 	 */
 	public function addStory(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
-		$p_startup_uid = $request -> Path('startup_uid');
+		$p_ref = $request -> Path('ref');
 	
 		if(self::$log -> isTraceEnabled()) {
-			self::$log -> trace("Creation d'un nouveau récit Startup");
+			self::$log -> trace("Creation d'un nouveau récit Startup '$p_ref'");
 		}
 	
+		$startup = $this -> loadStartup($p_ref);
+		if(is_null($startup)) {
+			return HttpStatus::NOT_FOUND;
+		}
+		
+		if(!$this -> isCurrentUserAllowed($startup -> uid)) {
+			return HttpStatus::FORBIDDEN;
+		}
+		
 		$jsonContent = $request -> Body();
 	
 		$doc = self::$storyEntity -> factory();
-		$doc -> startup_uid = $p_startup_uid;
+		$doc -> startup_uid = $startup -> uid;
 		$doc -> shortLine = $jsonContent -> shortLine;
 		$doc -> text = $jsonContent -> text;
 		$doc -> date = @$jsonContent -> date?$jsonContent -> date:$doc -> castSQL('CURRENT_TIMESTAMP');
@@ -693,23 +714,32 @@ class startup extends dwBasicController {
 	}
 	
 	/**
-	 * @Mapping(method = "put", value=":startup_uid/story/:uid", consumes="application/json", produces="application/json; charset=utf-8")
+	 * @Mapping(method = "put", value=":ref/story/:uid", consumes="application/json", produces="application/json; charset=utf-8")
 	 */
 	public function updateStory(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
 	
-		$p_startup_uid = $request -> Path('startup_uid');
+		$p_ref = $request -> Path('ref');
 		$p_uid = $request -> Path('uid');
 	
 		if(self::$log -> isTraceEnabled()) {
-			self::$log -> trace("Modification du récit '$p_uid'");
+			self::$log -> trace("Modification du récit '$p_ref'");
 		}
 	
+		$startup = $this -> loadStartup($p_ref);
+		if(is_null($startup)) {
+			return HttpStatus::NOT_FOUND;
+		}
+		
+		if(!$this -> isCurrentUserAllowed($startup -> uid)) {
+			return HttpStatus::FORBIDDEN;
+		}
+		
 		$jsonContent = $request -> Body();
 	
 		$doc = self::$storyEntity -> factory();
 		$doc -> uid = $p_uid;
-		$doc -> startup_uid = $p_startup_uid;
+		$doc -> startup_uid = $startup -> uid;
 		$doc -> shortLine = $jsonContent -> shortLine;
 		$doc -> text = $jsonContent -> text;
 		$doc -> date = $jsonContent -> date;
@@ -721,6 +751,78 @@ class startup extends dwBasicController {
 	
 		return HttpStatus::INTERNAL_SERVER_ERROR;
 	
+	}
+	
+
+	/**
+	 * @Mapping(method = "post", value=":ref/subscribe", consumes="application/json")
+	 */
+	public function addSubscription(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	{
+		if(!self::$session -> has('user')) {
+			return HttpStatus::FORBIDDEN;
+		}
+	
+		$p_ref = $request -> Path('ref');
+		$p_uid = self::$session -> user -> uid;
+	
+		$startup = $this -> loadStartup($p_ref);
+		if(is_null($startup)) {
+			return HttpStatus::NOT_FOUND;
+		}
+		
+		if(self::$log -> isTraceEnabled()) {
+			self::$log -> trace("Creation d'un souscription au compte Startup");
+		}
+	
+		$doc = self::$startupFollowerEntity -> factory();
+		$doc -> startup_uid = $startup -> uid;
+		$doc -> user_uid = $p_uid;
+	
+		if($doc -> insert()) {
+	
+			// Add event follow
+			$this -> addEvent($startup -> uid, $p_uid, self::EVENT_FOLLOW, null);
+	
+			$uid = $doc -> getLastInsertId();
+		} else {
+			$response -> statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
+		}
+	
+	}
+	
+	/**
+	 * @Mapping(method = "delete", value=":ref/subscribe", consumes="application/json")
+	 */
+	public function removeSubscription(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	{
+	
+		if(!self::$session -> has('user')) {
+			return HttpStatus::FORBIDDEN;
+		}
+	
+		$p_ref = $request -> Path('ref');
+		$p_uid = self::$session -> user -> uid;
+		
+		$startup = $this -> loadStartup($p_ref);
+		if(is_null($startup)) {
+			return HttpStatus::NOT_FOUND;
+		}
+	
+		if(self::$log -> isTraceEnabled()) {
+			self::$log -> trace("Suppression d'une souscription au compte Startup");
+		}
+	
+		$doc = self::$startupFollowerEntity -> factory();
+		$doc -> startup_uid = $startup -> uid;
+		$doc -> user_uid = $p_uid;
+	
+		if($doc -> delete()) {
+			// Add event unfollow
+			$this -> addEvent($startup -> uid, $p_uid, self::EVENT_UNFOLLOW, null);
+		} else {
+			$response -> statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
+		}
 	}
 	
 	

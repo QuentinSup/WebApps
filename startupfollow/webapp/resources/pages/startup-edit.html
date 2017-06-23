@@ -24,6 +24,7 @@
 					<li data-bind="click: function() { showSection(2) }, css: { 'strong': index() == 2 }">Logo &amp; réseaux sociaux</li>
 					<li data-bind="click: function() { showSection(3) }, css: { 'strong': index() == 3 }">Votre équipe</li>
 					<li data-bind="click: function() { showSection(4) }, css: { 'strong': index() == 4 }">Votre histoire</li>
+					<li data-bind="click: function() { showSection(5) }, css: { 'strong': index() == 5 }">Les événements</li>
 				</ul>
 			</div>
 			<div class="col-sm-9">
@@ -142,7 +143,12 @@
 											<strong>accepté</strong>
 											<!-- /ko -->
 											<!-- ko ifnot: joined() -->
+											<!-- ko if: !$data.invitationSentAt() -->
+											<strong>nouveau</strong>
+											<!-- /ko -->
+											<!-- ko if: $data.invitationSentAt() -->
 											<strong data-bind="attr: { 'title': 'Invitation envoyée le ' + $data.invitationSentAt() }">invitation en attente</strong>
+											<!-- /ko -->
 											<!-- /ko -->
 											</label>
 										</div>
@@ -155,14 +161,14 @@
 										</div>
 										<div class="col-sm-4">
 											<div class="form-group">
-												<!-- ko if: !$data.invitationSentAt -->
+												<!-- ko if: !$data.invitationSentAt() -->
 												<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input', disable: !!$data.uid(), attr: { 'title': $data.invitationSentAt()?'Invitation envoyée le ' + $data.invitationSentAt():'' }" placeholder="Email" required />
 												<!-- /ko -->
-												<!-- ko if: $data.invitationSentAt -->
+												<!-- ko if: $data.invitationSentAt() -->
 												<label>
 												<span data-bind="text: $data.user().email"></span>
 												<br />
-												<strong>invitation en attente</strong>*
+												<strong>nouveau</strong>
 												</label>
 												<!-- /ko -->
 											</div>
@@ -226,6 +232,21 @@
 										</li>
 									</ul>
 								</div>
+							</section>
+						</li>
+						<li class="content">
+							<section>
+								<div class="h8">Historique</div>
+								<!-- ko foreach: events() -->
+								<ul>
+									<!-- ko if: $data.type == 1 -->
+									<li>
+									L'utilisateur #<strong data-bind="text: $data.user_uid"></strong> <strong data-bind="text: $data.user.name"></strong> a créé le compte
+									
+									</li>
+									<!-- /ko -->
+								</ul>
+								<!-- /ko -->
 							</section>
 						</li>
 					</ul>

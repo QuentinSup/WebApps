@@ -6,10 +6,13 @@ use dw\dwFramework as dw;
 use dw\classes\dwHttpRequest;
 use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
+use dw\accessors\ary;
 use dw\classes\dwObject;
 use dw\classes\dwSession;
 use dw\enums\HttpStatus;
 use dw\classes\controllers\dwBasicController;
+
+include_once '../classes/StartupEntity.class.php';
 
 /**
  * @Mapping(value = '/')
@@ -25,6 +28,12 @@ class main extends dwBasicController {
 	 * @DatabaseEntity('startup_member')
 	 */
 	public static $memberEntity;
+	
+	/**
+	 * @DatabaseEntity('startup')
+	 */
+	public static $startupEntity;
+	
 	
 	/**
 	 * @Session()
@@ -75,6 +84,14 @@ class main extends dwBasicController {
 	public function login(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
 		return $this -> prepareModel($request, $model, 'log-in') -> view();
+	}
+	
+	/**
+	 * @Mapping(method = "get", value = "sign-up")
+	 */
+	public function signup(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	{
+		return $this -> prepareModel($request, $model, 'sign-up') -> view();
 	}
 	
 	/**
@@ -185,13 +202,26 @@ class main extends dwBasicController {
 	 */
 	public function startupEdit(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
+		$p_ref = $request -> Path('ref');
+		
 		if(!self::$session -> has('user')) {
 			$model -> redirectTo = $request -> getUri();
 			return self::login($request, $response, $model);
 		}
 		
-		$ref = $request -> Path('ref');
-		$model -> ref = $ref;
+		$startupE = new classes\StartupEntity(self::$startupEntity);
+		$startup = $startupE -> get($p_ref);
+		
+		if(is_null($startup)) {
+			return HttpStatus::NOT_FOUND;
+		}
+		
+		if(!ary::exists(self::$session -> user -> memberOf, $startup -> uid)) {
+			$model -> redirectTo = $request -> getUri();
+			return self::login($request, $response, $model);
+		}
+		
+		$model -> ref = $startup -> uid;
 			
 		return $this -> prepareModel($request, $model, 'startup-edit') -> view();
 	}

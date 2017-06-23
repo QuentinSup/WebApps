@@ -195,8 +195,16 @@ module startupfollows.startupEdit {
             email = email.toLowerCase();
             var members = this.members();
             for(var i = 0; i < members.length; i++) {
-                if(member != members[i] && members[i].email().toLowerCase() == email) {
-                    return true;
+                var current: any = members[i];
+                if(member != current) {
+                    
+                    if(current.user()) {
+                        if(current.user().email.toLowerCase() == email) {
+                            return true;    
+                        }
+                    } else if(current.email().toLowerCase() == email) {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -284,6 +292,7 @@ module startupfollows.startupEdit {
         public index = ko.observable(1);
         public startup = ko.observable();
         public stories = ko.observableArray();
+        public events = ko.observableArray();
         public form = new StartupForm();
         public storyform = new StartupStoryForm();
 
@@ -293,6 +302,7 @@ module startupfollows.startupEdit {
                 this.form.fill(s);
                 this.storyform.new(s.uid);
                 this.listStories();
+                this.listEvents();
             });
             
             this.index.subscribe((i: number): void => {
@@ -353,6 +363,9 @@ module startupfollows.startupEdit {
         }
         
 
+        /**
+         * Load stories
+         */
         public listStories(): void {
 
             var request = {
@@ -368,7 +381,29 @@ module startupfollows.startupEdit {
                 }
             });
         }
+        
+        /**
+         * Load events
+         */
+        public listEvents(): void {
 
+            var request = {
+                type: 'get',
+                url: host + 'rest/startup/' + this.startup().uid + '/event/all',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json'
+            };
+
+            $.ajax(request).complete((response, status): void => {
+                if (response.status == 200) {
+                    this.events(response.responseJSON);
+                }
+            });
+        }
+
+        /**
+         * Init story text editor
+         */
         public initMCE() {
 
             tinymce.init({
