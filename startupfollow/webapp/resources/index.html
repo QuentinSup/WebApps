@@ -66,6 +66,9 @@
 			<div class="col-sm-3">
 				<ul>
 					<li><a href="{$host}">Accueil</a>
+					{if $userName}
+					<li><a href="#" data-bind="click: function() { user.logout(); }">Déconnexion</a></li>
+					{/if}
 				</ul>
 			</div>
 			<div class="col-sm-3">

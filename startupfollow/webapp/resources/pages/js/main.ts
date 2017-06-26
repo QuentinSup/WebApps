@@ -49,7 +49,7 @@ module startupfollows.main {
     
     class Model {
         
-        public P = ko.observableArray(projects);
+        public P = ko.observableArray();
         public R = ko.observableArray();
         public searchValue = ko.observable();
         public startupRequestForm = new StartupFormRequest();

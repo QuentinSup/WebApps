@@ -97,7 +97,10 @@ var startupfollows;
                     }
                 });
             };
-            UserModel.prototype.unlog = function (callback) {
+            /**
+             * Log out user
+             */
+            UserModel.prototype.logout = function (callback) {
                 var request = {
                     type: 'delete',
                     url: host + 'rest/user/auth',
@@ -105,7 +108,7 @@ var startupfollows;
                     dataType: 'json'
                 };
                 $.ajax(request).complete(function (response, status) {
-                    if (response.status == 200) {
+                    if (response.status == 204) {
                         document.location.href = host + 'login';
                     }
                     if (typeof (callback) == "function") {

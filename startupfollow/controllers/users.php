@@ -297,7 +297,7 @@ class user extends dwBasicController {
 		}
 		
 		if ($doc->update()) {
-			if($this -> updateUserDataSession($user -> uid)) {
+			if($this -> updateUserDataSession($p_uid)) {
 				return self::$session -> user -> toArray();
 			}
 		}

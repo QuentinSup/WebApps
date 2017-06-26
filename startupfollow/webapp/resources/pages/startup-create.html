@@ -112,25 +112,59 @@
 								<p>
 								Invitez votre équipe à vous rejoindre !
 								</p>
-							<!-- ko with: form -->
-							<form data-role="form">
-								<label>Votre équipe</label>
-								<!-- ko foreach: members() -->
-								<div class="row">
-									<div class="form-group col-sm-6">
-										<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input'" placeholder="Email" required />
+								<!-- ko with: form -->
+								<form data-role="form" class="form">
+									<label>Votre équipe</label>
+									<!-- ko foreach: members() -->
+									<div class="row">
+										<div class="col-sm-1">
+											<!-- ko ifnot: $data.locked() -->
+											<button class="btn" data-bind="click: function() { $parent.removeMember($index()); }">-</button>
+											<!-- /ko -->
+										</div>
+										<!-- ko if: !!$data.user() -->
+										<div class="col-sm-2 text-center">
+											<div class="img-wrapper">
+												<img data-bind="attr: { 'src': $data.user().image || host + 'assets/img/avatars/team-avatar.png' }" class="img-responsive img-circle small" alt="avatar" />
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<label>
+												<span data-bind="text: $data.user().name"></span>
+											</label>
+										</div>
+										<!-- /ko -->
+										<!-- ko ifnot: !!$data.user() -->
+										<div class="col-sm-2 text-center">
+											<div class="img-wrapper">
+												<img src="{$host}assets/img/avatars/team-avatar.png" class="img-responsive img-circle small" alt="avatar" />
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="form-group">
+												<label>
+													<input type="text" name="email" class="form-control" value="" data-bind="attr: { 'id': 'email' + $index() }, value: $data.email, valueUpdate: 'input'" placeholder="Email" required />
+												</label>
+												<!-- /ko -->
+											</div>
+										</div>
+										<!-- /ko -->
+										<div class="col-sm-3">
+											<div class="form-group">
+												<input type="text" class="form-control" value="" data-bind="value: role, valueUpdate: 'input'" placeholder="Rôle" />
+											</div>
+										</div>
 									</div>
-									<div class="form-group col-sm-3">
-										<input type="text" class="form-control" value="" data-bind="value: role, valueUpdate: 'input'" placeholder="Rôle"  />
+									<!-- /ko -->
+									<div class="form-group">
+										<button data-bind="click: function() { addMember(); }" class="btn">+</button>
 									</div>
-								</div>
+									<div class="form-submit">
+										<button data-bind="click: function() { prev(); }" class="btn blank"><< Retour</button>
+										<button data-bind="click: function() { submit(); }" class="btn btn-default">Terminer</button>
+									</div>
+								</form>
 								<!-- /ko -->
-								<div class="form-group">
-								<button data-bind="click: function() { prev(); }" class="btn blank"><< Retour</button>
-								<button data-bind="click: function() { addMember(); }" class="btn">+</button> <button data-bind="click: function() { submit(); }" class="btn btn-default">Continuer</button>
-								</div>
-							</form>
-							<!-- /ko -->
 						</li>
 						</ul>
 						</div>

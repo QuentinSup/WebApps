@@ -1,4 +1,4 @@
-var error = function(message, title, opts) {
+var error = function(message, title, opts, callback) {
 
 	var options = $.extend({}, {
 		title : title || "Oups !",
@@ -11,11 +11,11 @@ var error = function(message, title, opts) {
 		$.extend(options, opts);
 	}
 
-	swal(options);
+	swal(options, callback);
 
 };
 
-var success = function(message, title, opts) {
+var success = function(message, title, opts, callback) {
 
 	var options = $.extend({}, {
 		title : title || "Yeah !",
@@ -28,7 +28,7 @@ var success = function(message, title, opts) {
 		$.extend(options, opts);
 	}
 
-	swal(options);
+	swal(options, callback);
 
 };
 

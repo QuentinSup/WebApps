@@ -6,7 +6,9 @@ module startupfollows.startup {
     declare var window;
     declare var host;
     declare var user;
-    declare function error(message, title?);
+    declare function isValidEmail(email);
+    declare function toast(message, opts?);
+    declare function error(message, title?, opts?);
     declare function success(message, title?, opts?);
     
     class Model {
@@ -27,8 +29,9 @@ module startupfollows.startup {
                 
                 this.isUserNameUnique(false);
                 
-                if(!s) return;
                 clearTimeout(this.__hdlCheckIfExistsName);
+                
+                if(!s) return;
                 this.__hdlCheckIfExistsName = setTimeout((): void => {
                     this.verifyUserName();
                 }, 500);  
@@ -37,12 +40,19 @@ module startupfollows.startup {
             this.email.subscribe((s: string): void => {
                 
                 this.isUserEmailUnique(false);
+
+                clearTimeout(this.__hdlCheckIfExistsEmail);
                 
                 if(!s) return;
-                clearTimeout(this.__hdlCheckIfExistsEmail);
+                
+                if(!isValidEmail(s)) {
+                   return; 
+                }
+                
                 this.__hdlCheckIfExistsEmail = setTimeout((): void => {
                     this.verifyUserEmail();
-                }, 500);  
+                }, 500);
+                
             });
             
         }
@@ -51,6 +61,10 @@ module startupfollows.startup {
          * Submit data
          */
         public submit(): boolean {
+            
+            if(!this.checkForm()) {
+                return false;
+            }
             
             var data: any = {
                 name: this.name(),
@@ -74,7 +88,7 @@ module startupfollows.startup {
                     }, 2000);
                     
                 } else {
-                    error("Holy s**t ! Une erreur est apparue durant la création de votre compte :(<br />Essayez de recommencer dans quelques minutes !");
+                    error("Holy s**t ! Une erreur est apparue durant la création de votre compte :(. Essayez de recommencer dans quelques minutes !");
                 }
             });
             
@@ -86,9 +100,74 @@ module startupfollows.startup {
             $('#UserForm').formslider('prev');
         }
         
-        public next() {
-            $('#UserForm').formslider('next');
+        /**
+         * Controle email seized
+         */
+        public checkEmail(): boolean {
+            
+            if(!(this.email() || '').trim()) {
+                toast("Il manque une adresse email pour votre compte");
+                return false;
+            }
+            
+            if(!isValidEmail(this.email())) {
+                toast("Malheureusement, cette adresse ne semble pas valide. Êtes-vous sûr de l'avoir bien saisie ?");
+                return false;
+            }
+            
+            if(!this.isUserEmailUnique()) {
+                toast("Malheureusement, cette adresse email est déjà utilisée");
+                return false;
+            }
+            
+            return true;
+            
         }
+        
+        /**
+         * Controle name seized
+         */
+        public checkName(): boolean {
+            
+            if(!(this.name() || '').trim()) {
+                toast("Renseignez un nom utilisateur pour votre compte");
+                return false;
+            }
+            
+            if(!this.isUserNameUnique()) {
+                toast("Malheureusement, ce nom est déjà pris");
+                return false;
+            }
+            
+            return true;
+            
+        }
+        
+        public checkForm(): boolean {
+            if(!this.checkEmail()) {
+                $('#UserForm').formslider('animate:0');    
+                return false;
+            }
+            
+            if(!this.checkName()) {
+                $('#UserForm').formslider('animate:1');    
+                return false;
+            }   
+            
+            return true;
+        }
+        
+        public next(): boolean {
+            
+            if(this.checkForm()) {
+                $('#UserForm').formslider('next');
+                return true;
+            }
+            
+            return false;
+            
+        }
+       
         
         /**
          * check if user name is already used into database

@@ -201,18 +201,20 @@ class startup extends dwBasicController {
 		$members = array();
 		if($memberDoc -> find()) {
 			do {
-				if(($p_norestrict || $memberDoc -> joined) && $memberDoc -> user_uid) {
+				if(($p_norestrict || $memberDoc -> joined)) {
 					$member = &$members[];
 					$member = $memberDoc -> toArray();
-					$userDoc = self::$userEntity -> factory();
-					$userDoc -> uid = $memberDoc -> user_uid;
-					if($user = $userDoc -> get()) {
-						$user -> password = null; // Clean password !!
-						$member['user'] = $user -> toArray();
-					} else {
-						
-						self::$log -> warn("User (uid=".$userDoc -> uid.") not found !");
-						
+					if($memberDoc -> user_uid) {
+						$userDoc = self::$userEntity -> factory();
+						$userDoc -> uid = $memberDoc -> user_uid;
+						if($user = $userDoc -> get()) {
+							$user -> password = null; // Clean password !!
+							$member['user'] = $user -> toArray();
+						} else {
+							
+							self::$log -> warn("User (uid=".$userDoc -> uid.") not found !");
+							
+						}
 					}
 				}
 			} while($memberDoc -> fetch());
@@ -230,7 +232,7 @@ class startup extends dwBasicController {
 	}
 	
 	/**
-	 * @Mapping(method = "post", consumes="application/json")
+	 * @Mapping(method = "post", consumes="application/json", produces="application/json; charset=utf-8")
 	 */
 	public function create(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
@@ -248,7 +250,7 @@ class startup extends dwBasicController {
 		$doc -> email = $jsonContent -> email;
 		$doc -> image = @$jsonContent -> image;
 		$doc -> ref = $ref;
-		$doc -> punchLine = @$jsonContent -> punchLine;
+		$doc -> punchLine = isset($jsonContent -> punchLine)?$jsonContent -> punchLine:'';
 		$doc -> link_website = @$jsonContent -> link_website;
 		$doc -> link_twitter = @$jsonContent -> link_twitter;
 		$doc -> link_facebook = @$jsonContent -> link_facebook;
@@ -258,41 +260,39 @@ class startup extends dwBasicController {
 
 			// Add event creation
 			$this -> addEvent($uid, self::$session -> user -> uid, self::EVENT_CREATE, null);
-			
-			// Add current user as member founder
-			$memberDoc = self::$memberEntity -> factory();
-			$memberDoc -> startup_uid = $uid;
-			$memberDoc -> user_uid = self::$session -> user -> uid;
-			$memberDoc -> founder = 1;
-			$memberDoc -> joined = 1;
-			$memberDoc -> insert();
-			
+
 			// Add other member and send invitation to member with no account
 			foreach($jsonContent -> members as $member) {
-				$memberDoc = self::$memberEntity -> factory();
-				$memberDoc -> startup_uid = $uid;
-				$memberDoc -> user_uid = @$member -> user_uid;
-				$memberDoc -> role = $member -> role;
-				$memberDoc -> invitation_email = $member -> invitation_email;
-				$memberDoc -> insert();
 				
-				if($memberDoc -> invitation_email) {
-					// Send invitation email
-					$mail_model = new dwObject();
-					$userName = self::$session -> user -> name;
-					$mail_model -> email = $memberDoc -> invitation_email;
-					$mail_model -> founderName = $userName;
-					$mail_model -> startupName = $doc -> name;
-					$mail_model -> memberRole = $memberDoc -> role;
-					$mail_model -> url = $request -> getBaseUri()."/startup/".$doc -> ref."/join/".$memberDoc -> getLastInsertId();
-						
-					if($this -> sendInvitationEmail($mail_model)) {
-						$memberUpdateDoc = $memberDoc -> factory();
-						$memberUpdateDoc -> uid = $memberDoc -> uid;
-						$memberUpdateDoc -> invitationSentAt = $memberUpdateDoc -> castSQL('CURRENT_TIMESTAMP');
-						$memberUpdateDoc -> update();
+				if(@$member -> user_uid || $member -> invitation_email) {
+				
+					$memberDoc = self::$memberEntity -> factory();
+					$memberDoc -> startup_uid = $uid;
+					$memberDoc -> user_uid = @$member -> user_uid;
+					$memberDoc -> role = @$member -> role;
+					$memberDoc -> founder = @$member -> founder?1:0;
+					$memberDoc -> joined = @$member -> joined?1:0;
+					$memberDoc -> invitation_email = $member -> invitation_email;
+					$memberDoc -> insert();
+					
+					if($memberDoc -> invitation_email && ($memberDoc -> joined == 0)) {
+						// Send invitation email
+						$mail_model = new dwObject();
+						$userName = self::$session -> user -> name;
+						$mail_model -> email = $memberDoc -> invitation_email;
+						$mail_model -> founderName = $userName;
+						$mail_model -> startupName = $doc -> name;
+						$mail_model -> memberRole = isset($memberDoc -> role)?$memberDoc -> role:'membre';
+						$mail_model -> url = $request -> getBaseUri()."/startup/".$doc -> ref."/join/".$memberDoc -> getLastInsertId();
+							
+						if($this -> sendInvitationEmail($mail_model)) {
+							$memberUpdateDoc = $memberDoc -> factory();
+							$memberUpdateDoc -> uid = $memberDoc -> getLastInsertId();
+							$memberUpdateDoc -> invitationSentAt = $memberUpdateDoc -> castSQL('CURRENT_TIMESTAMP');
+							$memberUpdateDoc -> update();
+						}
+	
 					}
-
 				}
 			}
 			
@@ -306,11 +306,14 @@ class startup extends dwBasicController {
 			
 			if(!self::$smtp -> send($doc -> email, null, null, "Bienvenue sur StartupFollow", $str)) {
 				self::$log -> error("Error sending email to ".$doc -> email);
+				return HttpStatus::INTERNAL_SERVER_ERROR;
 			}
 			
-		} else {
-			$response -> statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
+			return $doc -> toArray();
+			
 		}
+		
+		return HttpStatus::INTERNAL_SERVER_ERROR;
 		
 	}
 	
@@ -319,7 +322,7 @@ class startup extends dwBasicController {
 	 * @param unknown $name
 	 */
 	private function convertName($name) {
-		return StartupEntity::convertName($name);
+		return classes\StartupEntity::convertName($name);
 	}
 	
 	/**
@@ -364,56 +367,61 @@ class startup extends dwBasicController {
 			
 			foreach($jsonContent -> members as $member) {
 				
-				$memberDoc = self::$memberEntity -> factory();
-				$memberDoc -> uid 				= @$member -> uid;
-				$memberDoc -> user_uid 			= @$member -> user_uid;
-				$memberDoc -> startup_uid 		= $doc -> uid;
-				$memberDoc -> role 				= $member -> role;
-				$memberDoc -> invitation_email 	= @$member -> invitation_email;
+				if(@$member -> user_uid || @$member -> invitation_email) {
 				
-				if($memberDoc -> uid) {
+					$memberDoc = self::$memberEntity -> factory();
+					$memberDoc -> uid 				= @$member -> uid;
+					$memberDoc -> user_uid 			= @$member -> user_uid;
+					$memberDoc -> startup_uid 		= $doc -> uid;
+					$memberDoc -> role 				= @$member -> role;
+					$memberDoc -> invitation_email 	= @$member -> invitation_email;
 					
-					if($member -> deleted == true) {
-						$memberDoc -> delete();
+					if($memberDoc -> uid) {
+						
+						if($member -> deleted == true) {
+							$memberDoc -> delete();
+						} else {
+							$memberDoc -> update();
+							$uid = $memberDoc -> uid;
+						}
+						
 					} else {
-						$memberDoc -> update();
-						$uid = $memberDoc -> uid;
+						$memberDoc -> insert();
+						$uid = $memberDoc -> getLastInsertId();
 					}
 					
-				} else {
-					$memberDoc -> insert();
-					$uid = $memberDoc -> getLastInsertId();
-				}
-				
-				if($uid) {
-					
-					$memberDoc -> get(array('uid' => $uid));
-					
-					if(!$memberDoc -> joined && $memberDoc -> invitation_email && !$memberDoc -> invitationSentAt) {
-						// Send invitation email
-						$mail_model = new dwObject();
-						$userName = self::$session -> user -> name;
-						$mail_model -> email = $memberDoc -> invitation_email;
-						$mail_model -> founderName = $userName;
-						$mail_model -> startupName = $doc -> name;
-						$mail_model -> memberRole  = $memberDoc -> role;
-						$mail_model -> url = $request -> getBaseUri()."/startup/".$doc -> ref."/join/".$uid;
-					
-						if($this -> sendInvitationEmail($mail_model)) {
-							$memberUpdateDoc = $memberDoc -> factory();
-							$memberUpdateDoc -> uid = $memberDoc -> uid;
-							$memberUpdateDoc -> invitationSentAt = $memberUpdateDoc -> castSQL('CURRENT_TIMESTAMP');
-							$memberUpdateDoc -> update();
+					if($uid) {
+						
+						$memberDoc -> get(array('uid' => $uid));
+						
+						if(!$memberDoc -> joined && $memberDoc -> invitation_email && !$memberDoc -> invitationSentAt) {
+							// Send invitation email
+							$mail_model = new dwObject();
+							$userName = self::$session -> user -> name;
+							$mail_model -> email = $memberDoc -> invitation_email;
+							$mail_model -> founderName = $userName;
+							$mail_model -> startupName = $doc -> name;
+							$mail_model -> memberRole  = isset($memberDoc -> role)?$memberDoc -> role:'membre';
+							$mail_model -> url = $request -> getBaseUri()."/startup/".$doc -> ref."/join/".$uid;
+						
+							if($this -> sendInvitationEmail($mail_model)) {
+								$memberUpdateDoc = $memberDoc -> factory();
+								$memberUpdateDoc -> uid = $memberDoc -> uid;
+								$memberUpdateDoc -> invitationSentAt = $memberUpdateDoc -> castSQL('CURRENT_TIMESTAMP');
+								$memberUpdateDoc -> update();
+							}
+						
 						}
-					
 					}
 				}
 				
 			}
 			
-		} else {
-			$response -> statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
+			return HttpStatus::NO_CONTENT;
+			
 		}
+		
+		return HttpStatus::INTERNAL_SERVER_ERROR;
 	
 	}
 	

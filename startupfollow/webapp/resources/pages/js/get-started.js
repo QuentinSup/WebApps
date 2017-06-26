@@ -3,6 +3,9 @@ var startupfollows;
     var request;
     (function (request_1) {
         var StartupAddForm = (function () {
+            /**
+             * Constructor
+             */
             function StartupAddForm() {
                 var _this = this;
                 this.name = ko.observable();
@@ -14,14 +17,24 @@ var startupfollows;
                 this.facebook = ko.observable();
                 this.members = ko.observableArray();
                 this.nameExists = ko.observable(true);
+                // Prepare name control
                 this.name.subscribe(function (v) {
                     _this.nameExists(true);
+                    clearTimeout(_this.__hdlCheckIfNameExists);
                     if (!v)
                         return;
-                    clearTimeout(_this.__hdlCheckIfExists);
-                    _this.__hdlCheckIfExists = setTimeout(function () {
+                    _this.__hdlCheckIfNameExists = setTimeout(function () {
                         _this.checkIfExists(v);
                     }, 500);
+                });
+                // Add current user to member team
+                user.ready(function () {
+                    var member = _this.createMember();
+                    member.user(user.data());
+                    member.founder = true;
+                    member.joined = true;
+                    member.locked(true); // cannot remove this member !
+                    _this.addMember(member);
                 });
             }
             StartupAddForm.prototype.checkIfExists = function (name) {
@@ -39,19 +52,147 @@ var startupfollows;
             StartupAddForm.prototype.prev = function () {
                 $('#StartupAddForm').formslider('prev');
             };
-            StartupAddForm.prototype.next = function () {
-                $('#StartupAddForm').formslider('next');
+            /**
+             * Check data from screen 1
+             */
+            StartupAddForm.prototype.checkScreen1 = function () {
+                if (!(this.name() || '').trim()) {
+                    toast("Veuillez renseigner un nom pour votre projet");
+                    return false;
+                }
+                if (this.nameExists()) {
+                    toast("Ce nom existe déjà :( Est-ce que vous avez déjà un compte ?");
+                    return false;
+                }
+                /*
+                if(!(this.punchLine() || '').trim()) {
+                    toast("Renseignez votre phrase d'accroche !");
+                    return false;
+                }
+                */
+                return true;
             };
-            StartupAddForm.prototype.addMember = function () {
-                this.members.push({
+            /**
+             * Check data from screen 2
+             */
+            StartupAddForm.prototype.checkScreen2 = function () {
+                if (!(this.email() || '').trim()) {
+                    toast("Veuillez renseigner l'adresse email");
+                    return false;
+                }
+                if (!isValidEmail(this.email())) {
+                    toast("Veuillez renseigner une adresse email valide ;)");
+                    return false;
+                }
+                return true;
+            };
+            /**
+             * check form data
+             */
+            StartupAddForm.prototype.checkForm = function () {
+                if (!this.checkScreen1()) {
+                    $('#StartupAddForm').formslider('animate:0');
+                    return;
+                }
+                if (!this.checkScreen2()) {
+                    $('#StartupAddForm').formslider('animate:1');
+                    return;
+                }
+                return true;
+            };
+            StartupAddForm.prototype.next = function () {
+                if (this.checkForm()) {
+                    $('#StartupAddForm').formslider('next');
+                    return true;
+                }
+                return false;
+            };
+            /**
+             * Create a new member object
+             */
+            StartupAddForm.prototype.createMember = function () {
+                var member = {
                     role: ko.observable(),
-                    email: ko.observable()
+                    email: ko.observable(),
+                    user: ko.observable(),
+                    locked: ko.observable(false),
+                    founder: false,
+                    joined: false
+                };
+                return member;
+            };
+            /**
+             * Add member into team list
+             */
+            StartupAddForm.prototype.addMember = function (member) {
+                var _this = this;
+                var member = member || this.createMember();
+                this.members.push(member);
+                member.email.subscribe(function (s) {
+                    clearTimeout(_this.__hdlCheckIfEmailExists);
+                    if (s) {
+                        _this.__hdlCheckIfEmailExists = setTimeout(function () {
+                            if (!isValidEmail(s)) {
+                                toast("Merci de renseigner une adresse email valide !");
+                                member.email('');
+                                return;
+                            }
+                            if (_this.isCurrentMember(s, member)) {
+                                member.email('');
+                                toast("Ce membre est déjà présent dans la liste");
+                                return;
+                            }
+                            user.search({ email: s }, function (response, status) {
+                                if (response.status == 200) {
+                                    var data = response.responseJSON;
+                                    member.user(data[0]);
+                                }
+                            });
+                        }, 2000);
+                    }
                 });
+            };
+            /**
+             * Check if member is already into team list
+             */
+            StartupAddForm.prototype.isCurrentMember = function (email, member) {
+                if (!email)
+                    return;
+                email = email.toLowerCase();
+                var members = this.members();
+                for (var i = 0; i < members.length; i++) {
+                    var current = members[i];
+                    if (member != current) {
+                        if (current.user()) {
+                            if (current.user().email.toLowerCase() == email) {
+                                return true;
+                            }
+                        }
+                        else if (current.email().toLowerCase() == email) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            };
+            /**
+             * Remove member from team list
+             */
+            StartupAddForm.prototype.removeMember = function (ind) {
+                var members = this.members();
+                var member = members[ind];
+                if (!member)
+                    return;
+                this.members().splice(ind, 1);
+                this.members.valueHasMutated();
             };
             /**
              * Submit data
              */
             StartupAddForm.prototype.submit = function () {
+                if (!this.checkForm()) {
+                    return false;
+                }
                 var data = {
                     name: this.name(),
                     email: this.email(),
@@ -64,8 +205,11 @@ var startupfollows;
                 };
                 $.each(this.members(), function (k, v) {
                     data.members.push({
-                        invitation_email: v.email(),
-                        role: v.role()
+                        user_uid: v.user() ? v.user().uid : null,
+                        invitation_email: v.user() ? v.user().email : v.email(),
+                        role: v.role(),
+                        founder: v.founder,
+                        joined: v.joined
                     });
                 });
                 var request = {
@@ -76,7 +220,14 @@ var startupfollows;
                     dataType: 'json'
                 };
                 $.ajax(request).complete(function (response, status) {
-                    console.log(status, response);
+                    if (response.status == 200) {
+                        success("Votre espace a été créé avec succès !", "Greats !", null, function () {
+                            document.location.href = host + 'startup/' + response.responseJSON.ref;
+                        });
+                    }
+                    else {
+                        error("Ho my... ! Une erreur est apparue durant la création de votre compte. Nous avons prévenu le développeur (stagiaire) qui va certainement y remédier durant la nuit !");
+                    }
                 });
                 return false;
             };

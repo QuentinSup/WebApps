@@ -26,6 +26,10 @@ var startupfollows;
                         toast("Bienvenue " + _this.name() + " ;)");
                         document.location.href = host + _this.redirectTo() || '';
                     }
+                    else {
+                        _this.password('');
+                        error("Oups ! Votre identifiant ou votre mot de passe est incorrect");
+                    }
                 });
             };
             return Model;

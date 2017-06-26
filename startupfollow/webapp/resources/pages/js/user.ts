@@ -131,7 +131,10 @@ module startupfollows.startup {
             
         }
         
-        public unlog(callback?: Function) {
+        /**
+         * Log out user
+         */
+        public logout(callback?: Function) {
          
             var request = {
                 type: 'delete',
@@ -141,7 +144,7 @@ module startupfollows.startup {
             };
             
             $.ajax(request).complete(function(response, status): void {
-                 if(response.status == 200) {
+                 if(response.status == 204) {
                     document.location.href = host + 'login';
                  }
                  if(typeof(callback) == "function") {

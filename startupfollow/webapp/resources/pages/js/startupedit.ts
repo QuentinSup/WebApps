@@ -104,15 +104,16 @@ module startupfollows.startupEdit {
         public members = ko.observableArray();
         public nameExists = ko.observable(true);
 
-        private __hdlCheckIfExists;
-
+        private __hdlCheckIfNameExists;
+        private __hdlCheckIfEmailExists;
+        
         public constructor() {
 
             this.name.subscribe((v: string): void => {
                 this.nameExists(true);
+                clearTimeout(this.__hdlCheckIfNameExists);
                 if (!v) return;
-                clearTimeout(this.__hdlCheckIfExists);
-                this.__hdlCheckIfExists = setTimeout((): void => {
+                this.__hdlCheckIfNameExists = setTimeout((): void => {
                     this.checkIfExists(v);
                 }, 500);
             });
@@ -123,7 +124,7 @@ module startupfollows.startupEdit {
 
             var request = {
                 type: 'get',
-                url: host + 'rest/startup/' + name,
+                url: host + 'rest/startup/exists/' + name,
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json'
             };
@@ -154,20 +155,31 @@ module startupfollows.startupEdit {
             this.members.push(member);
             
             member.email.subscribe((s: string): void => {
-                if(s && isValidEmail(s)) {
+                clearTimeout(this.__hdlCheckIfEmailExists);
+                if(s) {
                     
-                    if(this.isCurrentMember(s, member)) {
-                        member.email('');
-                        toast("Ce membre est déjà présent dans la liste");
-                        return;
-                    }
+                    this.__hdlCheckIfEmailExists = setTimeout((): void => {
                     
-                    user.search({ email: s }, (response, status): void => {
-                        if(response.status == 200) { 
-                            var data = response.responseJSON;
-                            member.user(data[0]);
+                        if(!isValidEmail(s)) {
+                            toast("Merci de renseigner une adresse email valide !");
+                            member.email('');
+                            return;    
                         }
-                    });    
+                        
+                        if(this.isCurrentMember(s, member)) {
+                            member.email('');
+                            toast("Ce membre est déjà présent dans la liste");
+                            return;
+                        }
+                        
+                        user.search({ email: s }, (response, status): void => {
+                            if(response.status == 200) { 
+                                var data = response.responseJSON;
+                                member.user(data[0]);
+                            }
+                        });   
+                        
+                    }, 2000); 
                 }
             });
             
@@ -190,6 +202,9 @@ module startupfollows.startupEdit {
             
         }
         
+        /**
+         * Check if member is already into team list
+         */
         public isCurrentMember(email, member): boolean {
             if(!email) return;
             email = email.toLowerCase();

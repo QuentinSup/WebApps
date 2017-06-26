@@ -16,25 +16,28 @@
 			</ul>
 			<div class="col-sm-4 text-right">
 				<div class="col-sm-10">
-				<!-- ko if: $data.isFollowedByUser() -->
-				<button data-bind="click: function() { $data.unfollow(); }" class="btn white">ne plus suivre</button>
-				<!-- /ko -->
-				<!-- ko ifnot: $data.isFollowedByUser() -->
-				<button data-bind="click: function() { $data.follow(); }" class="btn white">suivre</button>
+				<!-- ko if: !!data() -->
+					<!-- ko if: $data.isFollowedByUser() -->
+					<button data-bind="click: function() { $data.unfollow(); }" class="btn white">ne plus suivre</button>
+					<!-- /ko -->
+					<!-- ko ifnot: $data.isFollowedByUser() -->
+					<button data-bind="click: function() { $data.follow(); }" class="btn white">suivre</button>
+					<!-- /ko -->
 				<!-- /ko -->
 				</div>
 				<!-- ko if: user.data() -->
 				<div class="col-sm-2">
 					<a href="{$host}account">
-						<img data-bind="attr: { 'src': user.data().image || host + 'assets/img/avatars/project-avatar.svg' }" class="img-responsive img-circle" alt="user" />
+						<img data-bind="attr: { 'src': user.data().image || host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
 					</a>
 				</div>
 				<!-- /ko -->
-				</div>
+			</div>
 		</nav>
 	</div>
 </header>
 
+<!-- ko if: !!data() -->
 <!-- ko with: data() -->
 <section id="hero" class="light bg-video">
 	<video autoplay loop>
@@ -117,6 +120,14 @@
 		<!-- /ko -->
 	</div>
 </section>
+<!-- /ko -->
+<!-- ko ifnot: !!data() -->
+<section id="story" class="section">
+	<div class="container">
+	<div class="h7">Le projet que vous recherchez n'existe pas (encore !)</div>
+	</div>
+</section>
+<!-- /ko -->
 
 <script type="text/javascript" src="{$host}/resources/pages/js/startup.js"></script>
 <script type="text/javascript">

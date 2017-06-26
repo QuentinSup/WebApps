@@ -6,7 +6,9 @@ module startupfollows.startup {
     declare var window;
     declare var host;
     declare function toast(message, opts?);
-
+    declare function error(message, title?);
+    declare function success(message, title?, opts?);
+    
     class Model {
 
         public name = ko.observable();
@@ -37,6 +39,9 @@ module startupfollows.startup {
                 if (response.status == 200) {
                     toast("Bienvenue " + this.name() + " ;)");
                     document.location.href = host + this.redirectTo() || '';
+                } else {
+                    this.password(''); 
+                    error("Oups ! Votre identifiant ou votre mot de passe est incorrect");
                 }
             });
 

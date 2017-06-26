@@ -80,10 +80,10 @@ var startupfollows;
                 this.nameExists = ko.observable(true);
                 this.name.subscribe(function (v) {
                     _this.nameExists(true);
+                    clearTimeout(_this.__hdlCheckIfNameExists);
                     if (!v)
                         return;
-                    clearTimeout(_this.__hdlCheckIfExists);
-                    _this.__hdlCheckIfExists = setTimeout(function () {
+                    _this.__hdlCheckIfNameExists = setTimeout(function () {
                         _this.checkIfExists(v);
                     }, 500);
                 });
@@ -92,7 +92,7 @@ var startupfollows;
                 var _this = this;
                 var request = {
                     type: 'get',
-                    url: host + 'rest/startup/' + name,
+                    url: host + 'rest/startup/exists/' + name,
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json'
                 };
@@ -117,18 +117,26 @@ var startupfollows;
                 var member = this.createMember();
                 this.members.push(member);
                 member.email.subscribe(function (s) {
-                    if (s && isValidEmail(s)) {
-                        if (_this.isCurrentMember(s, member)) {
-                            member.email('');
-                            toast("Ce membre est déjà présent dans la liste");
-                            return;
-                        }
-                        user.search({ email: s }, function (response, status) {
-                            if (response.status == 200) {
-                                var data = response.responseJSON;
-                                member.user(data[0]);
+                    clearTimeout(_this.__hdlCheckIfEmailExists);
+                    if (s) {
+                        _this.__hdlCheckIfEmailExists = setTimeout(function () {
+                            if (!isValidEmail(s)) {
+                                toast("Merci de renseigner une adresse email valide !");
+                                member.email('');
+                                return;
                             }
-                        });
+                            if (_this.isCurrentMember(s, member)) {
+                                member.email('');
+                                toast("Ce membre est déjà présent dans la liste");
+                                return;
+                            }
+                            user.search({ email: s }, function (response, status) {
+                                if (response.status == 200) {
+                                    var data = response.responseJSON;
+                                    member.user(data[0]);
+                                }
+                            });
+                        }, 2000);
                     }
                 });
             };
@@ -145,6 +153,9 @@ var startupfollows;
                 }
                 this.members.valueHasMutated();
             };
+            /**
+             * Check if member is already into team list
+             */
             StartupForm.prototype.isCurrentMember = function (email, member) {
                 if (!email)
                     return;

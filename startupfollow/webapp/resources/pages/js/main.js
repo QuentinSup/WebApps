@@ -40,7 +40,7 @@ var startupfollows;
         var Model = (function () {
             function Model() {
                 var _this = this;
-                this.P = ko.observableArray(projects);
+                this.P = ko.observableArray();
                 this.R = ko.observableArray();
                 this.searchValue = ko.observable();
                 this.startupRequestForm = new StartupFormRequest();

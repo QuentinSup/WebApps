@@ -55,7 +55,7 @@
 									<div class="form-group row">
 										<div class="col-sm-12">
 											<label for="FormInputEmail" class="control-label"> Adresse de contact </label>
-											<p class="help-block">Cette adresse sera privilégiée pour prendre contact avec vous. Vous recevrez une notification afin de donner
+											<p class="help-block">Cette adresse sera privilégiée pour prendre contact avec vous et votre équipe. Vous recevrez une notification afin de donner
 												régulièrement des nouvelles à votre communauté</p>
 										</div>
 										<div class="col-sm-8">
@@ -160,18 +160,16 @@
 											</div>
 										</div>
 										<div class="col-sm-4">
-											<div class="form-group">
-												<!-- ko if: !$data.invitationSentAt() -->
-												<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input', disable: !!$data.uid(), attr: { 'title': $data.invitationSentAt()?'Invitation envoyée le ' + $data.invitationSentAt():'' }" placeholder="Email" required />
-												<!-- /ko -->
-												<!-- ko if: $data.invitationSentAt() -->
-												<label>
-												<span data-bind="text: $data.user().email"></span>
-												<br />
-												<strong>nouveau</strong>
-												</label>
-												<!-- /ko -->
-											</div>
+											<!-- ko if: !$data.invitationSentAt() -->
+											<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input', disable: !!$data.uid(), attr: { 'title': $data.invitationSentAt()?'Invitation envoyée le ' + $data.invitationSentAt():'' }" placeholder="Email" required />
+											<!-- /ko -->
+											<!-- ko if: $data.invitationSentAt() -->
+											<label>
+											<span data-bind="text: $data.email()"></span>
+											<br />
+											<strong>invitation en attente</strong>
+											</label>
+											<!-- /ko -->
 										</div>
 										<!-- /ko -->
 										<div class="col-sm-3">
@@ -199,6 +197,7 @@
 								<div id="stories" class="slider">
 									<ul>
 										<li>
+											<label>Vos dernières nouvelles</label>
 											<ul class="list">
 												<!-- ko foreach: stories -->
 												<li data-bind="click: function() { $root.editStory($data.uid) }">

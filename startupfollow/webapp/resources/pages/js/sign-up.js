@@ -13,18 +13,21 @@ var startupfollows;
                 this.isUserEmailUnique = ko.observable(false);
                 this.name.subscribe(function (s) {
                     _this.isUserNameUnique(false);
+                    clearTimeout(_this.__hdlCheckIfExistsName);
                     if (!s)
                         return;
-                    clearTimeout(_this.__hdlCheckIfExistsName);
                     _this.__hdlCheckIfExistsName = setTimeout(function () {
                         _this.verifyUserName();
                     }, 500);
                 });
                 this.email.subscribe(function (s) {
                     _this.isUserEmailUnique(false);
+                    clearTimeout(_this.__hdlCheckIfExistsEmail);
                     if (!s)
                         return;
-                    clearTimeout(_this.__hdlCheckIfExistsEmail);
+                    if (!isValidEmail(s)) {
+                        return;
+                    }
                     _this.__hdlCheckIfExistsEmail = setTimeout(function () {
                         _this.verifyUserEmail();
                     }, 500);
@@ -34,6 +37,9 @@ var startupfollows;
              * Submit data
              */
             Model.prototype.submit = function () {
+                if (!this.checkForm()) {
+                    return false;
+                }
                 var data = {
                     name: this.name(),
                     email: this.email()
@@ -53,7 +59,7 @@ var startupfollows;
                         }, 2000);
                     }
                     else {
-                        error("Holy s**t ! Une erreur est apparue durant la création de votre compte :(<br />Essayez de recommencer dans quelques minutes !");
+                        error("Holy s**t ! Une erreur est apparue durant la création de votre compte :(. Essayez de recommencer dans quelques minutes !");
                     }
                 });
                 return false;
@@ -61,8 +67,55 @@ var startupfollows;
             Model.prototype.prev = function () {
                 $('#UserForm').formslider('prev');
             };
+            /**
+             * Controle email seized
+             */
+            Model.prototype.checkEmail = function () {
+                if (!(this.email() || '').trim()) {
+                    toast("Il manque une adresse email pour votre compte");
+                    return false;
+                }
+                if (!isValidEmail(this.email())) {
+                    toast("Malheureusement, cette adresse ne semble pas valide. Êtes-vous sûr de l'avoir bien saisie ?");
+                    return false;
+                }
+                if (!this.isUserEmailUnique()) {
+                    toast("Malheureusement, cette adresse email est déjà utilisée");
+                    return false;
+                }
+                return true;
+            };
+            /**
+             * Controle name seized
+             */
+            Model.prototype.checkName = function () {
+                if (!(this.name() || '').trim()) {
+                    toast("Renseignez un nom utilisateur pour votre compte");
+                    return false;
+                }
+                if (!this.isUserNameUnique()) {
+                    toast("Malheureusement, ce nom est déjà pris");
+                    return false;
+                }
+                return true;
+            };
+            Model.prototype.checkForm = function () {
+                if (!this.checkEmail()) {
+                    $('#UserForm').formslider('animate:0');
+                    return false;
+                }
+                if (!this.checkName()) {
+                    $('#UserForm').formslider('animate:1');
+                    return false;
+                }
+                return true;
+            };
             Model.prototype.next = function () {
-                $('#UserForm').formslider('next');
+                if (this.checkForm()) {
+                    $('#UserForm').formslider('next');
+                    return true;
+                }
+                return false;
             };
             /**
              * check if user name is already used into database
