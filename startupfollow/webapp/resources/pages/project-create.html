@@ -7,9 +7,24 @@
 			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
-			<ul class="navigation-bar navigation-bar-left">
-
-			</ul>
+			<div class="col-sm-12">
+				<ul class="navigation-bar navigation-bar-left">
+	
+				</ul>
+			</div>
+			<div class="col-sm-2 text-right">
+				<!-- ko if: user.data() -->
+				<div class="col-sm-12">
+					<a href="{$host}" class="menu">
+						<img data-bind="attr: { 'src': user.data().image || host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
+						<ul>
+							<li data-bind="click: function() { document.location.href = host + 'account' }" class="clickable"><span class="fa fa-gear"></span>&nbsp;Paramètre du compte</li>
+							<li data-bind="click: function() { user.logout() }" class="clickable"><span class="fa fa-power-off"></span>&nbsp;Déconnexion</li>
+						</ul>
+					</a>
+				</div>
+				<!-- /ko -->
+			</div>
 		</nav>
 	</div>
 </header>

@@ -12,6 +12,7 @@ var startupfollows;
             StartupStoryForm.prototype.new = function (startup_uid) {
                 this.shortLine('');
                 this.text('');
+                this.text.notifySubscribers();
                 this.uid('');
                 this.startupUID(startup_uid);
             };
@@ -259,6 +260,11 @@ var startupfollows;
                 });
                 this.index.subscribe(function (i) {
                     $('#sections').formslider('animate:' + (i - 1));
+                });
+                this.stories.subscribe(function () {
+                    setTimeout(function () {
+                        $('#stories .timeago').timeago();
+                    }, 100);
                 });
             }
             Model.prototype.load = function (name) {

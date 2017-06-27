@@ -19,6 +19,12 @@ module startupfollows.startup {
         
         public constructor() {
          
+            this.stories.subscribe((): void => {
+                setTimeout(function() {
+                    $('#stories .timeago').timeago();
+                }, 100);   
+            });
+            
             this.data.subscribe((s: any): void => {
                 
                 this.listStories();
@@ -31,7 +37,7 @@ module startupfollows.startup {
                 });
                 
             });
-            
+                      
             
             
         }
@@ -109,7 +115,7 @@ module startupfollows.startup {
                 if(response.status == 204) {
                     this.isFollowedByUser(true);
                     
-                    toast("Vous suivez désormais " + this.data().name, { title: 'Félicitations!' });
+                    toast("Vous suivez désormais " + this.data().name, { title: 'Félicitations!', image: this.data().image || (host + 'assets/img/logo.jpg') });
                     
                 } else {
 
@@ -124,7 +130,7 @@ module startupfollows.startup {
                 if(response.status == 204) {
                     this.isFollowedByUser(false);
                     
-                    toast("Vous ne suivez plus " + this.data().name, { title: 'Dommage!' });
+                    toast("Vous ne suivez plus " + this.data().name, { title: 'Dommage!', image: this.data().image || (host + 'assets/img/logo.jpg') });
                     
                 } else { 
                     error("Mince, une erreur est apparue et nous n'avons pas pu vous désinscrire de cette startup ;(");

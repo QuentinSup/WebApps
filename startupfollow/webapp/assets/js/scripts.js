@@ -50,7 +50,7 @@ var toast = function(message, opts) {
 	    icon: 'icon-contacts',
 	    //iconText: '',
 	    iconColor: 'rgb(0, 255, 184)',
-	    image: host + 'assets/img/logo.png',
+	    image: host + 'assets/img/logo.jpg',
 	    imageWidth: 70,
 	    //maxWidth: null,
 	    //zindex: null,
@@ -126,6 +126,25 @@ var isValidEmail = function(emailAddress) {
 	};
 
 	$(function() {
+		
+		// French
+		jQuery.timeago.settings.strings = {
+		   // environ ~= about, it's optional
+		   prefixAgo: "il y a",
+		   prefixFromNow: "d'ici",
+		   seconds: "moins d'une minute",
+		   minute: "environ une minute",
+		   minutes: "environ %d minutes",
+		   hour: "environ une heure",
+		   hours: "environ %d heures",
+		   day: "environ un jour",
+		   days: "environ %d jours",
+		   month: "environ un mois",
+		   months: "environ %d mois",
+		   year: "un an",
+		   years: "%d ans"
+		};
+		
 		//Preloader
 		app.el['loader'].delay(700).fadeOut();
 		app.el['mask'].delay(1200).fadeOut("slow");
@@ -164,13 +183,12 @@ var isValidEmail = function(emailAddress) {
 				height : heroHeight + "px"
 			});
 		}
-		;
+		
+		$(window).on("resize", heroInit);
+		$(document).on("ready", heroInit);
+		$(document).on("unsyncready", heroInit);
 
-		jQuery(window).on("resize", heroInit);
-		jQuery(document).on("ready", heroInit);
-		jQuery(document).on("unsyncready", heroInit);
-
-		jQuery(document).on("ready", function() {
+		$(document).on("ready", function() {
 			setTimeout(function() {
 				$('*[title]').tooltipster();
 			}, 1000);

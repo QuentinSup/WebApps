@@ -1,10 +1,10 @@
 <?php
 
-namespace startupfollow\classes;
+namespace colaunch\classes;
 
 use dw\helpers\dwString;
 
-class StartupEntity {
+class ProjectEntity {
 	
 	private $entity;
 	

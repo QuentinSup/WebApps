@@ -6,17 +6,32 @@
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
 			<div class="col-sm-1">
+				<!-- if: data() -->
 				<!-- ko with: data() -->
-				<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/project-avatar.svg' }" class="img-responsive img-circle" alt="startup" />
+				<a class="menu clickable">
+					<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/project-avatar.svg' }" class="img-responsive img-circle" alt="startup" />
+					<ul>
+						<li data-bind="click: function() { document.location.href = host + 'follow/' + ref }" class="clickable"><span class="fa fa-flask"></span>&nbsp;Voir la page</li>
+						<li data-bind="click: function() { document.location.href = host + 'project/edit/' + ref }" class="clickable"><span class="fa fa-gear"></span>&nbsp;Gérer</li>
+						<li class="separator"><hr /></li>
+						<!-- ko if: user.data() -->
+						<!-- ko foreach: user.data().projects -->
+							<li data-bind="visible: $data.ref != $root.data().ref, click: function() { document.location.href = host + 'follow/' + ref }" class="clickable"><img class="img-circle" data-bind="attr: { 'src': image || host + 'assets/img/avatars/project-avatar.svg' }" />&nbsp;<span data-bind="text: name"></span></li>	
+						<!-- /ko -->
+						<!-- /ko -->
+					</ul>
+				</a>
+				<!-- /ko -->
 				<!-- /ko -->
 			</div>
-			<ul class="navigation-bar col-sm-7">
+			<ul class="navigation-bar col-sm-8">
 				<li><a href="#" data-bind="click: function() { document.location = host }">Accueil</a></li>
 				<li><a href="#members">L'équipe</a></li>
+				<li><a href="#story">Les nouvelles</a></li>
 			</ul>
-			<div class="col-sm-4 text-right">
-				<div class="col-sm-10">
-				<!-- ko if: !!data() -->
+			<div class="col-sm-3 text-right">
+				<div class="col-sm-9">
+				<!-- ko if: !!user.data() -->
 					<!-- ko if: $data.isFollowedByUser() -->
 					<button data-bind="click: function() { $data.unfollow(); }" class="btn white">ne plus suivre</button>
 					<!-- /ko -->
@@ -25,13 +40,30 @@
 					<!-- /ko -->
 				<!-- /ko -->
 				</div>
-				<!-- ko if: user.data() -->
-				<div class="col-sm-2">
-					<a href="{$host}account">
-						<img data-bind="attr: { 'src': user.data().image || host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
-					</a>
+				<div class="col-sm-3">
+					<!-- ko if: !!user.data() -->
+					<div class="col-sm-12">
+						<a href="{$host}account" class="menu right">
+							<img data-bind="attr: { 'src': user.data().image || host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
+							<ul>
+								<li data-bind="click: function() { document.location.href = host + 'account' }" class="clickable"><span class="fa fa-gear"></span>&nbsp;Paramètre du compte</li>
+								<li data-bind="click: function() { user.logout() }" class="clickable"><span class="fa fa-power-off"></span>&nbsp;Déconnexion</li>
+							</ul>
+						</a>
+					</div>
+					<!-- /ko -->
+					<!-- ko ifnot: !!user.data() -->
+					<div class="col-sm-12">
+						<a href="{$host}login" class="menu right">
+							<img data-bind="attr: { 'src': host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
+							<ul>
+								<li data-bind="click: function() { document.location.href = host + 'login' }" class="clickable"><span class="fa fa-sign-in"></span>&nbsp;Connexion</li>
+								<li data-bind="click: function() { document.location.href = host + 'signup' }" class="clickable"><span class="fa fa-user"></span>&nbsp;Créer un compte</li>
+							</ul>
+						</a>
+					</div>
+					<!-- /ko -->
 				</div>
-				<!-- /ko -->
 			</div>
 		</nav>
 	</div>
@@ -54,9 +86,11 @@
 				<div class="hero-big">
 					<span class="sublime-text" data-bind="text: $data.name"></span>
 				</div>
+				<!-- ko if: $data.punchLine -->
 				<div class="hero-normal">
 					<span class="sublime-text" data-bind="text: $data.punchLine"></span>
 				</div>
+				<!-- /ko -->
 			</div>
 		</div>
 	</div>
@@ -108,16 +142,21 @@
 		<!-- ko if: stories().length == 0 -->
 		<div class="h7">Le projet n'a pas encore donné de nouvelle :( !<br />Suivez le projet pour être informés dès que le projet évolue !</div>
 		<!-- /ko -->
+		<div id="stories">
 		<!-- ko foreach: stories -->
-		<article>
-			<label class="strong text-center" data-bind="text: $data.shortLine"></label>
+		<article class="text-left">
+			<header>
+				<label class="strong" data-bind="text: $data.shortLine"></label>
+			</header>
 			<p data-bind="html: $data.text"></p>
-			<span>Fait le <span data-bind="text: $data.date"></span> - 
-			<span class="clickable badged fa fa-thumbs-o-up" data-bind="click: function() { $root.addStoryLike($data.uid(), $index()); }"></span>
-			<span data-bind="text: $data.numberOfLikes"></span></span>
+			<footer>
+				<span>Fait le <time class="timeago" data-bind="attr: { 'datetime': $data.date }"></time></span> - 
+				<a class="clickable" data-bind="click: function() { $root.addStoryLike($data.uid(), $index()); }">J'aime (<span data-bind="text: $data.numberOfLikes"></span>)</a>
+			</footer>
 		</article>
 		<hr />
 		<!-- /ko -->
+		</div>
 	</div>
 </section>
 <!-- /ko -->

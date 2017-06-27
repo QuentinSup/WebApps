@@ -269,8 +269,9 @@ table {
 						<td valign="bottom"
 							style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important; border-collapse: collapse; padding: 20px 16px 12px;">
 							<div style="text-align: center;">
-								<a href="#" style="color: #439fe0; font-weight: bold; text-decoration: none; word-break: break-word;"> <img src="base64:{$img_logo}"
-									width="120" height="36" style="-ms-interpolation-mode: bicubic; outline: none; text-decoration: none; border: none; margin-left: -1.5rem;"></a>
+								<a href="#" style="color: #439fe0; font-weight: bold; text-decoration: none; word-break: break-word;">
+								<img src="{$img_logo}" width="120" height="36" style="-ms-interpolation-mode: bicubic; outline: none; text-decoration: none; border: none; margin-left: -1.5rem;" />
+								</a>
 							</div>
 						</td>
 					</tr>
@@ -293,7 +294,7 @@ table {
 								Bonjour <strong>{$data.userName}</strong>,
 								</p>
 								<p style="font-size: 17px; line-height: 24px; margin: 0 0 16px;">
-								{$data.startupName} a donné des nouvelles sur le site StartupFollow : "<i>{$data.shortLine}</i>"</p>
+								{$data.startupName} a donné des nouvelles sur le site {$data.siteName} : "<i>{$data.shortLine}</i>"</p>
 								<p style="font-size: 17px; line-height: 24px; margin: 0 0 16px;">
 									Cliquer sur <a href="{$data.url}" style="color: #439fe0; font-weight: bold; text-decoration: none; word-break: break-word;">le lien</a> pour
 									consulter le détail !

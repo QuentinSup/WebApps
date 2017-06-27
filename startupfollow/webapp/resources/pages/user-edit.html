@@ -4,14 +4,32 @@
 <header id="header" class="navigation-bar-header light hidden-xs">
 	<div class="container">
 		<nav class="navigation">
-			<div class="navigation-txt hidden-xs" data-toggle="dropdown">StartupFollow</div>
 			<div class="navigation-txt visible-xs" data-toggle="dropdown">Home</div>
 			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
+			<div class="col-sm-2">
+				<!-- ko if: user.data() -->
+				<div class="col-sm-12">
+					<a href="{$host}" class="menu">
+						<img data-bind="attr: { 'src': user.data().image || host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
+						<ul>
+							<li data-bind="click: function() { user.logout() }" class="clickable"><span class="fa fa-power-off"></span>&nbsp;Déconnexion</li>
+						</ul>
+					</a>
+				</div>
+				<!-- /ko -->
+			</div>
+			<div class="col-sm-9">
 			<ul class="navigation-bar navigation-bar-left">
-
+				<li>
+					
+				</li>
 			</ul>
+			</div>
+			<div class="col-sm-2 text-right">
+				
+			</div>
 		</nav>
 	</div>
 </header>

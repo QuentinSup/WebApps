@@ -1,18 +1,15 @@
 <?php
 
-namespace startupfollow;
+namespace colaunch;
 
 use dw\classes\dwHttpRequest;
 use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
-use dw\classes\http\dwHttpSocket;
 use dw\enums\HttpStatus;
-use dw\helpers\dwFile;
-use dw\classes\dwSession;
 use dw\helpers\dwString;
-use dw\classes\dwObject;
 use dw\classes\controllers\dwBasicController;
-use dw\adapters\template\dwSmartyTemplate;
+
+include_once '../classes/Emailer.class.php';
 
 /**
  * @Mapping(value = '/rest/user')
@@ -42,6 +39,11 @@ class user extends dwBasicController {
 	public static $userEntity;
 	
 	/**
+	 * @DatabaseEntity('startup')
+	 */
+	public static $startupEntity;
+	
+	/**
 	 * @DatabaseEntity('user_story_like')
 	 */
 	public static $storyLikeEntity;
@@ -69,6 +71,11 @@ class user extends dwBasicController {
 		
 		if(!self::$session -> has('user')) {
 			return HttpStatus::FORBIDDEN;
+		}
+		
+		if(@self::$session -> user -> deprecated == true) {
+			// update data
+			$this -> updateUserDataSession(self::$session -> user -> uid);
 		}
 		
 		return self::$session -> user -> toArray();
@@ -160,12 +167,19 @@ class user extends dwBasicController {
 			$docMemberTeam = self::$memberEntity->factory ();
 			$docMemberTeam -> user_uid = $user -> uid;
 			$memberOf = array();
+			$projects = array();
 			if($docMemberTeam -> find()) {
 				do {
-					$memberOf[] = $docMemberTeam -> startup_uid;
+					$docStartup = self::$startupEntity -> factory();
+					if($startup = $docStartup -> get(array("uid" => $docMemberTeam -> startup_uid))) {
+						$startup -> role = $docMemberTeam -> role;
+						$memberOf[] = $startup -> uid;
+						$projects[] = $startup -> toArray();
+					}
 				} while($docMemberTeam -> fetch());
 			}
 			$user -> memberOf = $memberOf;
+			$user -> projects = $projects;
 				
 			// List for subscriptions
 			$docSubscriptions = self::$startupUserSubscriptionEntity -> factory();
@@ -250,17 +264,9 @@ class user extends dwBasicController {
 				'uid' => $doc->getLastInsertId () 
 		) );
 		
-		$mail_model = new dwObject ();
-		$mail_model->img_logo = dwFile::getBase64File ( 'assets/img/logo.png' );
-		$mail_model->userName = $doc->name;
-		$mail_model->userPassword = $password;
-		$mail_model->url = $request->getBaseUri () . "login";
-		
-		$str = dwSmartyTemplate::renderize ( "../emails/signup.html", $mail_model->toArray () );
-		
-		if (! self::$smtp->send ( $doc->email, null, null, "Bienvenue sur StartupFollow", $str )) {
-			self::$log->error ( "Error sending email to " . $doc->email );
-		}
+		// Send welcome email
+		$emailer = new classes\Emailer(self::$log, self::$smtp);
+		$emailer -> sendSignUp($request, $doc, $password);
 		
 		return $doc->toArray ();
 	}

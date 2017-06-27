@@ -9,6 +9,11 @@ var startupfollows;
                 this.stories = ko.observableArray();
                 this.events = ko.observableArray();
                 this.isFollowedByUser = ko.observable(false);
+                this.stories.subscribe(function () {
+                    setTimeout(function () {
+                        $('#stories .timeago').timeago();
+                    }, 100);
+                });
                 this.data.subscribe(function (s) {
                     _this.listStories();
                     _this.listEvents();
@@ -81,7 +86,7 @@ var startupfollows;
                 user.follow(this.data().uid, function (response, status) {
                     if (response.status == 204) {
                         _this.isFollowedByUser(true);
-                        toast("Vous suivez désormais " + _this.data().name, { title: 'Félicitations!' });
+                        toast("Vous suivez désormais " + _this.data().name, { title: 'Félicitations!', image: _this.data().image || (host + 'assets/img/logo.jpg') });
                     }
                     else {
                         error("Mince, une erreur est apparue et nous n'avons pas pu vous permettre de suivre cette startup ;(");
@@ -93,7 +98,7 @@ var startupfollows;
                 user.unfollow(this.data().uid, function (response, status) {
                     if (response.status == 204) {
                         _this.isFollowedByUser(false);
-                        toast("Vous ne suivez plus " + _this.data().name, { title: 'Dommage!' });
+                        toast("Vous ne suivez plus " + _this.data().name, { title: 'Dommage!', image: _this.data().image || (host + 'assets/img/logo.jpg') });
                     }
                     else {
                         error("Mince, une erreur est apparue et nous n'avons pas pu vous désinscrire de cette startup ;(");

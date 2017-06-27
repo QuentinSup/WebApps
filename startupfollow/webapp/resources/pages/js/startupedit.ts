@@ -27,6 +27,7 @@ module startupfollows.startupEdit {
         public new(startup_uid): void {
             this.shortLine('');
             this.text('');
+            this.text.notifySubscribers();
             this.uid('');
             this.startupUID(startup_uid);
         }
@@ -322,6 +323,12 @@ module startupfollows.startupEdit {
             
             this.index.subscribe((i: number): void => {
                 $('#sections').formslider('animate:' + (i - 1));    
+            });
+            
+            this.stories.subscribe((): void => {
+                setTimeout(function() {
+                    $('#stories .timeago').timeago();
+                }, 100);   
             });
 
         }

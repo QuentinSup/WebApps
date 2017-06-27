@@ -1,6 +1,6 @@
 <?php
 
-namespace startupfollow;
+namespace colaunch;
 
 use dw\classes\dwHttpRequest;
 use dw\classes\dwHttpResponse;
@@ -11,6 +11,8 @@ use dw\helpers\dwFile;
 use dw\classes\dwObject;
 use dw\classes\controllers\dwBasicController;
 use dw\adapters\template\dwSmartyTemplate;
+
+include_once '../classes/Emailer.class.php';
 
 /**
  * @Mapping(value = '/rest/request')
@@ -55,7 +57,7 @@ class request extends dwBasicController {
 		$doc->name = $json->name;
 		$doc->email = $json->email;
 		
-		if (! $doc->insert ()) {
+		if (!$doc->insert()) {
 			$response->statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
 			return;
 		}
@@ -66,16 +68,9 @@ class request extends dwBasicController {
 		
 		$doc -> find(array("uid" => $p_id));
 		
-		$mail_model = new dwObject ();
-		$mail_model->img_logo = dwFile::getBase64File ( 'assets/img/logo.png' );
-		$mail_model->projectName = $doc->name;
-		$mail_model->url = $request->getBaseUri () . "/request/" . $p_id;
-		
-		$str = dwSmartyTemplate::renderize ( "../emails/startupRequest.html", $mail_model->toArray () );
-		
-		if (! self::$smtp->send ( $doc->email, null, null, "Des amis souhaitent vous suivre sur StartupFollow", $str )) {
-			self::$log->error ( "Error sending email to " . $doc->email );
-		}
+		// Send email
+		$emailer = new classes\Emailer(self::$log, self::$smtp);
+		$emailer -> sendRequestEmail($request, $doc);
 		
 		return $doc->toArray ();
 	}

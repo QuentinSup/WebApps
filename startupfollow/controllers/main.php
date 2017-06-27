@@ -1,6 +1,6 @@
 <?php
 
-namespace startupfollow;
+namespace colaunch;
 
 use dw\dwFramework as dw;
 use dw\classes\dwHttpRequest;
@@ -8,11 +8,12 @@ use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
 use dw\accessors\ary;
 use dw\classes\dwObject;
+use dw\helpers\dwFile;
 use dw\classes\dwSession;
 use dw\enums\HttpStatus;
 use dw\classes\controllers\dwBasicController;
 
-include_once '../classes/StartupEntity.class.php';
+include_once '../classes/ProjectEntity.class.php';
 
 /**
  * @Mapping(value = '/')
@@ -88,6 +89,7 @@ class main extends dwBasicController {
 	
 	/**
 	 * @Mapping(method = "get", value = "sign-up")
+	 * @Mapping(method = "get", value = "signup")
 	 */
 	public function signup(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
@@ -131,12 +133,13 @@ class main extends dwBasicController {
 			}
 		}
 		
-		return $this -> prepareModel($request, $model, 'startup-create') -> view();
+		return $this -> prepareModel($request, $model, 'project-create') -> view();
 	}
 	
 
 	/**
 	 * @Mapping(method = "get", value= "startup/:ref")
+	 * @Mapping(method = "get", value= "project/:ref")
 	 * @Mapping(method = "get", value= "follow/:ref")
 	 */
 	public function landingPage(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
@@ -149,6 +152,7 @@ class main extends dwBasicController {
 	
 	/**
 	 * @Mapping(method = "get", value= "startup/:ref/join/:uid")
+	 * @Mapping(method = "get", value= "project/:ref/join/:uid")
 	 */
 	public function joinTeam(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
@@ -187,7 +191,7 @@ class main extends dwBasicController {
 				return HttpStatus::INTERNAL_SERVER_ERROR;
 			}
 			
-			return "redirect:/startup/".$member -> startup_uid;
+			return "redirect:/project/".$member -> startup_uid;
 			
 		}
 		
@@ -199,8 +203,9 @@ class main extends dwBasicController {
 	
 	/**
 	 * @Mapping(method = "get", value= "startup/edit/:ref")
+	 * @Mapping(method = "get", value= "project/edit/:ref")
 	 */
-	public function startupEdit(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	public function projectEdit(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
 		$p_ref = $request -> Path('ref');
 		
@@ -209,7 +214,7 @@ class main extends dwBasicController {
 			return self::login($request, $response, $model);
 		}
 		
-		$startupE = new classes\StartupEntity(self::$startupEntity);
+		$startupE = new classes\ProjectEntity(self::$startupEntity);
 		$startup = $startupE -> get($p_ref);
 		
 		if(is_null($startup)) {
@@ -223,7 +228,7 @@ class main extends dwBasicController {
 		
 		$model -> ref = $startup -> uid;
 			
-		return $this -> prepareModel($request, $model, 'startup-edit') -> view();
+		return $this -> prepareModel($request, $model, 'project-edit') -> view();
 	}
 	
 	/**

@@ -1,23 +1,23 @@
 <?php
 
-namespace startupfollow;
+namespace colaunch;
 
 use dw\classes\dwHttpRequest;
 use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
 use dw\enums\HttpStatus;
 use dw\accessors\ary;
-use dw\helpers\dwFile;
 use dw\classes\dwObject;
 use dw\classes\controllers\dwBasicController;
-use dw\adapters\template\dwSmartyTemplate;
 
-include_once '../classes/StartupEntity.class.php';
+include_once '../classes/ProjectEntity.class.php';
+include_once '../classes/Emailer.class.php';
 
 /**
  * @Mapping(value = '/rest/startup')
+ * @Mapping(value = '/rest/project')
  */
-class startup extends dwBasicController {
+class project extends dwBasicController {
 
 	const EVENT_CREATE = 1;
 	const EVENT_UPDATE_SETTINGS = 2;
@@ -109,7 +109,7 @@ class startup extends dwBasicController {
 	 */
 	private function loadStartup($uid) {
 		
-		$startupE = new classes\StartupEntity(self::$startupEntity);
+		$startupE = new classes\ProjectEntity(self::$startupEntity);
 		return $startupE -> get($uid);
 
 	}
@@ -276,16 +276,11 @@ class startup extends dwBasicController {
 					$memberDoc -> insert();
 					
 					if($memberDoc -> invitation_email && ($memberDoc -> joined == 0)) {
+					
 						// Send invitation email
-						$mail_model = new dwObject();
-						$userName = self::$session -> user -> name;
-						$mail_model -> email = $memberDoc -> invitation_email;
-						$mail_model -> founderName = $userName;
-						$mail_model -> startupName = $doc -> name;
-						$mail_model -> memberRole = isset($memberDoc -> role)?$memberDoc -> role:'membre';
-						$mail_model -> url = $request -> getBaseUri()."/startup/".$doc -> ref."/join/".$memberDoc -> getLastInsertId();
-							
-						if($this -> sendInvitationEmail($mail_model)) {
+						$emailer = new classes\Emailer(self::$log, self::$smtp);
+						
+						if($emailer -> sendInvitationEmail($request, self::$session -> user, $doc, $memberDoc)) {
 							$memberUpdateDoc = $memberDoc -> factory();
 							$memberUpdateDoc -> uid = $memberDoc -> getLastInsertId();
 							$memberUpdateDoc -> invitationSentAt = $memberUpdateDoc -> castSQL('CURRENT_TIMESTAMP');
@@ -297,18 +292,9 @@ class startup extends dwBasicController {
 			}
 			
 			// Send welcome email
-			$mail_model = new dwObject();
-			$mail_model -> img_logo = dwFile::getBase64File('assets/img/logo.png');
-			$mail_model -> projectName = $doc -> name;
-			$mail_model -> url = $request -> getBaseUri()."/startup/".$doc -> ref;
-			
-			$str = dwSmartyTemplate::renderize("../emails/startupWelcome.html", $mail_model -> toArray());
-			
-			if(!self::$smtp -> send($doc -> email, null, null, "Bienvenue sur StartupFollow", $str)) {
-				self::$log -> error("Error sending email to ".$doc -> email);
-				return HttpStatus::INTERNAL_SERVER_ERROR;
-			}
-			
+			$emailer = new classes\Emailer(self::$log, self::$smtp);
+			$emailer -> sendWelcome($request, $doc);
+
 			return $doc -> toArray();
 			
 		}
@@ -322,7 +308,7 @@ class startup extends dwBasicController {
 	 * @param unknown $name
 	 */
 	private function convertName($name) {
-		return classes\StartupEntity::convertName($name);
+		return classes\ProjectEntity::convertName($name);
 	}
 	
 	/**
@@ -359,7 +345,7 @@ class startup extends dwBasicController {
 		$doc -> link_website = @$jsonContent -> link_website;
 		$doc -> link_twitter = @$jsonContent -> link_twitter;
 		$doc -> link_facebook = @$jsonContent -> link_facebook;
-	
+
 		if($doc -> update()) {
 		
 			// Add event update
@@ -395,16 +381,10 @@ class startup extends dwBasicController {
 						$memberDoc -> get(array('uid' => $uid));
 						
 						if(!$memberDoc -> joined && $memberDoc -> invitation_email && !$memberDoc -> invitationSentAt) {
+
 							// Send invitation email
-							$mail_model = new dwObject();
-							$userName = self::$session -> user -> name;
-							$mail_model -> email = $memberDoc -> invitation_email;
-							$mail_model -> founderName = $userName;
-							$mail_model -> startupName = $doc -> name;
-							$mail_model -> memberRole  = isset($memberDoc -> role)?$memberDoc -> role:'membre';
-							$mail_model -> url = $request -> getBaseUri()."/startup/".$doc -> ref."/join/".$uid;
-						
-							if($this -> sendInvitationEmail($mail_model)) {
+							$emailer = new classes\Emailer(self::$log, self::$smtp);
+							if($emailer -> sendInvitationEmail($request, self::$session -> user, $doc, $memberDoc)) {
 								$memberUpdateDoc = $memberDoc -> factory();
 								$memberUpdateDoc -> uid = $memberDoc -> uid;
 								$memberUpdateDoc -> invitationSentAt = $memberUpdateDoc -> castSQL('CURRENT_TIMESTAMP');
@@ -423,28 +403,6 @@ class startup extends dwBasicController {
 		
 		return HttpStatus::INTERNAL_SERVER_ERROR;
 	
-	}
-	
-	/**
-	 * Send invitation email to member
-	 * @param unknown $model
-	 * @return boolean
-	 */
-	private function sendInvitationEmail($model) {
-		
-			// Send invitation email
-			$mail_model = new dwObject();
-			$mail_model -> img_logo = dwFile::getBase64File('assets/img/logo.png');
-			$mail_model -> data = $model -> toArray();
-					
-			$str = dwSmartyTemplate::renderize("../emails/invitationMember.html", $mail_model -> toArray());
-		
-			if(!self::$smtp -> send($model -> email, null, null, "Rejoignez votre équipe sur StartupFollow", $str)) {
-				self::$log -> error("Error sending invitation email to ".$model -> email);
-				return false;
-			}
-			
-			return true;
 	}
 
 	/**
@@ -615,7 +573,8 @@ class startup extends dwBasicController {
 				if(($userData = $userE -> get(array("uid" => $userUID))) == null) {
 					self::$log -> error("Utilisateur n°$userUID introuvable");
 				} else {
-					$this -> sendNotificationStoryEmail($request, $storyData, $startupData, $userData);			
+					$emailer = new classes\Emailer(self::$log, self::$smtp);
+					$emailer -> sendNotificationStoryEmail($request, $storyData, $startupData, $userData);			
 				}
 				
 				
@@ -624,37 +583,7 @@ class startup extends dwBasicController {
 		
 	}
 	
-	/**
-	 * Send notification email to follower
-	 * @param $startupData
-	 * @param $userData
-	 * @return boolean
-	 */
-	private function sendNotificationStoryEmail($request, $storyData, $startupData, $userData) {
-	
-		// Prepare model data
-		$model = new dwObject();
-		$model -> startupName = $startupData -> name;
-		$model -> userName = $userData -> name;
-		$model -> shortLine = $storyData -> shortLine;
-		$model -> url = $request -> getBaseUri()."/startup/".$startupData -> ref;
-		
-		// Prepare email
-		$mail_model = new dwObject();
-		$mail_model -> img_logo = dwFile::getBase64File('assets/img/logo.png');
-		$mail_model -> data = $model -> toArray();
-			
-		// Generate template body
-		$str = dwSmartyTemplate::renderize("../emails/notificationStory.html", $mail_model -> toArray());
-	
-		// Send email
-		if(!self::$smtp -> send($userData -> email, null, null, "Des nouvelles de ".$model -> startupName." sur StartupFollow", $str)) {
-			self::$log -> error("Error sending invitation email to ".$userData -> email);
-			return false;
-		}
-			
-		return true;
-	}
+
 	
 	/**
 	 * @Mapping(method = "GET", value=":startup_uid/story/:uid", consumes="application/json", produces="application/json; charset=utf-8")
@@ -780,7 +709,7 @@ class startup extends dwBasicController {
 		}
 		
 		if(self::$log -> isTraceEnabled()) {
-			self::$log -> trace("Creation d'un souscription au compte Startup");
+			self::$log -> trace("Creation d'une souscription au compte Startup");
 		}
 	
 		$doc = self::$startupFollowerEntity -> factory();
@@ -788,7 +717,10 @@ class startup extends dwBasicController {
 		$doc -> user_uid = $p_uid;
 	
 		if($doc -> insert()) {
-	
+			
+			// Flag user data into session deprecated
+			self::$session -> user -> deprecated = true;
+			
 			// Add event follow
 			$this -> addEvent($startup -> uid, $p_uid, self::EVENT_FOLLOW, null);
 	
@@ -826,6 +758,10 @@ class startup extends dwBasicController {
 		$doc -> user_uid = $p_uid;
 	
 		if($doc -> delete()) {
+			
+			// Flag user data into session deprecated
+			self::$session -> user -> deprecated = true;
+			
 			// Add event unfollow
 			$this -> addEvent($startup -> uid, $p_uid, self::EVENT_UNFOLLOW, null);
 		} else {

@@ -1,6 +1,6 @@
 <?php
 
-namespace startupfollow;
+namespace colaunch;
 
 use dw\dwFramework as dw;
 use dw\classes\dwHttpRequest;

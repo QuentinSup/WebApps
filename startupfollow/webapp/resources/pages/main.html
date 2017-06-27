@@ -3,10 +3,10 @@
 		<div class="home-bg">
 			<div class="hero-content text-center ">
 				<div class="hero-big">
-					<span class="sublime-text">Startup Follows</span>
+					<span class="sublime-text">Colaunch Flows</span>
 				</div>
 				<div class="hero-normal">
-					<span class="sublime-text">Suivez les projets de vos Startups</span>
+					<span class="sublime-text">Une nouvelle façon de suivre les Startups</span>							
 				</div>
 			</div>
 		</div>
@@ -22,22 +22,31 @@
 			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
-			<ul class="navigation-bar col-sm-10">
-				<li><a href="#about">A propos</a></li>
-				<li><a href="#projects">Les projets</a></li>
-				<li><a href="#newsletter">Contact</a></li>
+			<ul class="navigation-bar col-sm-11">
+				<li><a href="#about">Intro</a></li>
+				<li><a href="#projects">Voir les projets</a></li>
 			</ul>
-			<div class="col-sm-2 text-right">
+			<div class="col-sm-1 text-right">
 				<!-- ko if: user.data() -->
-				<div class="col-sm-6">
-					<a href="{$host}account">
+				<div class="col-sm-12">
+					<a href="{$host}account" class="menu right">
 						<img data-bind="attr: { 'src': user.data().image || host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
+						<ul>
+							<li data-bind="click: function() { document.location.href = host + 'account' }" class="clickable"><span class="fa fa-gear"></span>&nbsp;Paramètre du compte</li>
+							<li data-bind="click: function() { user.logout() }" class="clickable"><span class="fa fa-power-off"></span>&nbsp;Déconnexion</li>
+						</ul>
 					</a>
 				</div>
-				<div class="col-sm-6">
-					<button class="navigation-toggle" type="button" data-toggle="dropdown">
-						<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
-					</button>
+				<!-- /ko -->
+				<!-- ko ifnot: user.data() -->
+				<div class="col-sm-12">
+					<a href="{$host}login" class="menu right">
+						<img data-bind="attr: { 'src': host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
+						<ul>
+							<li data-bind="click: function() { document.location.href = host + 'login' }" class="clickable"><span class="fa fa-sign-in"></span>&nbsp;Connexion</li>
+							<li data-bind="click: function() { document.location.href = host + 'signup' }" class="clickable"><span class="fa fa-user"></span>&nbsp;Créer un compte</li>
+						</ul>
+					</a>
 				</div>
 				<!-- /ko -->
 			</div>
@@ -49,53 +58,28 @@
 	<div class="container">
 		<h4>Suivez les projets de vos Startups préférées</h4>
 		<article class="article-big" style="text-align: left;">
-			<p class="big">La vie d'une Startup est mouvementée et il est parfois difficile de suivre l'avancement des projets des Startups !</p>
+			<p class="big">La vie d'une Startup est mouvementée et il est parfois difficile de suivre son avancement !</p>
 			<p class="big">
-				Grâce à <span class="sublime-text">StartupFollows</span>, les porteurs de projets reçoivent régulièrement et automatiquement des invitations à
+				Grâce à <span class="sublime-text">Colaunch Flows</span>, les porteurs de projets reçoivent régulièrement et automatiquement des invitations à
 				mettre à jour leur profil, et partager leurs principales avancées, pour vous tenir informés !
 			</p>
 		</article>
-	</div>
-</section>
-<section id="search" class="section">
-	<div class="container">
+		
 		<div class="h7">Rechercher un projet</div>
 		<form class="form-register" data-role="form">
 			<div class="form-group relative">
 				<input type="text" value="" class="form-control" data-bind="value: searchValue, valueUpdate: 'keyup'" placeholder="nom du projet..." />
 				<ul class="search-list">
 					<!-- ko foreach: R -->
-					<li><span class="strong" data-bind="text: name"></span> <span data-bind="text: description"></span></li>
+					<li data-bind="click: function() { document.location.href = host + 'follow/' + ref }"><span class="strong" data-bind="text: name"></span> <span data-bind="text: description"></span></li>
 					<!-- /ko -->
-					<li><strong>Vous ne trouvez pas votre Startup ? Ajoutez-la !</strong></li>
+					<!-- ko if: searchValue() -->
+					<li><a href="#add"><strong>Vous ne trouvez pas le projet que vous cherchez ? Ajoutez-le !</strong></a></li>
+					<!-- /ko -->
 				</ul>
 			</div>
 		</form>
-	</div>
-</section>
-<section id="add" class="section light">
-	<div class="overlay"></div>
-	<div class="container">
-		<div class="h7">Ajouter une startup à la liste ?</div>
-		<p class="big">
-			Si vous ne trouvez pas votre Startup dans la liste mais que vous connaissez l'adresse email du porteur de projet, vous pouvez utilisez ce formulaire pour lui demander de se rajouter !<br />
-			S'il accepte, vous serez informés de son ajout et automatiquement inscrits aux changements du projet. 
-		</p>
-		<!-- ko with: startupRequestForm -->
-		<form class="form-register" data-role="form">
-			<div class="form-group">
-				<label for="AddProjectName">Nom du projet</label>
-				<input id="AddProjectName" type="text" value="" data-bind="value: name, valueUpdate: 'keyup'" class="form-control" placeholder="nom du projet..." required />
-			</div>
-			<div class="form-group">
-				<label for="AddProjectEmail">Adresse email du porteur de projet</label>
-				<input id="AddProjectEmail" type="email" value="" data-bind="value: email, valueUpdate: 'keyup'" class="form-control" placeholder="email du porteur de projet..." required />
-			</div>
-			<div class="form-group">
-				<button data-bind="click: function() { submit(); }" class="btn btn-default">Valider</button>
-			</div>
-		</form>
-		<!-- /ko -->
+		
 	</div>
 </section>
 <section id="stat" class="section hidden-xs">
@@ -127,7 +111,7 @@
 </section>
 <section id="projects" class="speakers section light">
 	<div class="overlay"></div>
-	<div class="">
+	<div class="container">
 		<div class="icon-wrap">
 			<span class="icon icon-active icon-multimedia-12"></span>
 		</div>
@@ -161,7 +145,29 @@
 			</div>
 			<!-- /ko -->
 		</section>
+		<section id="add">
+		<div class="container">
+			<div class="h7">Ajouter une startup à la liste ?</div>
+			<p class="big">
+				Si vous ne trouvez pas une Startup dans la liste mais que vous connaissez l'adresse email du porteur de projet, vous pouvez utilisez ce formulaire pour lui demander de rajouter son projet !<br />
+			</p>
+			<!-- ko with: startupRequestForm -->
+			<form class="form-register" data-role="form">
+				<div class="form-group">
+					<label for="AddProjectName">Nom du projet / startup</label>
+					<input id="AddProjectName" type="text" value="" data-bind="value: name, valueUpdate: 'keyup'" class="form-control" placeholder="nom du projet..." required />
+				</div>
+				<div class="form-group">
+					<label for="AddProjectEmail">Adresse email du porteur de projet</label>
+					<input id="AddProjectEmail" type="email" value="" data-bind="value: email, valueUpdate: 'keyup'" class="form-control" placeholder="email du porteur de projet..." required />
+				</div>
+				<div class="form-group">
+					<button data-bind="click: function() { submit(); }" class="btn btn-default">Envoyer</button>
+				</div>
+			</form>
+			<!-- /ko -->
+		</div>
+		</section>
 	</div>
 </section>
-
 <script type="text/javascript" src="resources/pages/js/main.js"></script>

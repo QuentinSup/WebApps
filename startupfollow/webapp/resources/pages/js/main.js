@@ -30,7 +30,7 @@ var startupfollows;
                         _this.email('');
                     }
                     else {
-                        error("Holy s**t !<br />Une erreur est apparue durant le traitement de la requête. Essayez de recommencer dans quelques minutes (on sait jamais) !");
+                        error("Holy s**t ! Une erreur est apparue durant le traitement de la requête. Essayez de recommencer dans quelques minutes (on sait jamais) !");
                     }
                 });
                 return false;

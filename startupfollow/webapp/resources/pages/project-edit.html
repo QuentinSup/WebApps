@@ -3,14 +3,40 @@
 <header id="header" class="navigation-bar-header light hidden-xs">
 	<div class="container">
 		<nav class="navigation">
-			<div class="navigation-txt hidden-xs" data-toggle="dropdown">StartupFollow</div>
 			<div class="navigation-txt visible-xs" data-toggle="dropdown">Home</div>
 			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
-			<ul class="navigation-bar navigation-bar-left">
-
-			</ul>
+			<div class="col-sm-1">
+				<!-- ko with: startup() -->
+				<a class="menu clickable">
+					<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/project-avatar.svg' }" class="img-responsive img-circle" alt="startup" />
+					<ul>
+						<li data-bind="click: function() { document.location.href = host + 'follow/' + ref }" class="clickable"><span class="fa fa-flask"></span>&nbsp;Voir la page</li>
+					</ul>
+				</a>
+				<!-- /ko -->
+			</div>
+			<div class="col-sm-10">
+				<ul class="navigation-bar navigation-bar-left">
+					<li>
+						
+					</li>
+				</ul>
+			</div>
+			<div class="col-sm-1 text-right">
+				<!-- ko if: user.data() -->
+				<div class="col-sm-12">
+					<a href="{$host}account" class="menu right">
+						<img data-bind="attr: { 'src': user.data().image || host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
+						<ul>
+							<li data-bind="click: function() { document.location.href = host + 'account' }" class="clickable"><span class="fa fa-gear"></span>&nbsp;Paramètre du compte</li>
+							<li data-bind="click: function() { user.logout() }" class="clickable"><span class="fa fa-power-off"></span>&nbsp;Déconnexion</li>
+						</ul>
+					</a>
+				</div>
+				<!-- /ko -->
+			</div>
 		</nav>
 	</div>
 </header>
@@ -30,8 +56,8 @@
 			<div class="col-sm-9">
 				<div id="sections" class="slider" data-slider-speed="0">
 					<ul>
-						<li class="content">
-							<section>
+						<li>
+							<section class="content">
 								<div class="h8">Votre Startup</div>
 								<!-- ko with: form -->
 								<form data-role="form">
@@ -70,8 +96,8 @@
 								<!-- /ko -->
 							</section>
 						</li>
-						<li class="content">
-							<section>
+						<li>
+							<section class="content">
 								<div class="h8">Votre logo</div>
 								<p>Votre logo et vos liens vers vos réseaux sociaux permettront à vos fans de vous suivre plus facilement et d'accroître votre communauté.</p>
 								<!-- ko with: form -->
@@ -115,8 +141,8 @@
 								<!-- /ko -->
 							</section>
 						</li>
-						<li class="content">
-							<section>
+						<li>
+							<section class="content">
 								<div class="h8">Votre équipe</div>
 								<p></p>
 								<!-- ko with: form -->
@@ -190,8 +216,8 @@
 								<!-- /ko -->
 							</section>
 						</li>
-						<li class="content">
-							<section>
+						<li>
+							<section class="content">
 								<div class="h8">Votre histoire</div>
 								<button data-bind="click: function() { newStory(); }" class="btn white">Ajouter</button>
 								<div id="stories" class="slider">
@@ -202,7 +228,7 @@
 												<!-- ko foreach: stories -->
 												<li data-bind="click: function() { $root.editStory($data.uid) }">
 													<span class="h8" data-bind="text: $data.shortLine"></span>
-													<span data-bind="text: $data.date"></span>
+													<time class="timeago" data-bind="attr: { 'datetime' : $data.date }"></time>
 												</li>
 												<!-- /ko -->
 											</ul>
@@ -233,8 +259,8 @@
 								</div>
 							</section>
 						</li>
-						<li class="content">
-							<section>
+						<li>
+							<section class="content">
 								<div class="h8">Historique</div>
 								<!-- ko foreach: events() -->
 								<ul>
