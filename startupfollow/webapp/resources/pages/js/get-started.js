@@ -15,6 +15,8 @@ var colaunch;
             this.facebook = ko.observable();
             this.members = ko.observableArray();
             this.nameExists = ko.observable(true);
+            this.isEmailValid = ko.observable(false);
+            this.isCheckingName = ko.observable(false);
             // Prepare name control
             this.name.subscribe(function (v) {
                 _this.nameExists(true);
@@ -24,6 +26,10 @@ var colaunch;
                 _this.__hdlCheckIfNameExists = setTimeout(function () {
                     _this.checkIfExists(v);
                 }, 500);
+            });
+            // Autovalidate email
+            this.email.subscribe(function (v) {
+                _this.isEmailValid(v && isValidEmail(v));
             });
             // Add current user to member team
             user.ready(function () {
@@ -37,13 +43,19 @@ var colaunch;
         }
         StartupAddForm.prototype.checkIfExists = function (name) {
             var _this = this;
+            if (this.__jqxrCheckIfNameExists) {
+                this.__jqxrCheckIfNameExists.abort();
+                this.__jqxrCheckIfNameExists = null;
+            }
+            this.isCheckingName(true);
             var request = {
                 type: 'get',
                 url: host + 'rest/startup/' + name,
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json'
             };
-            $.ajax(request).complete(function (response, status) {
+            this.__jqxrCheckIfNameExists = $.ajax(request).complete(function (response, status) {
+                _this.isCheckingName(false);
                 _this.nameExists(response.status == 200);
             });
         };

@@ -40,7 +40,7 @@
 						<ul>
 						<li>
 							<div class="h7">Welcome</div>
-							<p class="help-block">Bienvenue sur StartupFollow. Votre inscription sera effectuée en quelques cliques seulement.</p>
+							<p class="help-block">Bienvenue ! Votre inscription sera effectuée en quelques cliques seulement.</p>
 							<p>
 								Pour commencer, merci d'indiquer le nom (actuel) de votre projet et votre phrase d'accroche
 							</p>
@@ -49,8 +49,11 @@
 								<div class="form-group row has-feedback">
 									<div class="col-sm-4">
 										<input type="text" value="" class="form-control" data-bind="value: name, valueUpdate: 'input'" placeholder="nom du projet..." required />
-										<!-- ko if: !nameExists() -->
-										<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+										<!-- ko if: isCheckingName() -->
+										<img src="{$host}/assets/img/preloader.gif" class="form-control-feedback" aria-hidden="true" />
+										<!-- /ko -->
+										<!-- ko if: !isCheckingName() && !nameExists() -->
+										<span class="glyphicon glyphicon-ok form-control-feedback check" aria-hidden="true"></span>
 										<!-- /ko -->
 									</div>
 								</div>
@@ -59,7 +62,7 @@
 										<input type="text" class="form-control" value="" data-bind="value: punchLine, valueUpdate: 'input'" placeholder="Ex. : In tartiflette we trust" />
 									</div>
 								</div>
-								<button data-bind="click: function() { next(); }" class="btn btn-default">Commencer</button>
+								<button data-bind="disable: isCheckingName() || nameExists(), click: function() { next(); }" class="btn btn-default">Commencer</button>
 							</form>
 							<!-- /ko -->
 						</li>
@@ -71,19 +74,22 @@
 							<!-- ko with: form -->
 							<form class="form-register" data-role="form">
 								<label>Adresse de contact</label>
-								<div class="form-group row">
+								<div class="form-group row has-feedback">
 									<div class="col-sm-8">
 										<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input'" placeholder="email de contact" required />
+										<!-- ko if: isEmailValid() -->
+										<span class="glyphicon glyphicon-ok form-control-feedback check" aria-hidden="true"></span>
+										<!-- /ko -->
 									</div>
 								</div>
 								<button data-bind="click: function() { prev(); }" class="btn blank"><< Retour</button>
-								<button data-bind="click: function() { next(); }" class="btn btn-default">Continuer</button>
+								<button data-bind="disable: !isEmailValid(), click: function() { next(); }" class="btn btn-default">Continuer</button>
 							</form>
 							<!-- /ko -->
 						</li>
 						<li>
 							<div class="h7">Votre logo</div>
-							<p>Votre logo et vos liens vers vos réseaux sociaux permettront à vos fans de vous suivre plus facilement et d'accroître votre communauté.</p>
+							<p>Votre logo et vos liens vers vos réseaux sociaux permettront à vos fans de vous suivre plus facilement et d'accroître votre visibilité.</p>
 							<!-- ko with: form -->
 							<form class="form-register" data-role="form">
 								<label>Votre image</label>

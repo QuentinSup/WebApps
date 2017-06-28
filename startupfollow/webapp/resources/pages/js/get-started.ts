@@ -6,7 +6,7 @@ module colaunch {
     declare var window;
     declare var host;
     declare var user;
-    declare function isValidEmail(email);
+    declare function isValidEmail(email): boolean;
     declare function toast(message, opts?);
     declare function error(message, title?, callback?);
     declare function success(message, title?, opts?, callback?);
@@ -22,7 +22,11 @@ module colaunch {
         public facebook  = ko.observable();
         public members   = ko.observableArray();
         public nameExists = ko.observable(true);
+        public isEmailValid = ko.observable(false);
 
+        public isCheckingName = ko.observable(false);
+        
+        private __jqxrCheckIfNameExists;
         private __hdlCheckIfNameExists;
         private __hdlCheckIfEmailExists;
         
@@ -41,6 +45,11 @@ module colaunch {
                 }, 500);    
             });
             
+            // Autovalidate email
+            this.email.subscribe((v: string): void => {
+                this.isEmailValid(v && isValidEmail(v));
+            });
+            
             // Add current user to member team
             user.ready((): void => {
                 var member = this.createMember(); 
@@ -55,6 +64,13 @@ module colaunch {
         
         public checkIfExists(name: string) {
         
+            if(this.__jqxrCheckIfNameExists) {
+                this.__jqxrCheckIfNameExists.abort();
+                this.__jqxrCheckIfNameExists = null;
+            }
+            
+            this.isCheckingName(true);
+            
             var request = {
                 type: 'get',
                 url: host + 'rest/startup/' + name,
@@ -62,7 +78,8 @@ module colaunch {
                 dataType: 'json' 
             };
             
-            $.ajax(request).complete((response, status): void => {
+            this.__jqxrCheckIfNameExists = $.ajax(request).complete((response, status): void => {
+                this.isCheckingName(false);
                 this.nameExists(response.status == 200);
             });
             
