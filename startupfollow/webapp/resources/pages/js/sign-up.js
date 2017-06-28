@@ -9,6 +9,8 @@ var colaunch;
             this.email = ko.observable();
             this.isUserNameUnique = ko.observable(false);
             this.isUserEmailUnique = ko.observable(false);
+            this.isCheckingName = ko.observable(false);
+            this.isCheckingEmail = ko.observable(false);
             this.name.subscribe(function (s) {
                 _this.isUserNameUnique(false);
                 clearTimeout(_this.__hdlCheckIfExistsName);
@@ -121,7 +123,9 @@ var colaunch;
         Model.prototype.verifyUserName = function () {
             var _this = this;
             this.isUserNameUnique(false);
+            this.isCheckingName(true);
             user.isNameUnique(this.name(), function (b) {
+                _this.isCheckingName(false);
                 _this.isUserNameUnique(b);
             });
             return false;
@@ -131,7 +135,10 @@ var colaunch;
          */
         Model.prototype.verifyUserEmail = function () {
             var _this = this;
+            this.isUserEmailUnique(false);
+            this.isCheckingEmail(true);
             user.isEmailUnique(this.email(), function (b) {
+                _this.isCheckingEmail(false);
                 _this.isUserEmailUnique(b);
             });
             return false;

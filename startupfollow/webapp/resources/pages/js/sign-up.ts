@@ -19,6 +19,8 @@ module colaunch {
         public email = ko.observable();
         public isUserNameUnique = ko.observable(false);
         public isUserEmailUnique = ko.observable(false);
+        public isCheckingName = ko.observable(false);
+        public isCheckingEmail = ko.observable(false);
         
         private __hdlCheckIfExistsName;
         private __hdlCheckIfExistsEmail;
@@ -175,8 +177,10 @@ module colaunch {
         public verifyUserName(): boolean {
             
             this.isUserNameUnique(false);
+            this.isCheckingName(true);
             
             user.isNameUnique(this.name(), (b: boolean): void => {
+                this.isCheckingName(false);
                 this.isUserNameUnique(b);         
             });
             
@@ -190,7 +194,11 @@ module colaunch {
          */
         public verifyUserEmail(): boolean {
             
-             user.isEmailUnique(this.email(), (b: boolean): void => {
+            this.isUserEmailUnique(false); 
+            this.isCheckingEmail(true);
+            
+            user.isEmailUnique(this.email(), (b: boolean): void => {
+                this.isCheckingEmail(false);
                 this.isUserEmailUnique(b);         
             });
             

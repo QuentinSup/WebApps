@@ -35,11 +35,14 @@
 							<div class="form-group">
 								<input id="FormInputName" type="text" value="" class="form-control" data-bind="value: name, valueUpdate: 'input'" placeholder="Nom d'utilisateur" required />
 							</div>
-							<div class="form-group">
-								<div class="input-group">
-									<input id="FormInputPassword" type="password" value="" class="form-control" data-bind="value: password, valueUpdate: 'input'" placeholder="Mot de passe" required />
-									<span class="input-group-addon clickable" data-bind="click: function() { login(); }"><span class="fa fa-arrow-circle-right"></span></span>
-								</div>
+							<div class="form-group has-feedback">
+								<input id="FormInputPassword" type="password" value="" class="form-control" data-bind="value: password, valueUpdate: 'input'" placeholder="Mot de passe" required />
+								<!-- ko if: $data.isCheckingLogin() -->
+								<img src="{$host}/assets/img/preloader.gif" class="form-control-feedback" aria-hidden="true" />
+								<!-- /ko -->
+								<!-- ko ifnot: $data.isCheckingLogin() -->
+								<span class="form-control-feedback clickable" data-bind="click: function() { login(); }"><span class="fa fa-arrow-circle-right"></span></span>
+								<!-- /ko -->
 							</div>
 						</form>
 						<p>
@@ -49,11 +52,14 @@
 					<li>
 						<form data-role="form" class="form">
 							<label for="FormInputName">Récupérer mon mot de passe</label>
-							<div class="form-group">
-								<div class="input-group">
-									<input id="FormInputEmail" type="text" value="" class="form-control" data-bind="value: email, valueUpdate: 'input'" placeholder="Email du compte" required />
-									<span class="input-group-addon clickable" data-bind="click: function() { retrievePassword(); }"><span class="fa fa-arrow-circle-right"></span></span>
-								</div>
+							<div class="form-group has-feedback">
+								<input id="FormInputEmail" type="text" value="" class="form-control" data-bind="value: email, valueUpdate: 'input'" placeholder="Email du compte" required />
+								<!-- ko if: $data.isCheckingPassword() -->
+								<img src="{$host}/assets/img/preloader.gif" class="form-control-feedback" aria-hidden="true" />
+								<!-- /ko -->
+								<!-- ko ifnot: $data.isCheckingPassword() -->
+								<span class="form-control-feedback clickable" data-bind="click: function() { retrievePassword(); }"><span class="fa fa-arrow-circle-right"></span></span>
+								<!-- /ko -->
 							</div>
 						</form>
 					</li>

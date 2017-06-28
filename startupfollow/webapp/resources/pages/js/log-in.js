@@ -6,9 +6,12 @@ var colaunch;
             this.email = ko.observable();
             this.password = ko.observable();
             this.redirectTo = ko.observable();
+            this.isCheckingLogin = ko.observable(false);
+            this.isCheckingPassword = ko.observable(false);
         }
         Model.prototype.login = function () {
             var _this = this;
+            this.isCheckingLogin(true);
             var data = {
                 name: this.name(),
                 password: this.password()
@@ -21,6 +24,7 @@ var colaunch;
                 dataType: 'json'
             };
             $.ajax(request).complete(function (response, status) {
+                _this.isCheckingLogin(false);
                 if (response.status == 200) {
                     toast("Bienvenue " + _this.name() + " ;)");
                     document.location.href = host + _this.redirectTo() || '';
@@ -41,6 +45,7 @@ var colaunch;
          * Send request to retrieve password
          */
         Model.prototype.retrievePassword = function () {
+            var _this = this;
             if (!this.email().trim()) {
                 toast("Merci de renseigner l'adresse email de votre compte");
                 return;
@@ -49,6 +54,7 @@ var colaunch;
                 toast("Cette adresse email ne semble pas valide");
                 return;
             }
+            this.isCheckingPassword(true);
             var data = {
                 email: this.email()
             };
@@ -60,6 +66,7 @@ var colaunch;
                 dataType: 'json'
             };
             $.ajax(request).complete(function (response, status) {
+                _this.isCheckingPassword(false);
                 if (response.status == 200) {
                     success("Done ! Un nouveau mot de passe vous a été envoyé par email !");
                     $('#form').formslider('animate:0');

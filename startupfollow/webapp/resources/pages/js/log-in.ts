@@ -16,6 +16,9 @@ module colaunch {
         public email = ko.observable();
         public password = ko.observable();
         public redirectTo = ko.observable();
+        
+        public isCheckingLogin = ko.observable(false);
+        public isCheckingPassword = ko.observable(false);
 
         public constructor() {
 
@@ -24,6 +27,8 @@ module colaunch {
 
         public login() {
 
+            this.isCheckingLogin(true);
+            
             var data = {
                 name: this.name(),
                 password: this.password()    
@@ -38,6 +43,7 @@ module colaunch {
             };
 
             $.ajax(request).complete((response, status): void => {
+                this.isCheckingLogin(false);
                 if (response.status == 200) {
                     toast("Bienvenue " + this.name() + " ;)");
                     document.location.href = host + this.redirectTo() || '';
@@ -71,6 +77,8 @@ module colaunch {
                 return;
             }
             
+            this.isCheckingPassword(true);
+            
             var data = {
                 email: this.email()
             }
@@ -84,6 +92,7 @@ module colaunch {
             };
 
             $.ajax(request).complete((response, status): void => {
+                this.isCheckingPassword(false);
                 if (response.status == 200) {
                     success("Done ! Un nouveau mot de passe vous a été envoyé par email !");
                     $('#form').formslider('animate:0');

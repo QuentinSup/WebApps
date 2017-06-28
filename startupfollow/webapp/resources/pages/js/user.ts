@@ -12,6 +12,9 @@ module colaunch {
         public data = ko.observable();
         public isReady = ko.observable(false);
         
+        private __jqxrNameUnique = null;
+        private __jqxrEmailUnique = null;
+        
         public constructor() {
          
             this.data.subscribe((v: any): void => {
@@ -166,6 +169,11 @@ module colaunch {
                 dataType: 'json' 
             };
             
+            if(this.__jqxrNameUnique) {
+                this.__jqxrNameUnique.abort();
+                this.__jqxrNameUnique = null;
+            }
+            
             $.ajax(request).complete((response, status): void => {
                 if(typeof(callback) == "function") {
                     callback.call(this, response.status == 200);    
@@ -186,6 +194,11 @@ module colaunch {
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json' 
             };
+            
+            if(this.__jqxrEmailUnique) {
+                this.__jqxrEmailUnique.abort();
+                this.__jqxrEmailUnique = null;
+            }
 
             
             $.ajax(request).complete((response, status): void => {

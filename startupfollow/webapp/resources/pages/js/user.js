@@ -5,6 +5,8 @@ var colaunch;
             var _this = this;
             this.data = ko.observable();
             this.isReady = ko.observable(false);
+            this.__jqxrNameUnique = null;
+            this.__jqxrEmailUnique = null;
             this.data.subscribe(function (v) {
                 if (v) {
                     _this.isReady(true);
@@ -125,6 +127,10 @@ var colaunch;
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json'
             };
+            if (this.__jqxrNameUnique) {
+                this.__jqxrNameUnique.abort();
+                this.__jqxrNameUnique = null;
+            }
             $.ajax(request).complete(function (response, status) {
                 if (typeof (callback) == "function") {
                     callback.call(_this, response.status == 200);
@@ -142,6 +148,10 @@ var colaunch;
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json'
             };
+            if (this.__jqxrEmailUnique) {
+                this.__jqxrEmailUnique.abort();
+                this.__jqxrEmailUnique = null;
+            }
             $.ajax(request).complete(function (response, status) {
                 if (typeof (callback) == "function") {
                     callback.call(_this, response.status == 200);

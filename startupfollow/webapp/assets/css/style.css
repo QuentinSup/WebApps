@@ -346,6 +346,12 @@ input[type=button], button, .btn {
     max-width: 100%;
 }
 
+input[type=button][disabled], button[disabled], .btn[disabled] {
+    background: #2ab27b  !important;
+    color: #fff !important;
+    opacity: .5 !important;
+}
+
 input[type=button].blank, button.blank, .btn.blank {
     background: transparent;
     color: #cccccc;
@@ -373,11 +379,17 @@ input[type=button].white, button.white, .btn.white {
     height: 30px;
     line-height: 30px;
     text-align: center;
-    border-radius: 34px;
+    color: #000;
+    font-size: 1.1em;
+}
+
+.form-control-feedback.check {
+	border-radius: 34px;
     background: #fff;
     border: 1px solid #8bbba8;
     color: #fff;
     background: #65c39d;
+    font-size: 1em;
 }
 
 .input-group-addon {
