@@ -5,14 +5,9 @@ namespace colaunch;
 use dw\classes\dwHttpRequest;
 use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
-use dw\classes\http\dwHttpSocket;
 use dw\enums\HttpStatus;
-use dw\helpers\dwFile;
-use dw\classes\dwObject;
 use dw\classes\controllers\dwBasicController;
-use dw\adapters\template\dwSmartyTemplate;
-
-include_once '../classes/Emailer.class.php';
+use colaunch\classes\Emailer;
 
 /**
  * @Mapping(value = '/rest/request')

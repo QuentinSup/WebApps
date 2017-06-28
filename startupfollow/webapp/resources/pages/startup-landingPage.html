@@ -46,8 +46,21 @@
 						<a href="{$host}account" class="menu right">
 							<img data-bind="attr: { 'src': user.data().image || host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
 							<ul>
+								<!-- ko if: user.data().teams -->
+								<!-- ko foreach: user.data().teams -->
+								<li data-bind="click: function() { document.location.href = host + 'follow/' + ref }" class="clickable">
+									<img class="img-circle" data-bind="attr: { 'src': image || host + 'assets/img/avatars/project-avatar.svg' }" />
+									&nbsp;<span data-bind="text: name"></span>
+									<!-- ko if: $data.lastActivityInDays == -1 || $data.lastActivityInDays > 30 -->
+									<span title="Vos amis attendent que vous publiez quelque chose !" class="fa fa-lightbulb-o"></span>
+									<!-- /ko -->
+								</li>	
+								<!-- /ko -->
+								<li class="separator"><hr /></li>
+								<!-- /ko -->
 								<li data-bind="click: function() { document.location.href = host + 'account' }" class="clickable"><span class="fa fa-gear"></span>&nbsp;Paramètre du compte</li>
 								<li data-bind="click: function() { user.logout() }" class="clickable"><span class="fa fa-power-off"></span>&nbsp;Déconnexion</li>
+								
 							</ul>
 						</a>
 					</div>
@@ -91,6 +104,17 @@
 					<span class="sublime-text" data-bind="text: $data.punchLine"></span>
 				</div>
 				<!-- /ko -->
+				<div class="social-link hero-normal">
+					<!-- ko if: $data.link_twitter -->
+					<a href="" data-bind="attr: { 'href': $data.link_twitter }" title="Suivez le projet sur Twitter"><span class="fa fa-twitter"></span></a>
+					<!-- /ko -->
+					<!-- ko if: $data.link_facebook -->
+					<a href="" data-bind="attr: { 'href': $data.link_facebook }" title="Suivez le projet sur Facebook"><span class="fa fa-facebook"></span></a>
+					<!-- /ko -->
+					<!-- ko if: $data.link_website -->
+					<a href="" data-bind="attr: { 'href': $data.link_website }" title="Voir le site internet du projet"><span class="fa fa-link"></span></a>
+					<!-- /ko -->
+				</div>
 			</div>
 		</div>
 	</div>
@@ -139,6 +163,11 @@
 <section id="story" class="section">
 	<div class="container">
 		<h5>Dernières nouvelles !</h5>
+		<!-- ko if: user.data() && user.canManageStartup(data().uid) -->	
+		<a class="clickable" data-bind="click: function() { document.location.href = host + 'project/edit/' + ref }">
+			<span class="fa fa-gear"></span>&nbsp;Gérer la page
+		</a> 	
+		<!-- /ko -->
 		<!-- ko if: stories().length == 0 -->
 		<div class="h7">Le projet n'a pas encore donné de nouvelle :( !<br />Suivez le projet pour être informés dès que le projet évolue !</div>
 		<!-- /ko -->
@@ -150,7 +179,7 @@
 			</header>
 			<p data-bind="html: $data.text"></p>
 			<footer>
-				<span>Fait le <time class="timeago" data-bind="attr: { 'datetime': $data.date }"></time></span> - 
+				<span>Fait le <time class="timeago inline" data-bind="attr: { 'datetime': $data.date }"></time></span> - 
 				<a class="clickable" data-bind="click: function() { $root.addStoryLike($data.uid(), $index()); }">J'aime (<span data-bind="text: $data.numberOfLikes"></span>)</a>
 			</footer>
 		</article>
@@ -168,7 +197,7 @@
 </section>
 <!-- /ko -->
 
-<script type="text/javascript" src="{$host}/resources/pages/js/startup.js"></script>
+<script type="text/javascript" src="{$host}/resources/pages/js/project-page.js"></script>
 <script type="text/javascript">
 
 	model.find('{$ref}');

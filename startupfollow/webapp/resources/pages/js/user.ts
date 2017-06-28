@@ -1,4 +1,4 @@
-module startupfollows.startup {
+module colaunch {
     
     declare var projects;
     declare var ko;
@@ -59,17 +59,20 @@ module startupfollows.startup {
         
         public isFollowingStartup(uid: string): boolean {
          
+            if(!this.data()) return false;
             var subscriptions = this.data().subscriptions || [];
-            for(var i = 0; i < subscriptions.length; i++) {
-                if(subscriptions[i].startup_uid == uid) {
-                   return true;     
-                }
-            }
-        
-            return false;
+            return !!subscriptions.findBy('startup_uid', uid);
         
         }
 
+        public canManageStartup(uid: string): boolean {
+         
+            if(!this.data()) return false;
+            var teams = this.data().teams || [];
+            return !!teams.findBy('uid', uid);
+        
+        }
+        
         public likeStory(uid: string, callback?: Function): void {
             
             var request = {

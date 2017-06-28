@@ -46,11 +46,11 @@
 		<div class="row">
 			<div class="col-sm-3">
 				<ul class="list">
-					<li data-bind="click: function() { showSection(1) }, css: { 'strong': index() == 1 }">Votre Startup</li>
-					<li data-bind="click: function() { showSection(2) }, css: { 'strong': index() == 2 }">Logo &amp; réseaux sociaux</li>
-					<li data-bind="click: function() { showSection(3) }, css: { 'strong': index() == 3 }">Votre équipe</li>
-					<li data-bind="click: function() { showSection(4) }, css: { 'strong': index() == 4 }">Votre histoire</li>
-					<li data-bind="click: function() { showSection(5) }, css: { 'strong': index() == 5 }">Les événements</li>
+					<li class="clickable" data-bind="click: function() { showSection(1) }, css: { 'strong': index() == 1 }">Votre Startup</li>
+					<li class="clickable" data-bind="click: function() { showSection(2) }, css: { 'strong': index() == 2 }">Logo &amp; réseaux sociaux</li>
+					<li class="clickable" data-bind="click: function() { showSection(3) }, css: { 'strong': index() == 3 }">Votre équipe</li>
+					<li class="clickable" data-bind="click: function() { showSection(4) }, css: { 'strong': index() == 4 }">Vos récits</li>
+					<li class="clickable" data-bind="click: function() { showSection(5) }, css: { 'strong': index() == 5 }">Les événements</li>
 				</ul>
 			</div>
 			<div class="col-sm-9">
@@ -218,17 +218,38 @@
 						</li>
 						<li>
 							<section class="content">
-								<div class="h8">Votre histoire</div>
+								<div class="h8">Vos récits</div>
 								<button data-bind="click: function() { newStory(); }" class="btn white">Ajouter</button>
 								<div id="stories" class="slider">
 									<ul>
 										<li>
-											<label>Vos dernières nouvelles</label>
 											<ul class="list">
+												<hr />
+												<!-- ko if: stories().length == 0 --><li>
+												<div class="h7">Il est temps de donner de vos nouvelles à ceux qui vous suivent ! <strong><a class="clickable" data-bind="click: function() { newStory(); }">C'est parti !</a></strong></div>
+												<!-- /ko -->
 												<!-- ko foreach: stories -->
-												<li data-bind="click: function() { $root.editStory($data.uid) }">
-													<span class="h8" data-bind="text: $data.shortLine"></span>
-													<time class="timeago" data-bind="attr: { 'datetime' : $data.date }"></time>
+												<li>
+													<div class="row">
+														<div class="col-sm-10 clickable" data-bind="click: function() { $root.editStory($data.uid) }">
+															<strong data-bind="text: $data.shortLine"></strong><br />
+															<time class="timeago" data-bind="attr: { 'datetime' : $data.date }"></time>
+														</div>
+														<div class="col-sm-2 text-right">
+															<!-- ko if: $data.visibility == '1' -->
+															<span data-bind="click: function() { $root.updateStorySettings($data.uid, { visibility: '0' }); }" title="Le récit est visible. Cliquer pour le rendre invisible" class="clickable fa fa-eye"></span>
+															<!-- /ko -->
+															<!-- ko ifnot: $data.visibility == '1' -->
+															<span data-bind="click: function() { $root.updateStorySettings($data.uid, { visibility: '1' }); }" title="Le récit n'est pas visible. Cliquer pour le rendre visible" class="clickable fa fa-eye-slash"></span>
+															<!-- /ko -->
+															<!-- ko if: !!$data.sharedAt -->
+															<span title="Le récit a été partagé" class="fa fa-check"></span>
+															<!-- /ko -->
+															<!-- ko ifnot: !!$data.sharedAt -->
+															<span data-bind="click: function() { $root.shareStory($data.uid); }" title="Le récit va être partagé prochainement. Cliquer pour partager le récit immédiatement" class="clickable fa fa-share"></span>
+															<!-- /ko -->
+														</div>
+													</div>
 												</li>
 												<!-- /ko -->
 											</ul>
@@ -260,18 +281,37 @@
 							</section>
 						</li>
 						<li>
-							<section class="content">
+							<section id="events" class="content">
 								<div class="h8">Historique</div>
+								<ul class="list">
 								<!-- ko foreach: events() -->
-								<ul>
 									<!-- ko if: $data.type == 1 -->
 									<li>
-									L'utilisateur #<strong data-bind="text: $data.user_uid"></strong> <strong data-bind="text: $data.user.name"></strong> a créé le compte
-									
+										<time data-bind="attr: { 'datetime': $data.date }" class="timeago"></time>Création du compte par <strong data-bind="text: $data.user.name"></strong>
 									</li>
 									<!-- /ko -->
-								</ul>
+									<!-- ko if: $data.type == 2 -->
+									<li>
+										<time data-bind="attr: { 'datetime': $data.date }" class="timeago"></time>L'utilisateur <strong data-bind="text: $data.user.name"></strong> a modifié les informations du compte
+									</li>
+									<!-- /ko -->
+									<!-- ko if: $data.type == 3 -->
+									<li>
+										<time data-bind="attr: { 'datetime': $data.date }" class="timeago"></time>L'utilisateur <strong data-bind="text: $data.user.name"></strong> a suivi votre projet
+									</li>
+									<!-- /ko -->
+									<!-- ko if: $data.type == 4 -->
+									<li>
+										<time data-bind="attr: { 'datetime': $data.date }" class="timeago"></time>L'utilisateur <strong data-bind="text: $data.user.name"></strong> ne suit plus votre projet
+									</li>
+									<!-- /ko -->
+									<!-- ko if: $data.type == 5 -->
+									<li>
+										<time data-bind="attr: { 'datetime': $data.date }" class="timeago"></time>L'utilisateur <strong data-bind="text: $data.user.name"></strong> a partagé des nouvelles de votre projet
+									</li>
+									<!-- /ko -->
 								<!-- /ko -->
+								</ul>
 							</section>
 						</li>
 					</ul>
@@ -284,7 +324,7 @@
 
 <script src="{$host}assets/js/tinymce/tinymce.min.js"></script>
 <script src="{$host}assets/js/jquery.simpleupload.js"></script>
-<script type="text/javascript" src="{$host}resources/pages/js/startupedit.js"></script>
+<script type="text/javascript" src="{$host}resources/pages/js/project-edit.js"></script>
 
 <script type="text/javascript">
 

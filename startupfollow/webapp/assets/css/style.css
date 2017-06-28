@@ -1,3 +1,11 @@
+.iziToast-body a {
+	color: #fff !important;
+}
+
+
+img[src=""], img:not([src]) {
+	visibility: hidden;
+}
 
 /* menu */
 
@@ -9,7 +17,7 @@
     right: 0px;
     display: inline-block;
     clear: both;
-    height: 150px;
+    height: 75px;
 }
 
 .menu.right > ul {
@@ -36,6 +44,9 @@
 	padding: 5px 10px;
 	font-size: .9em;
 	line-height: 35px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
 }
 
 .menu > ul > li > img {
@@ -55,7 +66,7 @@
 }
 
 .menu > ul > li:hover {
-	color: #007AB8;
+	color: orange !important;
 }
 
 
@@ -168,7 +179,6 @@ ul.list > li:not(:first-of-type) {
 
 ul.list > li {
 	padding: 1em 0em;
-	cursor: pointer;
 }
 
 body, .bg-gray {
@@ -1858,6 +1868,25 @@ label.error {
 	margin: 0 0 15px;
 }
 
+#events time.timeago {
+	font-size: .9em;
+    color: #17a1da;
+    margin-right: 5px;
+    display: block;
+}
+
+#stories time.timeago {
+	font-size: .9em;
+    color: #17a1da;
+    margin-right: 5px;
+    display: block;
+}
+
+time.timeago.inline {
+	display: inline-block !important;
+	font-size: 1em !important;
+}
+
 .speakers p {
 	padding: 0 20px;
 	margin-bottom: 15px;
@@ -1879,202 +1908,6 @@ label.error {
 	opacity: 1;
 	color: rgb(12, 145, 239);
 	border-color: rgb(12, 145, 239);
-}
-
-#events {
-	background-image: url('../img/sound-wave.jpg');
-	background-repeat: no-repeat;
-	background-position: center;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-}
-
-.pricing-cols {
-	margin-top: 30px;
-	width: 100%;
-	display: inline-block;
-	border-collapse: collapse;
-	margin-bottom: -20px;
-}
-
-.pricing-col {
-	float: left;
-	text-align: center;
-	padding: 0;
-	margin-bottom: 10px;
-	display: inline-block;
-	border: solid 1px #ddd;
-	border-left: none;
-	overflow: hidden;
-	position: relative;
-}
-
-.pricing-col:first-child {
-	border: solid 1px #ddd;
-	border-right: 0;
-}
-
-.pricing-col-featured
-:not
- 
-(
-:first-child
- 
-)
-{
-border
-:
- 
-solid
- 
-1
-px
- 
-rgb(12, 145, 239)
-;
-
-	
-margin-left
-:
- 
-0
-px
-;
-
-
-}
-.pricing-2-cols .pricing-col {
-	width: 50%;
-}
-
-.pricing-3-cols .pricing-col {
-	width: 33.333333%;
-}
-
-.pricing-4-cols .pricing-col {
-	width: 25%;
-}
-
-.pricing-3-col {
-	width: 33.333333%;
-}
-
-.pricing-table-header {
-	text-align: center;
-	padding: 0 18%;
-}
-
-.pricing-table-header p {
-	line-height: 1.5em;
-}
-
-.pricing-cols>div {
-	
-}
-
-.pricing-col-featured .pricing-col-header .pricing-col-header-amount .pricing-col-amount
-	{
-	color: rgb(12, 145, 239);
-}
-
-.pricing-col-featured .pricing-ribbon {
-	background: rgb(12, 145, 239);
-	color: #fff;
-	display: inline-block;
-	width: auto;
-	padding: 5px 50px;
-	text-align: center;
-	-ms-transform: rotate(45deg);
-	-webkit-transform: rotate(45deg);
-	transform: rotate(45deg);
-	position: absolute;
-	font-size: 20px;
-	right: -45px;
-	top: 10px;
-}
-
-.pricing-col-header .pricing-col-header-title {
-	font-weight: 200;
-	padding: 20px 0;
-	font-size: 28px;
-	margin: 0;
-	background: #ECECEC;
-}
-
-.pricing-col-header .pricing-col-header-amount {
-	margin: 0 30px;
-	padding: 20px 0;
-	font-size: 14px;
-	line-height: 18px;
-}
-
-.pricing-col-header .pricing-col-header-amount .pricing-col-amount {
-	font-size: 72px;
-	display: block;
-	line-height: initial;
-	color: #000;
-}
-
-.pricing-col-content {
-	font-size: 11pt;
-	font-weight: 300;
-}
-
-.pricing-col-content ul {
-	margin-top: 15px;
-	padding-left: 0;
-	width: 80%;
-	margin: 0 auto;
-}
-
-.pricing-col-content ul li {
-	padding: 15px 0;
-	list-style: none;
-	border-bottom: solid 1px #ddd;
-}
-
-.pricing-col-content ul li:last-child {
-	border-bottom: none;
-}
-
-.pricing-col-button {
-	margin: 10px 0 0;
-	display: block;
-	background: #25201f;
-	color: #ffffff;
-	font-weight: 200;
-	padding: 5px 0 10px;
-	font-size: 35px;
-}
-
-.pricing-col-button:hover {
-	background: #4d4645;
-	color: #ffffff;
-	text-decoration: none;
-}
-
-.pricing-col-featured {
-	position: relative;
-	top: -30px;
-}
-
-.pricing-col-featured .pricing-col-header .pricing-col-header-title {
-	margin-bottom: 30px;
-	background-color: #ECECEC;
-	color: #000;
-	margin-top: 0;
-}
-
-.pricing-col-featured .pricing-col-button {
-	margin: 0;
-	margin-top: 25px;
-	background: rgb(12, 145, 239);
-}
-
-.pricing-col-featured .pricing-col-button:hover {
-	opacity: 0.9;
 }
 
 #sponsors {

@@ -27,22 +27,37 @@
 <section id="hero" class="bg-color">
 	<div class="container">
 		<div class="hero-content">
-			<section class="col-sm-4 col-md-4 col-md-offset-4 col-sm-offset-4">
-				<form data-role="form" class="form">
-					<label for="FormInputName">Authentification</label>
-					<div class="form-group">
-						<input id="FormInputName" type="text" value="" class="form-control" data-bind="value: name, valueUpdate: 'input'" placeholder="Nom d'utilisateur" required />
-					</div>
-					<div class="form-group">
-						<div class="input-group">
-							<input id="FormInputPassword" type="password" value="" class="form-control" data-bind="value: password, valueUpdate: 'input'" placeholder="Mot de passe" required />
-							<span class="input-group-addon clickable" data-bind="click: function() { login(); }"><span class="fa fa-arrow-circle-right"></span></span>
-						</div>
-					</div>
-				</form>
-				<p>
-				ou <a href="{$host}sign-up">crééer votre compte</a>
-				</p>
+			<section id="form" class="col-sm-5 col-md-5 col-md-offset-3 col-sm-offset-3">
+				<ul>
+					<li>
+						<form data-role="form" class="form">
+							<label for="FormInputName">Authentification</label>
+							<div class="form-group">
+								<input id="FormInputName" type="text" value="" class="form-control" data-bind="value: name, valueUpdate: 'input'" placeholder="Nom d'utilisateur" required />
+							</div>
+							<div class="form-group">
+								<div class="input-group">
+									<input id="FormInputPassword" type="password" value="" class="form-control" data-bind="value: password, valueUpdate: 'input'" placeholder="Mot de passe" required />
+									<span class="input-group-addon clickable" data-bind="click: function() { login(); }"><span class="fa fa-arrow-circle-right"></span></span>
+								</div>
+							</div>
+						</form>
+						<p>
+						ou <a href="{$host}sign-up">crééer votre compte</a> - <a class="clickable" data-bind="click: function() { showForgotPasswordForm(); }">J'ai oublié mon mot de passe</a>
+						</p>
+					</li>
+					<li>
+						<form data-role="form" class="form">
+							<label for="FormInputName">Récupérer mon mot de passe</label>
+							<div class="form-group">
+								<div class="input-group">
+									<input id="FormInputEmail" type="text" value="" class="form-control" data-bind="value: email, valueUpdate: 'input'" placeholder="Email du compte" required />
+									<span class="input-group-addon clickable" data-bind="click: function() { retrievePassword(); }"><span class="fa fa-arrow-circle-right"></span></span>
+								</div>
+							</div>
+						</form>
+					</li>
+				</ul>
 			</section>
 		</div>
 	</div>
@@ -54,5 +69,9 @@
 <script>
 	
 	model.redirectTo("{$redirectTo}");
+	
+	jQuery(document).ready(function($) {
+		$('#form').formslider();
+	});
 
 </script>

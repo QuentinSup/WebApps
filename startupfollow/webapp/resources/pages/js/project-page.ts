@@ -1,4 +1,4 @@
-module startupfollows.startup {
+module colaunch {
     
     declare var projects;
     declare var ko;
@@ -34,7 +34,18 @@ module startupfollows.startup {
                     if(user.isFollowingStartup(s.uid)) {
                         this.isFollowedByUser(true);
                     }
+                    
+                    if(user.canManageStartup(s.uid)) {
+                        if(s.lastActivityInDays == -1) {
+                            toast("Vous n'avez pas encore partagé de vos nouvelles. <a href=\"" + host +  "project/edit/" + s.ref + "\">Commencez maintenant !</a>", { title: 'Bonjour <strong>' + user.data().name + '</strong>', timeout: false, progressBar: false, bubble: true });
+                        } else if(s.lastActivityInDays > 30) {
+                            toast("Celà fait " + s.lastActivityInDays + " jours que vous avez partagé votre dernière avancée. <a href=\"" + host +  "project/edit/" + s.ref + "\">Commencez maintenant !</a>", { title: 'Bonjour <strong>' + user.data().name + '</strong>', timeout: false, progressBar: false, bubble: true });
+                        }
+                    }
+                    
                 });
+                
+                
                 
             });
                       

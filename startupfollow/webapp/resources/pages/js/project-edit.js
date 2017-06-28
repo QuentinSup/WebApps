@@ -25,6 +25,9 @@ var startupfollows;
             StartupStoryForm.prototype.cancel = function () {
                 $('#stories').formslider('animate:first');
             };
+            /**
+             * Submit story form
+             */
             StartupStoryForm.prototype.submit = function () {
                 var _this = this;
                 var data = {
@@ -264,6 +267,12 @@ var startupfollows;
                 this.stories.subscribe(function () {
                     setTimeout(function () {
                         $('#stories .timeago').timeago();
+                        $('#stories *[title]').tooltipster();
+                    }, 100);
+                });
+                this.events.subscribe(function () {
+                    setTimeout(function () {
+                        $('#events .timeago').timeago();
                     }, 100);
                 });
             }
@@ -289,8 +298,17 @@ var startupfollows;
                 this.storyform.new(this.startup().uid);
                 $('#stories').formslider('animate:1');
             };
+            /**
+             * Load data story
+             */
             Model.prototype.loadStory = function (uid) {
                 var _this = this;
+                var story = this.findStory(uid);
+                if (story) {
+                    this.storyform.fill(story);
+                    $('#stories').formslider('animate:1');
+                    return;
+                }
                 var request = {
                     type: 'get',
                     url: host + 'rest/startup/' + this.startup().uid + '/story/' + uid,
@@ -301,6 +319,63 @@ var startupfollows;
                     if (response.status == 200) {
                         _this.storyform.fill(response.responseJSON);
                         $('#stories').formslider('animate:1');
+                    }
+                });
+            };
+            /**
+             * Return story
+             */
+            Model.prototype.findStory = function (uid) {
+                var stories = this.stories();
+                return stories.findBy('uid', uid);
+            };
+            /**
+             * Return story
+             */
+            Model.prototype.findAndUpdateStory = function (uid, data) {
+                var story = this.findStory(uid);
+                var ind = this.stories().indexOf(story);
+                this.stories()[ind] = data;
+                this.stories.notifySubscribers();
+            };
+            /**
+             * Change a setting of a story
+             */
+            Model.prototype.updateStorySettings = function (uid, settings) {
+                var _this = this;
+                var request = {
+                    type: 'put',
+                    url: host + 'rest/startup/' + this.startup().uid + '/story/' + uid,
+                    data: JSON.stringify(settings),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json'
+                };
+                $.ajax(request).complete(function (response, status) {
+                    if (response.status == 200) {
+                        _this.findAndUpdateStory(uid, response.responseJSON);
+                    }
+                    else {
+                        error("Mince, une erreur est apparue durant le traitement de votre requête :(");
+                    }
+                });
+            };
+            /**
+             * Share story
+             */
+            Model.prototype.shareStory = function (uid) {
+                var _this = this;
+                var request = {
+                    type: 'put',
+                    url: host + 'rest/startup/' + this.startup().uid + '/story/' + uid + '?share=1',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json'
+                };
+                $.ajax(request).complete(function (response, status) {
+                    if (response.status == 200) {
+                        _this.findAndUpdateStory(uid, response.responseJSON);
+                    }
+                    else {
+                        error("Mince, une erreur est apparue durant le traitement de votre requête :(");
                     }
                 });
             };
@@ -317,7 +392,7 @@ var startupfollows;
                 var _this = this;
                 var request = {
                     type: 'get',
-                    url: host + 'rest/startup/' + this.startup().uid + '/story/all',
+                    url: host + 'rest/startup/' + this.startup().uid + '/story/all?norestrict=true',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json'
                 };
@@ -334,7 +409,7 @@ var startupfollows;
                 var _this = this;
                 var request = {
                     type: 'get',
-                    url: host + 'rest/startup/' + this.startup().uid + '/event/all',
+                    url: host + 'rest/startup/' + this.startup().uid + '/event/all?norestrict=true',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json'
                 };
@@ -377,4 +452,4 @@ var startupfollows;
         model.initMCE();
     })(startupEdit = startupfollows.startupEdit || (startupfollows.startupEdit = {}));
 })(startupfollows || (startupfollows = {}));
-//# sourceMappingURL=startupedit.js.map
+//# sourceMappingURL=project-edit.js.map

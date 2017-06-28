@@ -1,8 +1,9 @@
-module startupfollows.main {
+module colaunch {
     
     declare var projects;
     declare var ko;
     declare var $;
+    declare var window;
     declare function error(message, title?);
     declare function success(message, title?, opts?);
     
@@ -53,6 +54,7 @@ module startupfollows.main {
         public R = ko.observableArray();
         public searchValue = ko.observable();
         public startupRequestForm = new StartupFormRequest();
+        public isReady = ko.observable();
         
         public constructor() {
          
@@ -74,7 +76,7 @@ module startupfollows.main {
 
             var request = {
                 type: 'get',
-                url: 'rest/startup/all',
+                url: 'rest/project/all',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json' 
             };
@@ -94,7 +96,8 @@ module startupfollows.main {
         
     }
     
-    ko.applyBindings(new Model(), $('#app')[0]);
+    window.model = new Model();
+    ko.applyBindings(window.model, $('#app')[0]);
     
 }
     

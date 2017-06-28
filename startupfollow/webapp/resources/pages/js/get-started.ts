@@ -1,4 +1,4 @@
-module startupfollows.request {
+module colaunch {
     
     declare var projects;
     declare var ko;

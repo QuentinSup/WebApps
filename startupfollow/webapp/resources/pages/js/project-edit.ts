@@ -40,9 +40,12 @@ module startupfollows.startupEdit {
         }
         
         public cancel(): void {
-            $('#stories').formslider('animate:first');    
+            $('#stories').formslider('animate:first');
         }
 
+        /**
+         * Submit story form
+         */
         public submit(): boolean {
 
             var data = {
@@ -328,6 +331,13 @@ module startupfollows.startupEdit {
             this.stories.subscribe((): void => {
                 setTimeout(function() {
                     $('#stories .timeago').timeago();
+                    $('#stories *[title]').tooltipster();
+                }, 100);   
+            });
+            
+            this.events.subscribe((): void => {
+                setTimeout(function() {
+                    $('#events .timeago').timeago();
                 }, 100);   
             });
 
@@ -358,8 +368,19 @@ module startupfollows.startupEdit {
             $('#stories').formslider('animate:1');
         }
 
+        /**
+         * Load data story
+         */
         public loadStory(uid: string): void {
 
+            var story = this.findStory(uid);            
+            
+            if(story) {
+                this.storyform.fill(story);
+                $('#stories').formslider('animate:1');       
+                return;
+            }
+            
             var request = {
                 type: 'get',
                 url: host + 'rest/startup/' + this.startup().uid + '/story/' + uid,
@@ -374,6 +395,73 @@ module startupfollows.startupEdit {
                 }
             });
 
+        }
+        
+        /**
+         * Return story
+         */
+        public findStory(uid): any {
+            var stories = this.stories();
+            return stories.findBy('uid', uid);
+        }
+        
+        /**
+         * Return story
+         */
+        public findAndUpdateStory(uid, data): any {
+            var story = this.findStory(uid);
+            var ind = this.stories().indexOf(story);  
+            this.stories()[ind] = data;
+            this.stories.notifySubscribers();
+        }
+        
+        /**
+         * Change a setting of a story
+         */
+        public updateStorySettings(uid: string, settings: any): void {
+
+            var request = {
+                type: 'put',
+                url: host + 'rest/startup/' + this.startup().uid + '/story/' + uid,
+                data: JSON.stringify(settings),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json'
+            };
+          
+
+            $.ajax(request).complete((response, status): void => {
+                if(response.status == 200) {
+                    this.findAndUpdateStory(uid, response.responseJSON);
+                } else {  
+                    error("Mince, une erreur est apparue durant le traitement de votre requête :(");
+                }
+                    
+            });    
+            
+        }
+        
+        /**
+         * Share story
+         */
+        public shareStory(uid: string): void {
+
+            var request = {
+                type: 'put',
+                url: host + 'rest/startup/' + this.startup().uid + '/story/' + uid + '?share=1',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json'
+            };
+          
+
+            $.ajax(request).complete((response, status): void => {
+                if(response.status == 200) {
+                    this.findAndUpdateStory(uid, response.responseJSON);
+                } else {  
+                    error("Mince, une erreur est apparue durant le traitement de votre requête :(");
+                }
+                    
+            });    
+            
         }
 
         public editStory(uid: string) {
@@ -392,7 +480,7 @@ module startupfollows.startupEdit {
 
             var request = {
                 type: 'get',
-                url: host + 'rest/startup/' + this.startup().uid + '/story/all',
+                url: host + 'rest/startup/' + this.startup().uid + '/story/all?norestrict=true',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json'
             };
@@ -411,7 +499,7 @@ module startupfollows.startupEdit {
 
             var request = {
                 type: 'get',
-                url: host + 'rest/startup/' + this.startup().uid + '/event/all',
+                url: host + 'rest/startup/' + this.startup().uid + '/event/all?norestrict=true',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json'
             };

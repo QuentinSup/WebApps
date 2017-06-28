@@ -1,2 +1,2 @@
-declare module startupfollows.startup {
+declare module colaunch {
 }

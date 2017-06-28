@@ -8,8 +8,9 @@ use dw\classes\dwModel;
 use dw\enums\HttpStatus;
 use dw\helpers\dwString;
 use dw\classes\controllers\dwBasicController;
-
-include_once '../classes/Emailer.class.php';
+use colaunch\classes\Emailer;
+use colaunch\classes\Events;
+use colaunch\classes\ProjectEntity;
 
 /**
  * @Mapping(value = '/rest/user')
@@ -62,6 +63,24 @@ class user extends dwBasicController {
 	 * @DatabaseEntity('startup_follower')
 	 */
 	public static $startupFollowerEntity;
+	
+	/**
+	 * @DatabaseEntity('startup_event')
+	 */
+	public static $startupEventEntity;
+	
+	/**
+	 * Events manager
+	 * @var unknown
+	 */
+	private $eventsManager;
+	
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
+		$this -> eventsManager = new Events(self::$log, self::$startupEventEntity);
+	}
 	
 	
 	/**
@@ -150,6 +169,40 @@ class user extends dwBasicController {
 	}
 	
 	/**
+	 * @Mapping(method = "delete", value="password", consumes="application/json", produces="application/json; charset=utf-8")
+	 */
+	public function resetPassword(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
+		
+		$json = $request->Body ();
+	
+		$doc = self::$userEntity->factory ();
+		$doc->email = strtolower($json->email);
+	
+		if ($user = $doc->get()) {
+				
+			$doc = self::$userEntity->factory ();
+			$doc -> uid = $user -> uid;
+			$doc->password = md5 ( $password = dwString::generate ( "5" ) );
+			
+				
+			if(!$doc -> update()) {
+				return HttpStatus::INTERNAL_SERVER_ERROR;
+			}
+			
+			// Send email
+			$emailer = new classes\Emailer(self::$log, self::$smtp);
+			if(!$emailer -> sendResetPassword($request, $user, $password)) {
+				return HttpStatus::INTERNAL_SERVER_ERROR;
+			}
+			
+			return HttpStatus::OK;
+	
+		}
+	
+		return HttpStatus::NOT_FOUND;
+	}
+	
+	/**
 	 * Update data user into session
 	 * @param unknown $uid
 	 */
@@ -167,24 +220,37 @@ class user extends dwBasicController {
 			$docMemberTeam = self::$memberEntity->factory ();
 			$docMemberTeam -> user_uid = $user -> uid;
 			$memberOf = array();
-			$projects = array();
+			$teams = array();
 			if($docMemberTeam -> find()) {
 				do {
 					$docStartup = self::$startupEntity -> factory();
 					if($startup = $docStartup -> get(array("uid" => $docMemberTeam -> startup_uid))) {
 						$startup -> role = $docMemberTeam -> role;
+						$startup -> lastActivityInDays = @$startup -> lastStoryCreatedAt?ProjectEntity::getAgeInDays($startup -> lastStoryCreatedAt):-1;
 						$memberOf[] = $startup -> uid;
-						$projects[] = $startup -> toArray();
+						$teams[] = $startup -> toArray();
 					}
 				} while($docMemberTeam -> fetch());
 			}
 			$user -> memberOf = $memberOf;
-			$user -> projects = $projects;
+			$user -> teams = $teams;
 				
 			// List for subscriptions
+			$subscriptions = array();
+			$projects = array();
 			$docSubscriptions = self::$startupUserSubscriptionEntity -> factory();
 			$docSubscriptions -> user_uid = $doc -> uid;
-			$user -> subscriptions = $docSubscriptions -> getAll();
+			if($docSubscriptions -> find()) {
+				do {
+					$subscriptions[] = $docSubscriptions -> toArray();
+					$docStartup = self::$startupEntity -> factory();
+					if($startup = $docStartup -> get(array("uid" => $docSubscriptions -> startup_uid))) {
+						$projects[] = $startup -> toArray();
+					}
+				} while($docSubscriptions -> fetch());
+			}
+			$user -> subscriptions = $subscriptions;
+			$user -> projects = $projects;
 		
 			self::$session->user = $user;
 			
@@ -284,7 +350,7 @@ class user extends dwBasicController {
 		
 		
 		if (self::$log->isTraceEnabled ()) {
-			self::$log->trace ( "Modification du compte utilisateur n°$p_uid" );
+			self::$log->trace ( "Modification du compte utilisateur n$p_uid" );
 		}
 		
 		$json = $request->Body ();

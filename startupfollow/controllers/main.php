@@ -12,8 +12,7 @@ use dw\helpers\dwFile;
 use dw\classes\dwSession;
 use dw\enums\HttpStatus;
 use dw\classes\controllers\dwBasicController;
-
-include_once '../classes/ProjectEntity.class.php';
+use colaunch\classes\ProjectEntity;
 
 /**
  * @Mapping(value = '/')

@@ -1,2 +1,2 @@
-declare module startupfollows.startupEdit {
+declare module colaunch {
 }

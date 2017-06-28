@@ -53,6 +53,30 @@ class ProjectEntity {
 		
 	}
 	
+
+	/**
+	 * 
+	 */
+	public static function getAgeInDays($date)
+	{
+		$diff = abs(time() - strtotime($date));
+		$retour = array();
+	
+		$tmp = $diff;
+		$retour['second'] = $tmp % 60;
+	
+		$tmp = floor( ($tmp - $retour['second']) /60 );
+		$retour['minute'] = $tmp % 60;
+	
+		$tmp = floor( ($tmp - $retour['minute'])/60 );
+		$retour['hour'] = $tmp % 24;
+	
+		$tmp = floor( ($tmp - $retour['hour']) /24 );
+		$retour['day'] = $tmp;
+	
+		return $retour['day'];
+	}
+	
 }
 
 ?>

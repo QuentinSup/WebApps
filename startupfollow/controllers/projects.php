@@ -7,11 +7,10 @@ use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
 use dw\enums\HttpStatus;
 use dw\accessors\ary;
-use dw\classes\dwObject;
 use dw\classes\controllers\dwBasicController;
-
-include_once '../classes/ProjectEntity.class.php';
-include_once '../classes/Emailer.class.php';
+use colaunch\classes\ProjectEntity;
+use colaunch\classes\Emailer;
+use colaunch\classes\Events;
 
 /**
  * @Mapping(value = '/rest/startup')
@@ -19,12 +18,6 @@ include_once '../classes/Emailer.class.php';
  */
 class project extends dwBasicController {
 
-	const EVENT_CREATE = 1;
-	const EVENT_UPDATE_SETTINGS = 2;
-	const EVENT_FOLLOW = 3;
-	const EVENT_UNFOLLOW = 4;
-	const EVENT_NEWSTORY = 5;
-	
 	/**
 	 * 
 	 * @var unknown
@@ -80,6 +73,19 @@ class project extends dwBasicController {
 	public static $session;
 	
 	/**
+	 * Events manager
+	 * @var unknown
+	 */
+	private $eventsManager;
+	
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
+		$this -> eventsManager = new Events(self::$log, self::$startupEventEntity);
+	}
+	
+	/**
 	 * Traitement de prérequête
 	 *
 	 * @param dwHttpRequest $request
@@ -109,9 +115,12 @@ class project extends dwBasicController {
 	 */
 	private function loadStartup($uid) {
 		
-		$startupE = new classes\ProjectEntity(self::$startupEntity);
-		return $startupE -> get($uid);
-
+		$startupE = new ProjectEntity(self::$startupEntity);
+		$startup = $startupE -> get($uid);
+		if($startup) {
+			$startup -> lastActivityInDays = @$startup -> lastStoryCreatedAt?ProjectEntity::getAgeInDays($startup -> lastStoryCreatedAt):-1;
+		}
+		return $startup;
 	}
 	
 	/**
@@ -259,7 +268,7 @@ class project extends dwBasicController {
 			$uid = $doc -> getLastInsertId();
 
 			// Add event creation
-			$this -> addEvent($uid, self::$session -> user -> uid, self::EVENT_CREATE, null);
+			$this -> addEvent($uid, self::$session -> user -> uid, Events::EVENT_CREATE, null);
 
 			// Add other member and send invitation to member with no account
 			foreach($jsonContent -> members as $member) {
@@ -278,7 +287,7 @@ class project extends dwBasicController {
 					if($memberDoc -> invitation_email && ($memberDoc -> joined == 0)) {
 					
 						// Send invitation email
-						$emailer = new classes\Emailer(self::$log, self::$smtp);
+						$emailer = new Emailer(self::$log, self::$smtp);
 						
 						if($emailer -> sendInvitationEmail($request, self::$session -> user, $doc, $memberDoc)) {
 							$memberUpdateDoc = $memberDoc -> factory();
@@ -292,7 +301,7 @@ class project extends dwBasicController {
 			}
 			
 			// Send welcome email
-			$emailer = new classes\Emailer(self::$log, self::$smtp);
+			$emailer = new Emailer(self::$log, self::$smtp);
 			$emailer -> sendWelcome($request, $doc);
 
 			return $doc -> toArray();
@@ -308,7 +317,7 @@ class project extends dwBasicController {
 	 * @param unknown $name
 	 */
 	private function convertName($name) {
-		return classes\ProjectEntity::convertName($name);
+		return ProjectEntity::convertName($name);
 	}
 	
 	/**
@@ -349,7 +358,7 @@ class project extends dwBasicController {
 		if($doc -> update()) {
 		
 			// Add event update
-			$this -> addEvent($p_id, self::$session -> user -> uid, self::EVENT_UPDATE_SETTINGS, null);
+			$this -> addEvent($p_id, self::$session -> user -> uid, Events::EVENT_UPDATE_SETTINGS, null);
 			
 			foreach($jsonContent -> members as $member) {
 				
@@ -383,7 +392,7 @@ class project extends dwBasicController {
 						if(!$memberDoc -> joined && $memberDoc -> invitation_email && !$memberDoc -> invitationSentAt) {
 
 							// Send invitation email
-							$emailer = new classes\Emailer(self::$log, self::$smtp);
+							$emailer = new Emailer(self::$log, self::$smtp);
 							if($emailer -> sendInvitationEmail($request, self::$session -> user, $doc, $memberDoc)) {
 								$memberUpdateDoc = $memberDoc -> factory();
 								$memberUpdateDoc -> uid = $memberDoc -> uid;
@@ -434,23 +443,7 @@ class project extends dwBasicController {
 	 * 
 	 */
 	private function addEvent($startupUID, $userUID, $type, $data) {
-		
-		if(self::$log -> isTraceEnabled()) {
-			self::$log -> trace("Creation d'un événement associé au compte Startup n°'$startupUID'");
-		}
-
-		$doc = self::$startupEventEntity -> factory();
-		$doc -> startup_uid = $startupUID;
-		$doc -> user_uid = $userUID;
-		$doc -> type = $type;
-		$doc -> data = $data;
-		
-		if($doc -> insert()) {
-			$uid = $doc -> getLastInsertId();
-			return $uid;
-		}
-		
-		return null;
+		return $this -> eventsManager -> addEvent($startupUID, $userUID, $type, $data);
 	}
 	
 	/**
@@ -490,7 +483,7 @@ class project extends dwBasicController {
 	 */
 	public function getAllEvents(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
-			
+
 		$p_startup_uid = $request -> Path('uid');
 		$p_type = $request -> Param('type');
 		
@@ -501,7 +494,7 @@ class project extends dwBasicController {
 		$doc = self::$startupEventEntity -> factory();
 		$doc -> startup_uid = $p_startup_uid;
 		$doc -> type = $p_type;
-
+		
 		if($doc -> plist('date DESC')) {
 			return $doc -> fetchAll(array($this, "__mapEvent"));
 		} else {
@@ -516,6 +509,7 @@ class project extends dwBasicController {
 	public function getAllStories(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
 	
+		$p_norestrict = $request -> Param('norestrict');		
 		$p_startup_uid = $request -> Path('startup_uid');
 	
 		if(self::$log -> isTraceEnabled()) {
@@ -526,6 +520,11 @@ class project extends dwBasicController {
 	
 		$doc = self::$storyEntity -> factory();
 		$doc -> startup_uid = $p_startup_uid;
+		
+		if(!$p_norestrict) {
+			$doc -> visibility = 1;
+		}
+		
 		$list = [];
 		if($doc -> plist('date DESC')) {
 			while($doc -> fetch()) {
@@ -564,7 +563,7 @@ class project extends dwBasicController {
 			self::$log -> error("Startup n°$startupUID introuvable");
 			return false;
 		}
-		
+
 		if($followerE -> find(array("startup_uid" => $startupUID))) {
 			do {
 				
@@ -573,13 +572,24 @@ class project extends dwBasicController {
 				if(($userData = $userE -> get(array("uid" => $userUID))) == null) {
 					self::$log -> error("Utilisateur n°$userUID introuvable");
 				} else {
-					$emailer = new classes\Emailer(self::$log, self::$smtp);
+					$emailer = new Emailer(self::$log, self::$smtp);
 					$emailer -> sendNotificationStoryEmail($request, $storyData, $startupData, $userData);			
 				}
 				
 				
 			} while($followerE -> fetch());
+
 		}
+
+		$storyE = self::$storyEntity -> factory();
+		$storyE -> uid = $storyUID;
+		$storyE -> sharedAt = $storyE -> castSQL('CURRENT_TIMESTAMP');
+		if(!$storyE -> update()) {
+			self::$log -> error("Erreur lors de la mise à jour de la date de partage du récit '$storyUID'");
+			
+		}
+		
+		return $storyE -> get(array("uid" => $storyUID)) -> export();
 		
 	}
 	
@@ -608,8 +618,10 @@ class project extends dwBasicController {
 	 * @Mapping(method = "post", value=":ref/story", consumes="application/json", produces="application/json; charset=utf-8")
 	 */
 	public function addStory(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
+		
 		$p_ref = $request -> Path('ref');
-	
+		$p_share = $request -> Param('share');
+		
 		if(self::$log -> isTraceEnabled()) {
 			self::$log -> trace("Creation d'un nouveau récit Startup '$p_ref'");
 		}
@@ -632,15 +644,25 @@ class project extends dwBasicController {
 		$doc -> date = @$jsonContent -> date?$jsonContent -> date:$doc -> castSQL('CURRENT_TIMESTAMP');
 	
 		if($doc -> insert()) {
-			if($doc -> get(array('uid' => $doc -> getLastInsertId()))) {
+			if($story = $doc -> get(array('uid' => $doc -> getLastInsertId()))) {
+				
+				// Update startup data
+				$startupE = self::$startupEntity -> factory();
+				$startupE -> uid = $startup -> uid;
+				$startupE -> lastStoryCreatedAt = $startupE -> castSQL('CURRENT_TIMESTAMP');
+				if(!$startupE -> update()) {
+					self::$log -> error("Erreur lors de la mise à jour de la date 'lastStoryCreatedAt' du compte startup uid=".$startup -> uid);
+				}
 				
 				// Add event
-				$wordwrap = wordwrap(strip_tags($doc -> text), 240, '|-|', true);
+				$wordwrap = wordwrap(strip_tags($story -> text), 240, '|-|', true);
 				$truncText = explode('|-|', html_entity_decode($wordwrap))[0];
-				$this -> addEvent($p_startup_uid, self::$session -> user -> uid, self::EVENT_NEWSTORY, $truncText);
+				$this -> addEvent($startup -> uid, self::$session -> user -> uid, Events::EVENT_NEWSTORY, $truncText);
 				
-				// inform followers
-				$this -> broadcastNewStoryNotification($request, $doc -> uid);
+				if($p_share) {
+					// inform followers
+					$this -> broadcastNewStoryNotification($request, $story -> uid);
+				}
 				
 				return $doc -> toArray();
 			}
@@ -655,7 +677,7 @@ class project extends dwBasicController {
 	 */
 	public function updateStory(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
-	
+		$p_share = $request -> Param('share');
 		$p_ref = $request -> Path('ref');
 		$p_uid = $request -> Path('uid');
 	
@@ -677,13 +699,43 @@ class project extends dwBasicController {
 		$doc = self::$storyEntity -> factory();
 		$doc -> uid = $p_uid;
 		$doc -> startup_uid = $startup -> uid;
-		$doc -> shortLine = $jsonContent -> shortLine;
-		$doc -> text = $jsonContent -> text;
-		$doc -> date = $jsonContent -> date;
+		
+		$bupdate = false;
+		
+		if(isset($jsonContent -> shortLine)) {
+			$doc -> shortLine = $jsonContent -> shortLine;
+			$bupdate = true;
+		}
+		
+		if(isset($jsonContent -> shortLine)) {
+			$doc -> text = $jsonContent -> text;
+			$bupdate = true;
+		}
+		
+		if(isset($jsonContent -> date)) {
+			$doc -> date = $jsonContent -> date;
+			$bupdate = true;
+		}
+		
+		if(isset($jsonContent -> visibility)) {
+			$doc -> visibility = $jsonContent -> visibility?"1":"0";
+			$bupdate = true;
+		}
 	
+		$story = null;
+		
 		if($doc -> update()) {
 			$doc -> find();
-			return $doc -> toArray();
+			$story = $doc -> export();
+		}
+		
+		if($p_share) {
+			// inform followers
+			$story = $this -> broadcastNewStoryNotification($request, $story -> uid);
+		}
+			
+		if($story) {
+			return $story -> toArray();
 		}
 	
 		return HttpStatus::INTERNAL_SERVER_ERROR;
@@ -694,7 +746,7 @@ class project extends dwBasicController {
 	/**
 	 * @Mapping(method = "post", value=":ref/subscribe", consumes="application/json")
 	 */
-	public function addSubscription(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	public function follow(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
 		if(!self::$session -> has('user')) {
 			return HttpStatus::FORBIDDEN;
@@ -715,14 +767,14 @@ class project extends dwBasicController {
 		$doc = self::$startupFollowerEntity -> factory();
 		$doc -> startup_uid = $startup -> uid;
 		$doc -> user_uid = $p_uid;
-	
+
 		if($doc -> insert()) {
 			
 			// Flag user data into session deprecated
 			self::$session -> user -> deprecated = true;
 			
 			// Add event follow
-			$this -> addEvent($startup -> uid, $p_uid, self::EVENT_FOLLOW, null);
+			$this -> addEvent($startup -> uid, $p_uid, Events::EVENT_FOLLOW, null);
 	
 			$uid = $doc -> getLastInsertId();
 		} else {
@@ -734,7 +786,7 @@ class project extends dwBasicController {
 	/**
 	 * @Mapping(method = "delete", value=":ref/subscribe", consumes="application/json")
 	 */
-	public function removeSubscription(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	public function unfollow(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
 	
 		if(!self::$session -> has('user')) {
@@ -763,11 +815,67 @@ class project extends dwBasicController {
 			self::$session -> user -> deprecated = true;
 			
 			// Add event unfollow
-			$this -> addEvent($startup -> uid, $p_uid, self::EVENT_UNFOLLOW, null);
+			$this -> addEvent($startup -> uid, $p_uid, Events::EVENT_UNFOLLOW, null);
+			
 		} else {
-			$response -> statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
+			return HttpStatus::INTERNAL_SERVER_ERROR;
 		}
 	}
+	
+	/**
+	 * @Mapping(method = "get", value="campaign/getintouch", consumes="application/json")
+	 */
+	public function getintouch(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	{
+	
+		if(self::$log -> isTraceEnabled()) {
+			self::$log -> trace("Lancement de la campagne de relance");
+		}
+	
+		$doc = self::$startupEntity -> factory();
+
+		$dayLimit = 60;
+		$delayBetweenTwoContact = 30;
+		
+		// Get all startup with no news since 30 days or more
+		if($doc -> select("(lastStoryCreatedAt IS NULL OR TO_DAYS(NOW()) - TO_DAYS(lastStoryCreatedAt) >= $dayLimit) AND (lastContactSentAt IS NULL OR TO_DAYS(NOW()) - TO_DAYS(lastContactSentAt) > $delayBetweenTwoContact)")) {
+			
+			do {
+				$startup = $doc -> export();
+				
+				// Send get in touch email
+				$emailer = new Emailer(self::$log, self::$smtp);
+				
+				$nbDays = 0;
+				if(@$startup -> lastStoryCreatedAt) {
+					$nbDays = ProjectEntity::getAgeInDays($startup -> lastStoryCreatedAt);
+				}
+				
+				if($emailer -> sendGetInTouchEmail($request, $startup, $nbDays)) {
+				
+					// Update startup data
+					$startupE = self::$startupEntity -> factory();
+					$startupE -> uid = $startup -> uid;
+					$startupE -> lastContactSentAt = $startupE -> castSQL('CURRENT_TIMESTAMP');
+					if(!$startupE -> update()) {
+						self::$log -> error("Erreur lors de la mise à jour de la date 'lastContactSentAt' du compte startup uid=".$startup -> uid);
+					}
+				
+					// Add event get in touch
+					$this -> addEvent($startup -> uid, null, Events::EVENT_GETINTOUCH, null);
+					
+				} else {
+					self::$log -> trace("Erreur lors de la relance du projet uid=".$doc -> startup_uid);
+				}
+			} while($doc -> fetch());
+			
+			return HttpStatus::OK;
+
+		} else {
+			return HttpStatus::NOT_FOUND;
+		}
+	}
+	
 	
 	
 }

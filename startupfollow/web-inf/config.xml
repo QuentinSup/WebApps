@@ -7,7 +7,7 @@
 	<description></description>
 </about>
 <config>
-	<application run="0" lang="fr" />
+	<application run="0" lang="fr" ns="colaunch" />
 	<connectors>
 		<connector name="db" type="dbi" dsn="mysqli://root:@localhost:/startupfollow" autoconnect="1" /> 
 		<connector name="mail" type="smtp" from="no-reply@colaunch-flows.com" />

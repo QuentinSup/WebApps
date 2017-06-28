@@ -48,11 +48,34 @@ class Emailer {
 		
 		$str = dwSmartyTemplate::renderize ( "../emails/signup.html", $mail_model->toArray () );
 		
-		if (!$this -> smtp ->send ( $user->email, null, null, "Bienvenue sur StartupFollow", $str )) {
+		if (!$this -> smtp ->send ( $user->email, null, null, "Bienvenue sur Colaunch Flows", $str )) {
 			$this -> log ->error ( "Error sending email to " . $user->email );
 			return false;
 		}
 		
+		return true;
+	}
+	
+	/**
+	 * Send email with new password
+	 * @param unknown $user
+	 * @return boolean
+	 */
+	public function sendResetPassword($httpRequest, $user, $password) {
+	
+		$mail_model = new dwObject ();
+		$mail_model->img_logo = self::getLogoBase64Img();
+		$mail_model->userName = $user->name;
+		$mail_model->userPassword = $password;
+		$mail_model->url = $httpRequest->getBaseUri () . "login";
+	
+		$str = dwSmartyTemplate::renderize ( "../emails/resetPassword.html", $mail_model->toArray () );
+	
+		if (!$this -> smtp ->send ( $user->email, null, null, "Votre nouveau mot de passe sur Colaunch Flows", $str )) {
+			$this -> log ->error ( "Error sending email to " . $user->email );
+			return false;
+		}
+	
 		return true;
 	}
 	
@@ -70,13 +93,37 @@ class Emailer {
 			
 		$str = dwSmartyTemplate::renderize("../emails/startupWelcome.html", $mail_model -> toArray());
 			
-		if(!$this -> smtp -> send($doc -> email, null, null, "Bienvenue sur StartupFollow", $str)) {
+		if(!$this -> smtp -> send($startup -> email, null, null, "Bienvenue sur Colaunch Flows", $str)) {
 			$this -> log -> error("Error sending email to ".$startup -> email);
 			return false;
 		}
 		
 		return true;
 		
+	}
+	
+	/**
+	 * Send get in touch for project
+	 * @param unknown $startup
+	 * @return boolean
+	 */
+	public function sendGetInTouchEmail($httpRequest, $startup, $nbDays) {
+	
+		$mail_model = new dwObject();
+		$mail_model -> img_logo = self::getLogoBase64Img();
+		$mail_model -> projectName = $startup -> name;
+		$mail_model -> nbDays = $nbDays;
+		$mail_model -> url = $httpRequest -> getBaseUri()."/startup/".$startup -> ref;
+			
+		$str = dwSmartyTemplate::renderize("../emails/startupGetInTouch.html", $mail_model -> toArray());
+			
+		if(!$this -> smtp -> send($startup -> email, null, null, "On attend de vos nouvelles sur Colaunch Flows", $str)) {
+			$this -> log -> error("Error sending email to ".$startup -> email);
+			return false;
+		}
+	
+		return true;
+	
 	}
 	
 	/**
@@ -101,7 +148,7 @@ class Emailer {
 			
 		$str = dwSmartyTemplate::renderize("../emails/invitationMember.html", $mail_model -> toArray());
 	
-		if(!$this -> smtp -> send($invitation -> invitation_email, null, null, "Rejoignez votre équipe sur StartupFollow", $str)) {
+		if(!$this -> smtp -> send($invitation -> invitation_email, null, null, "Rejoignez votre équipe sur Colaunch Flows", $str)) {
 			$this -> log -> error("Error sending invitation email to ".$invitation -> invitation_email);
 			return false;
 		}
@@ -134,7 +181,7 @@ class Emailer {
 		$str = dwSmartyTemplate::renderize("../emails/notificationStory.html", $mail_model -> toArray());
 	
 		// Send email
-		if(!$this -> smtp -> send($userData -> email, null, null, "Des nouvelles de ".$model -> startupName." sur StartupFollow", $str)) {
+		if(!$this -> smtp -> send($userData -> email, null, null, "Des nouvelles de ".$model -> startupName." sur Colaunch Flows", $str)) {
 			$this -> log -> error("Error sending invitation email to ".$userData -> email);
 			return false;
 		}
@@ -156,7 +203,7 @@ class Emailer {
 		
 		$str = dwSmartyTemplate::renderize ( "../emails/startupRequest.html", $mail_model->toArray () );
 		
-		if (! $this -> smtp->send ( $request->email, null, null, "Des amis souhaitent vous suivre sur StartupFollow", $str )) {
+		if (! $this -> smtp->send ( $request->email, null, null, "Des amis souhaitent vous suivre sur Colaunch Flows", $str )) {
 			$this -> log->error ( "Error sending email to " . $request->email );
 			return false;
 		}
