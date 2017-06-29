@@ -22,7 +22,8 @@
 			loop: false,
 			//  Animation speed in millseconds
 			speed: 500,
-
+			// Auto focus on first input found after slide
+			autofocus: true,
 			//  An easing string to use. If you're using Velocity, use a
 			//  Velocity string otherwise you can use jQuery/jQ UI options.
 			easing: 'swing', // [.42, 0, .58, 1],
@@ -317,6 +318,9 @@
 				callback = function() {
 					self.$context.trigger(self._ + '.moved');
 					$el.removeClass(self._ + '-move');
+					if(self.options.autofocus == true) {
+						$el.find('li:eq(' + self.current + ') input:first').focus();
+					}
 				};
 			}
 			

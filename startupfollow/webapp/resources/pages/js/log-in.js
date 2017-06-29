@@ -5,7 +5,6 @@ var colaunch;
             this.name = ko.observable();
             this.email = ko.observable();
             this.password = ko.observable();
-            this.redirectTo = ko.observable();
             this.isCheckingLogin = ko.observable(false);
             this.isCheckingPassword = ko.observable(false);
         }
@@ -27,7 +26,7 @@ var colaunch;
                 _this.isCheckingLogin(false);
                 if (response.status == 200) {
                     toast("Bienvenue " + _this.name() + " ;)");
-                    document.location.href = host + _this.redirectTo() || '';
+                    document.location.href = host + (response.responseJSON.redirect || '');
                 }
                 else {
                     _this.password('');

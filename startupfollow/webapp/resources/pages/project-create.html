@@ -1,28 +1,20 @@
 <link rel="stylesheet" href="{$host}assets/css/simpleupload.css" type="text/css" media="all" />
 <!-- Header -->
-<header id="header" class="navigation-bar-header light hidden-xs">
+<header id="header" class="navigation-bar-header">
 	<div class="container">
 		<nav class="navigation">
-			<div class="navigation-txt visible-xs" data-toggle="dropdown">Home</div>
-			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
-				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
-			</button>
-			<div class="col-sm-12">
-				<ul class="navigation-bar navigation-bar-left">
-	
-				</ul>
+			<div class="col-sm-11 col-xs-10">
+				<a href="{$host}"><span class="fa fa-home"></span>&nbsp;Colaunch Flows</a>
 			</div>
-			<div class="col-sm-2 text-right">
+			<div class="col-sm-1 col-xs-2">
 				<!-- ko if: user.data() -->
-				<div class="col-sm-12">
-					<a href="{$host}" class="menu">
+					<a href="{$host}" class="menu right">
 						<img data-bind="attr: { 'src': user.data().image || host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
 						<ul>
 							<li data-bind="click: function() { document.location.href = host + 'account' }" class="clickable"><span class="fa fa-gear"></span>&nbsp;Paramètre du compte</li>
 							<li data-bind="click: function() { user.logout() }" class="clickable"><span class="fa fa-power-off"></span>&nbsp;Déconnexion</li>
 						</ul>
 					</a>
-				</div>
 				<!-- /ko -->
 			</div>
 		</nav>
@@ -42,7 +34,7 @@
 							<div class="h7">Welcome</div>
 							<p class="help-block">Bienvenue ! Votre inscription sera effectuée en quelques cliques seulement.</p>
 							<p>
-								Pour commencer, merci d'indiquer le nom (actuel) de votre projet et votre phrase d'accroche
+								Pour commencer, merci d'indiquer le nom (actuel) de votre projet et votre phrase d'accroche.
 							</p>
 							<!-- ko with: form -->
 							<form class="form-register" data-role="form">
@@ -67,16 +59,51 @@
 							<!-- /ko -->
 						</li>
 						<li>
-							<div class="h7">Votre adresse email de contact</div>
+							<div class="h7">Vos débuts</div>
+							<!-- ko with: form -->
 							<p>
-								Cette adresse sera privilégiée pour prendre contact avec vous. Vous recevrez une notification afin de donner régulièrement des nouvelles à votre communauté
+								Depuis quand êtes-vous sur le projet <span class="strong" data-bind="text: name()"></span> ?
+							</p>
+							<form class="form-register" data-role="form">
+								<div class="row">
+									<div class="form-group col-sm-3">
+										<select class="form-control" data-bind="value: month, valueUpdate: 'input'" placeholder="Sélectionner le mois" required>
+											<option value="1">Janvier</option>
+											<option value="2">Février</option>
+											<option value="3">Mars</option>
+											<option value="4">Avril</option>
+											<option value="5">Mai</option>
+											<option value="6">Juin</option>
+											<option value="7">Juillet</option>
+											<option value="8">Août</option>
+											<option value="9">Septembre</option>
+											<option value="10">Octobre</option>
+											<option value="11">Novembre</option>
+											<option value="12">Décembre</option>
+										</select>
+									</div>
+									<div class="form-group col-sm-2 col-sm-offset-1">
+										<input type="text" class="form-control text-center" data-bind="value: year, valueUpdate: 'input'" placeholder="année" maxlength="4" required />
+									</div>
+								</div>
+								<div class="row">
+									<button data-bind="disable: !isValidDate(), click: function() { next(); }" class="btn btn-default">Suivant</button>
+								</div>
+							</form>
+							<!-- /ko -->
+						</li>
+						<li>
+							<div class="h7">Votre boîte email de contact</div>
+							<p>
+								Cette adresse sera privilégiée pour prendre contact avec vous et votre équipe.<br />
+								Vous recevrez régulièrement une notification afin de donner régulièrement des nouvelles à votre communauté.
 							</p>
 							<!-- ko with: form -->
 							<form class="form-register" data-role="form">
 								<label>Adresse de contact</label>
 								<div class="form-group row has-feedback">
 									<div class="col-sm-8">
-										<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input'" placeholder="email de contact" required />
+										<input type="text" class="form-control" value="" data-bind="value: email, valueUpdate: 'input'" placeholder="contact@projet.com" required />
 										<!-- ko if: isEmailValid() -->
 										<span class="glyphicon glyphicon-ok form-control-feedback check" aria-hidden="true"></span>
 										<!-- /ko -->
@@ -106,7 +133,7 @@
 								</div>
 								<label>Liens</label>
 								<div class="form-group row-fluid">
-									<div class="input-group col-sm-3">
+									<div class="input-group col-sm-4">
 										<span class="input-group-addon"><span class="fa fa-twitter"></span></span>
 										<input type="text" class="form-control" value="" data-bind="value: twitter, valueUpdate: 'input'" placeholder="@" />
 									</div>
@@ -178,7 +205,7 @@
 									</div>
 									<!-- /ko -->
 									<div class="form-group">
-										<button data-bind="click: function() { addMember(); }" class="btn">+</button>
+										<button data-bind="click: function() { addMember(); }" class="btn btn-default">+</button>
 									</div>
 									<div class="form-submit">
 										<button data-bind="click: function() { prev(); }" class="btn blank"><< Retour</button>

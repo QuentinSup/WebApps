@@ -1,5 +1,5 @@
-var startupfollows;
-(function (startupfollows) {
+var colaunch;
+(function (colaunch) {
     var startupEdit;
     (function (startupEdit) {
         var StartupStoryForm = (function () {
@@ -70,10 +70,12 @@ var startupfollows;
             return StartupStoryForm;
         })();
         var StartupForm = (function () {
-            function StartupForm() {
+            function StartupForm(parent) {
                 var _this = this;
                 this.uid = ko.observable();
                 this.name = ko.observable();
+                this.month = ko.observable();
+                this.year = ko.observable();
                 this.punchLine = ko.observable();
                 this.email = ko.observable();
                 this.image = ko.observable();
@@ -82,6 +84,10 @@ var startupfollows;
                 this.facebook = ko.observable();
                 this.members = ko.observableArray();
                 this.nameExists = ko.observable(true);
+                this.isEmailValid = ko.observable(false);
+                this.isCheckingNameExists = ko.observable(false);
+                this.parent = parent;
+                // Check existing name
                 this.name.subscribe(function (v) {
                     _this.nameExists(true);
                     clearTimeout(_this.__hdlCheckIfNameExists);
@@ -91,16 +97,75 @@ var startupfollows;
                         _this.checkIfExists(v);
                     }, 500);
                 });
+                // Autovalidate email
+                this.email.subscribe(function (v) {
+                    _this.isEmailValid(v && isValidEmail(v));
+                });
+                this.isValidDate = ko.computed(function () {
+                    if (!(_this.month() || '').trim()) {
+                        return false;
+                    }
+                    var month = _this.month() * 1;
+                    if (!(month >= 1 && month <= 12)) {
+                        return false;
+                    }
+                    if (!(_this.year() || '').trim()) {
+                        return false;
+                    }
+                    var year = _this.year();
+                    if (year.length != 4 || isNaN(year)) {
+                        return false;
+                    }
+                    var now = new Date();
+                    year = year * 1;
+                    if (year < now.getFullYear() - 50 || year > now.getFullYear()) {
+                        toast("Etes-vous certain de l'année ?");
+                        return false;
+                    }
+                    if (year == now.getFullYear() && month > now.getMonth() - 1) {
+                        toast("Etes-vous certain du mois ?");
+                        return false;
+                    }
+                    return true;
+                }).extend({ throttle: 100 });
             }
+            /**
+             * Check form
+             */
+            StartupForm.prototype.checkForm = function () {
+                if (!(this.name() || '').trim()) {
+                    toast("Le nom ne doit pas être vide !");
+                    this.parent.showSection(1);
+                    return false;
+                }
+                if (this.nameExists()) {
+                    toast("Ce nom est déjà utilisé !");
+                    this.parent.showSection(1);
+                    return false;
+                }
+                if (!this.isEmailValid()) {
+                    toast("L'adresse email n'est pas valide !");
+                    this.parent.showSection(1);
+                    return false;
+                }
+                if (!this.isValidDate()) {
+                    toast("La date de début du projet n'est pas valide !");
+                    this.parent.showSection(1);
+                    return false;
+                }
+                return true;
+            };
             StartupForm.prototype.checkIfExists = function (name) {
                 var _this = this;
+                this.isCheckingNameExists(true);
                 var request = {
                     type: 'get',
-                    url: host + 'rest/startup/exists/' + name,
+                    url: host + 'rest/startup/exists/' + name + '?ref=' + this.uid(),
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json'
                 };
                 $.ajax(request).complete(function (response, status) {
+                    _this.isCheckingNameExists(false);
                     _this.nameExists(response.status == 200);
                 });
             };
@@ -190,6 +255,8 @@ var startupfollows;
                 this.website(data.link_website);
                 this.twitter(data.link_twitter);
                 this.facebook(data.link_facebook);
+                this.month(data.startedMonth);
+                this.year(data.startedYear);
                 this.members([]);
                 $.each(data.members, function (k, v) {
                     var member = _this.createMember();
@@ -207,6 +274,9 @@ var startupfollows;
              */
             StartupForm.prototype.submit = function () {
                 var _this = this;
+                if (!this.checkForm()) {
+                    return false;
+                }
                 var data = {
                     name: this.name(),
                     email: this.email(),
@@ -215,6 +285,8 @@ var startupfollows;
                     link_twitter: this.twitter(),
                     link_website: this.website(),
                     link_facebook: this.facebook(),
+                    startedMonth: this.month(),
+                    startedYear: this.year(),
                     members: []
                 };
                 $.each(this.members(), function (k, v) {
@@ -253,7 +325,7 @@ var startupfollows;
                 this.startup = ko.observable();
                 this.stories = ko.observableArray();
                 this.events = ko.observableArray();
-                this.form = new StartupForm();
+                this.form = new StartupForm(this);
                 this.storyform = new StartupStoryForm();
                 this.startup.subscribe(function (s) {
                     _this.form.fill(s);
@@ -450,6 +522,6 @@ var startupfollows;
         window.model = model;
         ko.applyBindings(model, $('#app')[0]);
         model.initMCE();
-    })(startupEdit = startupfollows.startupEdit || (startupfollows.startupEdit = {}));
-})(startupfollows || (startupfollows = {}));
+    })(startupEdit = colaunch.startupEdit || (colaunch.startupEdit = {}));
+})(colaunch || (colaunch = {}));
 //# sourceMappingURL=project-edit.js.map

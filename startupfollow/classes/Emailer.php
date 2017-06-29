@@ -89,7 +89,7 @@ class Emailer {
 		$mail_model = new dwObject();
 		$mail_model -> img_logo = self::getLogoBase64Img();
 		$mail_model -> projectName = $startup -> name;
-		$mail_model -> url = $httpRequest -> getBaseUri()."/startup/".$startup -> ref;
+		$mail_model -> url = $httpRequest -> getBaseUri()."startup/".$startup -> ref;
 			
 		$str = dwSmartyTemplate::renderize("../emails/startupWelcome.html", $mail_model -> toArray());
 			
@@ -113,7 +113,7 @@ class Emailer {
 		$mail_model -> img_logo = self::getLogoBase64Img();
 		$mail_model -> projectName = $startup -> name;
 		$mail_model -> nbDays = $nbDays;
-		$mail_model -> url = $httpRequest -> getBaseUri()."/startup/".$startup -> ref;
+		$mail_model -> url = $httpRequest -> getBaseUri()."startup/".$startup -> ref;
 			
 		$str = dwSmartyTemplate::renderize("../emails/startupGetInTouch.html", $mail_model -> toArray());
 			
@@ -139,7 +139,7 @@ class Emailer {
 		$model -> founderName = $userName;
 		$model -> startupName = $startup -> name;
 		$model -> memberRole  = isset($invitation -> role)?$invitation -> role:'membre';
-		$model -> url = $httpRequest -> getBaseUri()."/startup/".$startup -> ref."/join/".$invitation -> uid;
+		$model -> url = $httpRequest -> getBaseUri()."startup/".$startup -> ref."/join/".$invitation -> uid;
 		
 		// Send invitation email
 		$mail_model = new dwObject();
@@ -170,7 +170,7 @@ class Emailer {
 		$model -> siteName = "Colaunch Flows";
 		$model -> userName = $userData -> name;
 		$model -> shortLine = $storyData -> shortLine;
-		$model -> url = $httpRequest -> getBaseUri()."/startup/".$startupData -> ref;
+		$model -> url = $httpRequest -> getBaseUri()."startup/".$startupData -> ref;
 	
 		// Prepare email
 		$mail_model = new dwObject();
@@ -199,7 +199,7 @@ class Emailer {
 		$mail_model = new dwObject ();
 		$mail_model->img_logo = self::getLogoBase64Img();
 		$mail_model->projectName = $request->name;
-		$mail_model->url = $httpRequest->getBaseUri () . "/request/" . $request -> uid;
+		$mail_model->url = $httpRequest->getBaseUri () . "get-started?r=" . $request -> uid;
 		
 		$str = dwSmartyTemplate::renderize ( "../emails/startupRequest.html", $mail_model->toArray () );
 		

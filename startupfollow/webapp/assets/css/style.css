@@ -1,5 +1,37 @@
+.card {
+	padding: 2em;
+	border: 10px solid #d7e1e8;
+	box-shadow: 10px 10px 10px #eff1f5;
+	background: #fff;
+	border-radius: 15px;
+    margin: 1em;
+    transition: margin, border, box-shadow;
+    transition-duration: .5s;
+}
+
+.card .h8 {
+	text-align: center !important;
+	color: #1d578a;
+}
+
+.card:hover {
+	margin: .5em;
+	box-shadow: 20px 20px 20px #eff1f5;
+	border-color: #404040;
+}
+
+.card img {
+	
+}
+
 .iziToast-body a {
 	color: #fff !important;
+}
+
+.transparent {
+	background: transparent !important;
+	color: #fff !important;
+	border: 0px !important;
 }
 
 
@@ -21,7 +53,7 @@ img[src=""], img:not([src]) {
 }
 
 .menu.right > ul {
-	right: -40px;
+	right: 0px;
 }
 
 .menu > ul {
@@ -265,13 +297,25 @@ ul {
 }
 
 .search-list {
-	border:	1px solid #dedede;
-	background-color: #fff;
 	padding: 0px;
     position: absolute;
     left: 0px;
     right: 0px;
     z-index: 999999999;
+}
+
+.search-list:after {
+	content: '';
+	display: block;
+	visibility: visible;
+	position: absolute;
+	z-index: -1;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	opacity: .1;
+	background-color: #fff;
 }
 
 .search-list > li {
@@ -294,7 +338,10 @@ ul {
 	width: 200px;
 }
 
-input[type=text], input[type=email], input[type=password] {
+input[type=text], 
+input[type=email], 
+input[type=password], 
+select.form-control {
 	font-size: 1.25em;
 	font-weight: 400;
     line-height: normal;
@@ -444,6 +491,11 @@ strong, .strong {
 	font-weight: 600;
 	font-style: normal;
 	color: #007AB8;
+}
+
+.bg-color strong,
+.bg-color .strong {
+	color: #dedede;
 }
 
 p {
@@ -928,13 +980,27 @@ article footer {
 	overflow: hidden;
 }
 
+.navigation {
+	padding: 0em .1em;
+}
+
 .navigation-bar-header {
 	position: relative;
 	z-index: 99999999999;
     background: #fff;
+    color: #404040;
     min-height: 70px;
     line-height: 70px;
 	box-shadow: 0 1px 4px rgba(0,0,0,.15);
+}
+
+.navigation-bar-header a {
+	color: #404040;	
+}
+
+.navigation-bar-header a:hover {
+	color: #007AB8;
+	text-decoration: none;
 }
 
 .navigation-bar-header img,
@@ -953,11 +1019,6 @@ article footer {
 
 .sticky-wrapper {
 	margin-top: 0px;
-}
-
-.navigation {
-	margin-left: -15px;
-	margin-right: -15px;
 }
 
 .navigation-bar {
@@ -1481,10 +1542,16 @@ article footer {
 }
 
 .form-control:focus {
+    border-color: #cee5f3 !important;
+    -webkit-box-shadow: 0px 0px 5px #8fc0fd !important;
+    box-shadow: 0px 0px 5px #8fc0fd !important;
+}
+
+.bg-color .form-control:focus {
 	border-color: #fff !important;
 	outline: 0 !important;
-	-webkit-box-shadow: none !important;
-	box-shadow: none !important;
+    -webkit-box-shadow: 0px 0px 5px #fff !important;
+    box-shadow: 0px 0px 5px #fff !important;
 }
 
 .form .form-group {
@@ -1538,8 +1605,8 @@ label.error {
 }
 
 .form-register .form-control:focus {
-	border-color: #fe4918 !important;
-	outline: 1px solid #fe4918 !important;
+	border-color: #9AADBB  !important;
+	outline: 0px solid #fe4918 !important;
 }
 
 .form-register input[type=file]:focus, .form-register input[type=radio]:focus,
@@ -2281,14 +2348,23 @@ time.timeago.inline {
 		text-align: center;
 		display: block;
 	}
-	#mobileheader {
+	#header {
 		position: fixed;
 		width: 100%;
 		display: block;
 		z-index: 999;
 		background: rgba(37, 37, 37, .9)
 	}
-	#mobileheader .navigation-txt {
+	
+	.navigation-bar-header a {
+		color: #fff !important;
+	}
+
+	.navigation-bar-header a:hover {
+		color: #007AB8 !important;
+	}
+	
+	#header .navigation-txt {
 		position: absolute;
 		width: 100%;
 		text-align: center;
@@ -2296,24 +2372,24 @@ time.timeago.inline {
 		line-height: 50px;
 		cursor: pointer;
 	}
-	#mobileheader .navigation-bar {
+	#header .navigation-bar {
 		height: 0;
 		overflow: hidden;
 		display: block;
 	}
-	#mobileheader .open .navigation-bar {
+	#header .open .navigation-bar {
 		height: auto;
 		float: none !important;
 		clear: both;
 		width: 100%;
 		border-top: 2px solid rgb(12, 145, 239);
 	}
-	#mobileheader .open .navigation-bar:last-child {
+	#header .open .navigation-bar:last-child {
 		border-top: none;
 		padding-top: 10px;
 		padding-bottom: 30px;
 	}
-	#mobileheader .navigation-bar li {
+	#header .navigation-bar li {
 		padding-top: 2px;
 		padding-bottom: 2px;
 		display: block;

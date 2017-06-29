@@ -7,6 +7,7 @@ module colaunch {
     declare var host;
     declare var tinymce;
     declare var user;
+    declare function isValidEmail(email);
     declare function error(message, title?, opts?);
     declare function success(message, title?, opts?);
     declare function toast(message, opts?);
@@ -26,20 +27,29 @@ module colaunch {
         public twitter = ko.observable();
         public facebook = ko.observable();
         
+        public isCheckingNameUnique = ko.observable(false);
+        public isCheckingEmailUnique = ko.observable(false);
+        
+        public isEmailValid = ko.observable(false);
+        
         public isUserNameUnique = ko.observable(false);
         public isUserEmailUnique = ko.observable(false);
         
         private __hdlCheckIfExistsName;
         private __hdlCheckIfExistsEmail;
 
-        public constructor() {
+        private parent;
+        
+        public constructor(parent: any) {
 
+            this.parent = parent;
+            
             this.name.subscribe((s: string): void => {
                 
+                clearTimeout(this.__hdlCheckIfExistsName);
                 this.isUserNameUnique(false);
                 
                 if(!s) return;
-                clearTimeout(this.__hdlCheckIfExistsName);
                 this.__hdlCheckIfExistsName = setTimeout((): void => {
                     this.verifyUserName();
                 }, 500);  
@@ -47,13 +57,19 @@ module colaunch {
             
             this.email.subscribe((s: string): void => {
                 
+                clearTimeout(this.__hdlCheckIfExistsEmail);
+                
                 this.isUserEmailUnique(false);
                 
                 if(!s) return;
-                clearTimeout(this.__hdlCheckIfExistsEmail);
-                this.__hdlCheckIfExistsEmail = setTimeout((): void => {
-                    this.verifyUserEmail();
-                }, 500);  
+                
+                this.isEmailValid(isValidEmail(s));
+                
+                if(this.isEmailValid()) {
+                    this.__hdlCheckIfExistsEmail = setTimeout((): void => {
+                        this.verifyUserEmail();
+                    }, 500);  
+                }
             });
 
         }
@@ -63,11 +79,13 @@ module colaunch {
          */
         public verifyUserName(): boolean {
             
+            this.isCheckingNameUnique(true);
             this.isUserNameUnique(false);
             
             user.isNameUnique(this.name(), (b: boolean): void => {
+                this.isCheckingNameUnique(false);
                 this.isUserNameUnique(b);     
-                if(b) {
+                if(b && this.name().toLowerCase() != user.data().name.toLowerCase()) {
                     toast("Votre nouveau nom vous va à ravir ;)", { id: 'usernameunique' });
                 }    
             });
@@ -75,14 +93,17 @@ module colaunch {
             return false;
             
         }
-        
 
         /**
          * check if user email is already used into database
          */
         public verifyUserEmail(): boolean {
             
-             user.isEmailUnique(this.email(), (b: boolean): void => {
+            this.isCheckingEmailUnique(true);
+            this.isUserEmailUnique(false);  
+            
+            user.isEmailUnique(this.email(), (b: boolean): void => {
+                this.isCheckingEmailUnique(false);
                 this.isUserEmailUnique(b);         
             });
             
@@ -101,12 +122,55 @@ module colaunch {
             this.twitter(data.link_twitter);
             this.facebook(data.link_facebook);
         }
+        
+        /**
+         * Check form data
+         */
+        public checkForm(): boolean {
+            
+            if(!(this.name() || '').trim()) {
+                toast("N'oubliez pas d'indiquer votre nom de connexion !");
+                this.parent.showSection(1);
+                return false;    
+            }
+            
+            if(!(this.email() || '').trim()) {
+                toast("Votre email est nécessaire !");
+                this.parent.showSection(1);
+                return false;    
+            }
+            
+            if(!this.isEmailValid()) {
+                toast("Votre email n'est pas valide !");
+                this.parent.showSection(1);
+                return false;
+            }
+            
+            if(!this.isUserEmailUnique()) {
+                toast("Cet email est déjà utilisé par un autre compte !");
+                this.parent.showSection(1);
+                return false;
+            }
+            
+            if(!this.isUserNameUnique()) {
+                toast("Cet identifiant est déjà utilisé par un autre compte !");
+                this.parent.showSection(1);
+                return false;
+            }
+            
+            return true;
+            
+        }
 
         /**
          * Submit data
          */
         public submit(): boolean {
 
+            if(!this.checkForm()) {
+                return false;
+            }
+            
             var data: any = {
                 name: this.name(),
                 email: this.email(),
@@ -135,7 +199,7 @@ module colaunch {
     class Model {
 
         public index = ko.observable(1);
-        public form = new UserForm();
+        public form = new UserForm(this);
 
         public constructor() {
 

@@ -146,13 +146,18 @@ class project extends dwBasicController {
 	{
 		
 		$ref = $request -> Path('ref');
+		$uid = $request -> Param('ref');
 		
 		if(self::$log -> isTraceEnabled()) {
 			self::$log -> trace("Vérification de l'existence du compte pour la Startup '$ref'");
 		}
 		
-		if($this -> loadStartup($ref)) {
-			$response -> statusCode = HttpStatus::OK;
+		if($startup = $this -> loadStartup($ref)) {
+			if($startup -> uid == $uid) {
+				$response -> statusCode = HttpStatus::NOT_FOUND;
+			} else {
+				$response -> statusCode = HttpStatus::OK;
+			}
 		} else {
 			$response -> statusCode = HttpStatus::NOT_FOUND;
 		}
@@ -258,6 +263,8 @@ class project extends dwBasicController {
 		$doc -> name = $jsonContent -> name;
 		$doc -> email = $jsonContent -> email;
 		$doc -> image = @$jsonContent -> image;
+		$doc -> startedMonth = @$jsonContent -> startedMonth;
+		$doc -> startedYear = @$jsonContent -> startedYear;
 		$doc -> ref = $ref;
 		$doc -> punchLine = isset($jsonContent -> punchLine)?$jsonContent -> punchLine:'';
 		$doc -> link_website = @$jsonContent -> link_website;
@@ -267,6 +274,9 @@ class project extends dwBasicController {
 		if($doc -> insert()) {
 			$uid = $doc -> getLastInsertId();
 
+			// Flag user data as deprecated
+			self::$session -> user -> deprecated = true;
+			
 			// Add event creation
 			$this -> addEvent($uid, self::$session -> user -> uid, Events::EVENT_CREATE, null);
 
@@ -349,6 +359,8 @@ class project extends dwBasicController {
 		$doc -> name = $jsonContent -> name;
 		$doc -> image = $jsonContent -> image;
 		$doc -> email = $jsonContent -> email;
+		$doc -> startedMonth = @$jsonContent -> startedMonth;
+		$doc -> startedYear = @$jsonContent -> startedYear;
 		$doc -> ref = $ref;
 		$doc -> punchLine = $jsonContent -> punchLine;
 		$doc -> link_website = @$jsonContent -> link_website;

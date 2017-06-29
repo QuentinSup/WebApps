@@ -66,8 +66,11 @@
 										<div class="col-sm-4">
 											<input id="FormInputName" type="text" value="" class="form-control" data-bind="value: name, valueUpdate: 'input'"
 												placeholder="nom du projet..." required />
-											<!-- ko if: !nameExists() -->
-											<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+											<!-- ko if: isCheckingNameExists() -->
+											<img src="{$host}/assets/img/preloader.gif" class="form-control-feedback" aria-hidden="true" />
+											<!-- /ko -->
+											<!-- ko if: !isCheckingNameExists() && !nameExists() -->
+											<span class="glyphicon glyphicon-ok form-control-feedback check" aria-hidden="true"></span>
 											<!-- /ko -->
 										</div>
 									</div>
@@ -80,7 +83,7 @@
 
 									<div class="form-group row">
 										<div class="col-sm-12">
-											<label for="FormInputEmail" class="control-label"> Adresse de contact </label>
+											<label for="FormInputEmail" class="control-label">Adresse de contact</label>
 											<p class="help-block">Cette adresse sera privilégiée pour prendre contact avec vous et votre équipe. Vous recevrez une notification afin de donner
 												régulièrement des nouvelles à votre communauté</p>
 										</div>
@@ -89,8 +92,33 @@
 												placeholder="email de contact" required />
 										</div>
 									</div>
+									
+									<div class="form-group row">
+										<label for="FormInputEmail" class="control-label">Début du projet</label>
+										<p class="help-block">Quand avez-vous commencé le projet ?</p>
+										<div class="form-group col-sm-3">
+											<select class="form-control" data-bind="value: month, valueUpdate: 'input'" placeholder="Sélectionner le mois" required>
+												<option value="1">Janvier</option>
+												<option value="2">Février</option>
+												<option value="3">Mars</option>
+												<option value="4">Avril</option>
+												<option value="5">Mai</option>
+												<option value="6">Juin</option>
+												<option value="7">Juillet</option>
+												<option value="8">Août</option>
+												<option value="9">Septembre</option>
+												<option value="10">Octobre</option>
+												<option value="11">Novembre</option>
+												<option value="12">Décembre</option>
+											</select>
+										</div>
+										<div class="form-group col-sm-2 col-sm-offset-1">
+											<input type="text" class="form-control text-center" data-bind="value: year, valueUpdate: 'input'" placeholder="année" maxlength="4" required />
+										</div>
+									</div>
+									
 									<div class="form-submit">
-										<button data-bind="click: function() { submit(); }" class="btn btn-default">Enregistrer</button>
+										<button data-bind="disable: isCheckingNameExists() || nameExists() || !isValidDate() || !isEmailValid(), click: function() { submit(); }" class="btn btn-default">Enregistrer</button>
 									</div>
 								</form>
 								<!-- /ko -->
@@ -117,7 +145,7 @@
 									</div>
 									<label>Liens</label>
 									<div class="form-group row-fluid">
-										<div class="input-group col-sm-3">
+										<div class="input-group col-sm-4">
 											<span class="input-group-addon"><span class="fa fa-twitter"></span></span> <input type="text" class="form-control" value=""
 												data-bind="value: twitter, valueUpdate: 'input'" placeholder="@" />
 										</div>
@@ -226,7 +254,9 @@
 											<ul class="list">
 												<hr />
 												<!-- ko if: stories().length == 0 --><li>
-												<div class="h7">Il est temps de donner de vos nouvelles à ceux qui vous suivent ! <strong><a class="clickable" data-bind="click: function() { newStory(); }">C'est parti !</a></strong></div>
+												<div class="h7">
+												<p>Il est temps de donner de vos nouvelles !</p>
+												<span class ="fa fa-hand-o-right"></span>&nbsp;<strong><a class="clickable" data-bind="click: function() { newStory(); }">C'est parti !</a></strong></div>
 												<!-- /ko -->
 												<!-- ko foreach: stories -->
 												<li>

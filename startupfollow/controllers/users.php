@@ -150,6 +150,9 @@ class user extends dwBasicController {
 		
 		if ($user = $doc->get()) {
 			
+			// get origin uri
+			$origin = self::$session -> origin;
+			
 			self::$session->start();
 			
 			// Update date of connection
@@ -159,12 +162,13 @@ class user extends dwBasicController {
 			$docUpdate -> update();
 			
 			if($this -> updateUserDataSession($user -> uid)) {
-				return self::$session -> user -> toArray();
+				return array("user" => self::$session -> user -> toArray(), "redirect" => $origin);
 			}
 
 		}
 		
-		self::$session->destroy ();
+		self::$session-> user = null;
+		
 		return HttpStatus::NOT_FOUND;
 	}
 	
@@ -211,9 +215,8 @@ class user extends dwBasicController {
 		$doc = self::$userEntity->factory ();
 		$doc-> uid = $uid;
 		
-		if ($doc->find()) {
+		if ($user = $doc->get()) {
 				
-			$user = $doc-> export();
 			$user -> password = null; // Hide password !
 		
 			// Look for member teams
@@ -267,15 +270,12 @@ class user extends dwBasicController {
 	public function checkUserName(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
 		
 		$p_userName = $request -> Path('name');
+		$uid = $request -> Param('ref');
 	
 		$doc = self::$userEntity->factory ();
 
-		$doc->name = strtolower($p_userName);
-
-		
-		
-		if (!$doc->get ()) {
-			return array("OK");
+		if ($doc->select("LOWER(name) = LOWER('".$doc -> escapeValue($p_userName)."')".($uid?" AND uid <> $uid":"")) == 0) {
+			return HttpStatus::OK;
 		}
 		
 		return HttpStatus::FORBIDDEN;
@@ -288,12 +288,18 @@ class user extends dwBasicController {
 	public function checkUserEmail(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
 	
 		$p_userEmail = $request -> Path('email');
-	
+		$uid = $request -> Param('ref');
+		
 		$doc = self::$userEntity->factory ();
 		$doc->email = strtolower($p_userEmail);
 	
-		if (!$doc->get ()) {
-			return array("OK");
+		if ($user = $doc->get()) {
+			if($user -> uid == $uid) {
+				return HttpStatus::OK;
+			}
+			return HttpStatus::NOT_FOUND;
+		} else {
+			return HttpStatus::OK;
 		}
 		
 		return HttpStatus::FORBIDDEN;

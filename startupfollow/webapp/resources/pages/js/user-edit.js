@@ -1,7 +1,7 @@
 var colaunch;
 (function (colaunch) {
     var UserForm = (function () {
-        function UserForm() {
+        function UserForm(parent) {
             var _this = this;
             this.uid = ko.observable();
             this.name = ko.observable();
@@ -14,25 +14,32 @@ var colaunch;
             this.website = ko.observable();
             this.twitter = ko.observable();
             this.facebook = ko.observable();
+            this.isCheckingNameUnique = ko.observable(false);
+            this.isCheckingEmailUnique = ko.observable(false);
+            this.isEmailValid = ko.observable(false);
             this.isUserNameUnique = ko.observable(false);
             this.isUserEmailUnique = ko.observable(false);
+            this.parent = parent;
             this.name.subscribe(function (s) {
+                clearTimeout(_this.__hdlCheckIfExistsName);
                 _this.isUserNameUnique(false);
                 if (!s)
                     return;
-                clearTimeout(_this.__hdlCheckIfExistsName);
                 _this.__hdlCheckIfExistsName = setTimeout(function () {
                     _this.verifyUserName();
                 }, 500);
             });
             this.email.subscribe(function (s) {
+                clearTimeout(_this.__hdlCheckIfExistsEmail);
                 _this.isUserEmailUnique(false);
                 if (!s)
                     return;
-                clearTimeout(_this.__hdlCheckIfExistsEmail);
-                _this.__hdlCheckIfExistsEmail = setTimeout(function () {
-                    _this.verifyUserEmail();
-                }, 500);
+                _this.isEmailValid(isValidEmail(s));
+                if (_this.isEmailValid()) {
+                    _this.__hdlCheckIfExistsEmail = setTimeout(function () {
+                        _this.verifyUserEmail();
+                    }, 500);
+                }
             });
         }
         /**
@@ -40,10 +47,12 @@ var colaunch;
          */
         UserForm.prototype.verifyUserName = function () {
             var _this = this;
+            this.isCheckingNameUnique(true);
             this.isUserNameUnique(false);
             user.isNameUnique(this.name(), function (b) {
+                _this.isCheckingNameUnique(false);
                 _this.isUserNameUnique(b);
-                if (b) {
+                if (b && _this.name().toLowerCase() != user.data().name.toLowerCase()) {
                     toast("Votre nouveau nom vous va à ravir ;)", { id: 'usernameunique' });
                 }
             });
@@ -54,7 +63,10 @@ var colaunch;
          */
         UserForm.prototype.verifyUserEmail = function () {
             var _this = this;
+            this.isCheckingEmailUnique(true);
+            this.isUserEmailUnique(false);
             user.isEmailUnique(this.email(), function (b) {
+                _this.isCheckingEmailUnique(false);
                 _this.isUserEmailUnique(b);
             });
             return false;
@@ -71,9 +83,43 @@ var colaunch;
             this.facebook(data.link_facebook);
         };
         /**
+         * Check form data
+         */
+        UserForm.prototype.checkForm = function () {
+            if (!(this.name() || '').trim()) {
+                toast("N'oubliez pas d'indiquer votre nom de connexion !");
+                this.parent.showSection(1);
+                return false;
+            }
+            if (!(this.email() || '').trim()) {
+                toast("Votre email est nécessaire !");
+                this.parent.showSection(1);
+                return false;
+            }
+            if (!this.isEmailValid()) {
+                toast("Votre email n'est pas valide !");
+                this.parent.showSection(1);
+                return false;
+            }
+            if (!this.isUserEmailUnique()) {
+                toast("Cet email est déjà utilisé par un autre compte !");
+                this.parent.showSection(1);
+                return false;
+            }
+            if (!this.isUserNameUnique()) {
+                toast("Cet identifiant est déjà utilisé par un autre compte !");
+                this.parent.showSection(1);
+                return false;
+            }
+            return true;
+        };
+        /**
          * Submit data
          */
         UserForm.prototype.submit = function () {
+            if (!this.checkForm()) {
+                return false;
+            }
             var data = {
                 name: this.name(),
                 email: this.email(),
@@ -100,7 +146,7 @@ var colaunch;
         function Model() {
             var _this = this;
             this.index = ko.observable(1);
-            this.form = new UserForm();
+            this.form = new UserForm(this);
             user.ready(function (user, data) {
                 _this.form.fill(data);
             });

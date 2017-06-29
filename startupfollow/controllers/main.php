@@ -49,7 +49,7 @@ class main extends dwBasicController {
 	 * @return boolean
 	 */
 	public function startRequest(dwHttpRequest $request, dwHttpResponse $response, dwModel $model) {
-		
+	
 		if(self::$session -> has('user')) {
 			$model -> userName = self::$session -> user -> name;
 			$model -> user = self::$session -> user;
@@ -58,7 +58,7 @@ class main extends dwBasicController {
 	}
 	
 	private function prepareModel(dwHttpRequest $request, dwModel $model, $pageId) {
-		$model -> title = "StartupFollow";
+		$model -> title = "Colaunch Flows";
 		$model -> pageId = $pageId;
 		$model -> version = "1.0.0";
 		$model -> host = $request -> getBaseUri();
@@ -92,6 +92,10 @@ class main extends dwBasicController {
 	 */
 	public function signup(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
+		if(self::$session -> has('user')) {
+			return self::account($request, $response, $model);
+		}
+		
 		return $this -> prepareModel($request, $model, 'sign-up') -> view();
 	}
 	
@@ -101,7 +105,7 @@ class main extends dwBasicController {
 	public function account(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
 		if(!self::$session -> has('user')) {
-			$model -> redirectTo = $request -> getUri();
+			self::$session -> origin = $request -> getOrigin();
 			return self::login($request, $response, $model);
 		}
 		
@@ -116,13 +120,13 @@ class main extends dwBasicController {
 	{
 		
 		if(!self::$session -> has('user')) {
-			$model -> redirectTo = $request -> getUri();
+			self::$session -> origin = $request -> getOrigin();
 			return self::login($request, $response, $model);
 		}
 		
 		$doc = self::$requestEntity;
 		
-		$p_id = $request -> Path('id');
+		$p_id = $request -> Path('id', $request -> Param('r'));
 	
 		if($p_id) {
 			$doc -> uid = $p_id;
@@ -156,16 +160,16 @@ class main extends dwBasicController {
 	public function joinTeam(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
 		
-		if(!self::$session -> has('user')) {
-			$model -> redirectTo = $request -> getUri();
+		$ref = $request -> Path('ref');
+		$uid = $request -> Path('uid');
+		
+		if(!self::$session -> has('user') || $uid != self::$session -> user -> uid) {
+			self::$session -> origin = $request -> getOrigin();
 			return self::login($request, $response, $model);
 		}
 		
 		$user = self::$session -> user;
-		
-		$ref = $request -> Path('ref');
-		$uid = $request -> Path('uid');
-		
+
 		$memberE = self::$memberEntity -> factory();
 		$memberE -> uid = $uid;
 		if($member = $memberE -> get()) {
@@ -209,11 +213,11 @@ class main extends dwBasicController {
 		$p_ref = $request -> Path('ref');
 		
 		if(!self::$session -> has('user')) {
-			$model -> redirectTo = $request -> getUri();
+			self::$session -> origin = $request -> getOrigin();
 			return self::login($request, $response, $model);
 		}
 		
-		$startupE = new classes\ProjectEntity(self::$startupEntity);
+		$startupE = new ProjectEntity(self::$startupEntity);
 		$startup = $startupE -> get($p_ref);
 		
 		if(is_null($startup)) {
@@ -221,7 +225,7 @@ class main extends dwBasicController {
 		}
 		
 		if(!ary::exists(self::$session -> user -> memberOf, $startup -> uid)) {
-			$model -> redirectTo = $request -> getUri();
+			$model -> redirectTo = $request -> getOrigin();
 			return self::login($request, $response, $model);
 		}
 		
@@ -236,6 +240,16 @@ class main extends dwBasicController {
 	public function page(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
 	{
 		return HttpStatus::NOT_FOUND;
+	}
+	
+	/**
+	 * @Mapping(method = "get", value="session")
+	 */
+	public function session(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
+
+		print_r(self::$session);
+		
+		return HttpStatus::OK;
 	}
 	
 }

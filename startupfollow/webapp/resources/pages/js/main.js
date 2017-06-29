@@ -23,7 +23,7 @@ var colaunch;
             };
             $.ajax(request).complete(function (response, status) {
                 if (response.status == 201) {
-                    success("Un email a été envoyé au porteur du projet '" + _this.name() + "' ;)", "Super !");
+                    success("Un email a été envoyé au projet '" + _this.name() + "' ;)", "Super !");
                     _this.name('');
                     _this.email('');
                 }

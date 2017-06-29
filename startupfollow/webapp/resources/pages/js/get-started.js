@@ -9,6 +9,8 @@ var colaunch;
             this.name = ko.observable();
             this.punchLine = ko.observable();
             this.email = ko.observable();
+            this.month = ko.observable();
+            this.year = ko.observable();
             this.image = ko.observable();
             this.website = ko.observable();
             this.twitter = ko.observable();
@@ -40,6 +42,33 @@ var colaunch;
                 member.locked(true); // cannot remove this member !
                 _this.addMember(member);
             });
+            this.isValidDate = ko.computed(function () {
+                if (!(_this.month() || '').trim()) {
+                    return false;
+                }
+                var month = _this.month() * 1;
+                if (!(month >= 1 && month <= 12)) {
+                    return false;
+                }
+                if (!(_this.year() || '').trim()) {
+                    return false;
+                }
+                var year = _this.year();
+                if (year.length != 4 || isNaN(year)) {
+                    return false;
+                }
+                var now = new Date();
+                year = year * 1;
+                if (year < now.getFullYear() - 50 || year > now.getFullYear()) {
+                    toast("Etes-vous certain de l'année ?");
+                    return false;
+                }
+                if (year == now.getFullYear() && month > now.getMonth() - 1) {
+                    toast("Etes-vous certain du mois ?");
+                    return false;
+                }
+                return true;
+            }).extend({ throttle: 100 });
         }
         StartupAddForm.prototype.checkIfExists = function (name) {
             var _this = this;
@@ -86,6 +115,16 @@ var colaunch;
          * Check data from screen 2
          */
         StartupAddForm.prototype.checkScreen2 = function () {
+            if (!this.isValidDate()) {
+                toast("Votre date de lancement ne semble pas valide");
+                return false;
+            }
+            return true;
+        };
+        /**
+         * Check data from screen 3
+         */
+        StartupAddForm.prototype.checkScreen3 = function () {
             if (!(this.email() || '').trim()) {
                 toast("Veuillez renseigner l'adresse email");
                 return false;
@@ -108,13 +147,14 @@ var colaunch;
                 $('#StartupAddForm').formslider('animate:1');
                 return;
             }
+            if (!this.checkScreen3()) {
+                $('#StartupAddForm').formslider('animate:2');
+                return;
+            }
             return true;
         };
         StartupAddForm.prototype.next = function () {
-            if (this.checkForm()) {
-                $('#StartupAddForm').formslider('next');
-                return true;
-            }
+            $('#StartupAddForm').formslider('next');
             return false;
         };
         /**
@@ -208,6 +248,8 @@ var colaunch;
                 email: this.email(),
                 punchLine: this.punchLine(),
                 image: this.image(),
+                startedMonth: this.month(),
+                startedYear: this.year(),
                 link_twitter: this.twitter(),
                 link_website: this.website(),
                 link_facebook: this.facebook(),

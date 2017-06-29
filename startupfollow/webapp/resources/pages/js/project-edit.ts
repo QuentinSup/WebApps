@@ -1,4 +1,4 @@
-module startupfollows.startupEdit {
+module colaunch.startupEdit {
 
     declare var projects;
     declare var ko;
@@ -99,6 +99,8 @@ module startupfollows.startupEdit {
 
         public uid = ko.observable();
         public name = ko.observable();
+        public month = ko.observable();
+        public year = ko.observable();
         public punchLine = ko.observable();
         public email = ko.observable();
         public image = ko.observable();
@@ -107,12 +109,22 @@ module startupfollows.startupEdit {
         public facebook = ko.observable();
         public members = ko.observableArray();
         public nameExists = ko.observable(true);
+        
+        public isValidDate;
 
+        public isEmailValid = ko.observable(false);
+        public isCheckingNameExists = ko.observable(false);
+        
         private __hdlCheckIfNameExists;
         private __hdlCheckIfEmailExists;
         
-        public constructor() {
+        private parent;
+        
+        public constructor(parent) {
 
+            this.parent = parent;
+            
+            // Check existing name
             this.name.subscribe((v: string): void => {
                 this.nameExists(true);
                 clearTimeout(this.__hdlCheckIfNameExists);
@@ -121,19 +133,96 @@ module startupfollows.startupEdit {
                     this.checkIfExists(v);
                 }, 500);
             });
+            
+            // Autovalidate email
+            this.email.subscribe((v: string): void => {
+                this.isEmailValid(v && isValidEmail(v));
+            });
+            
+            this.isValidDate = ko.computed((): boolean => {
+                
+               if(!(this.month() || '').trim()) {
+                    return false;
+                }
+                
+                var month = this.month() * 1;
+                if(!(month >= 1 && month <= 12)) {
+                    return false;     
+                }
+                
+                if(!(this.year() || '').trim()) {
+                    return false;
+                }
+                
+                var year = this.year();
+                if(year.length != 4 || isNaN(year)) {
+                    return false;   
+                }
+                
+                var now = new Date();
+                year = year * 1;
+                if(year < now.getFullYear() - 50 || year > now.getFullYear()) {
+                    toast("Etes-vous certain de l'année ?");
+                    return false;   
+                }
+                
+                if(year == now.getFullYear() && month > now.getMonth() - 1) {
+                    toast("Etes-vous certain du mois ?");
+                    return false;    
+                }
+            
+                return true;
+ 
+            }).extend({ throttle: 100 });
 
         }
+        
+        /**
+         * Check form
+         */
+        public checkForm(): boolean {
 
+            if(!(this.name() || '').trim()) {
+                toast("Le nom ne doit pas être vide !");
+                this.parent.showSection(1);
+                return false;
+            }
+            
+            if(this.nameExists()) {
+                toast("Ce nom est déjà utilisé !");
+                this.parent.showSection(1);
+                return false;
+            }
+                       
+            if(!this.isEmailValid()) {
+                toast("L'adresse email n'est pas valide !");
+                this.parent.showSection(1);
+                return false;
+            }
+            
+            if(!this.isValidDate()) {
+                toast("La date de début du projet n'est pas valide !");
+                this.parent.showSection(1);
+                return false;
+            }
+            
+            return true;
+            
+        }
+        
         public checkIfExists(name: string) {
 
+            this.isCheckingNameExists(true);
+            
             var request = {
                 type: 'get',
-                url: host + 'rest/startup/exists/' + name,
+                url: host + 'rest/startup/exists/' + name + '?ref=' + this.uid(),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json'
             };
 
             $.ajax(request).complete((response, status): void => {
+                this.isCheckingNameExists(false);
                 this.nameExists(response.status == 200);
             });
 
@@ -238,7 +327,9 @@ module startupfollows.startupEdit {
             this.website(data.link_website);
             this.twitter(data.link_twitter);
             this.facebook(data.link_facebook);
-
+            this.month(data.startedMonth);
+            this.year(data.startedYear);
+            
             this.members([]);
 
             $.each(data.members, (k, v): void => {
@@ -256,12 +347,17 @@ module startupfollows.startupEdit {
             });
 
         }
+       
 
         /**
          * Submit data
          */
         public submit(): boolean {
 
+            if(!this.checkForm()) {
+                return false;
+            }
+            
             var data: any = {
                 name: this.name(),
                 email: this.email(),
@@ -270,6 +366,8 @@ module startupfollows.startupEdit {
                 link_twitter: this.twitter(),
                 link_website: this.website(),
                 link_facebook: this.facebook(),
+                startedMonth: this.month(),
+                startedYear: this.year(),
                 members: []
             };
 
@@ -312,7 +410,7 @@ module startupfollows.startupEdit {
         public startup = ko.observable();
         public stories = ko.observableArray();
         public events = ko.observableArray();
-        public form = new StartupForm();
+        public form = new StartupForm(this);
         public storyform = new StartupStoryForm();
 
         public constructor() {

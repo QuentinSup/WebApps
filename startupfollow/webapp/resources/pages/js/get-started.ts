@@ -16,6 +16,8 @@ module colaunch {
         public name      = ko.observable();
         public punchLine = ko.observable();
         public email     = ko.observable();
+        public month     = ko.observable();
+        public year      = ko.observable();
         public image     = ko.observable();
         public website   = ko.observable();
         public twitter   = ko.observable();
@@ -24,6 +26,7 @@ module colaunch {
         public nameExists = ko.observable(true);
         public isEmailValid = ko.observable(false);
 
+        public isValidDate;
         public isCheckingName = ko.observable(false);
         
         private __jqxrCheckIfNameExists;
@@ -59,6 +62,42 @@ module colaunch {
                 member.locked(true); // cannot remove this member !
                 this.addMember(member);
             });
+            
+            this.isValidDate = ko.computed((): boolean => {
+                
+               if(!(this.month() || '').trim()) {
+                    return false;
+                }
+                
+                var month = this.month() * 1;
+                if(!(month >= 1 && month <= 12)) {
+                    return false;     
+                }
+                
+                if(!(this.year() || '').trim()) {
+                    return false;
+                }
+                
+                var year = this.year();
+                if(year.length != 4 || isNaN(year)) {
+                    return false;   
+                }
+                
+                var now = new Date();
+                year = year * 1;
+                if(year < now.getFullYear() - 50 || year > now.getFullYear()) {
+                    toast("Etes-vous certain de l'année ?");
+                    return false;   
+                }
+                
+                if(year == now.getFullYear() && month > now.getMonth() - 1) {
+                    toast("Etes-vous certain du mois ?");
+                    return false;    
+                }
+            
+                return true;
+ 
+            }).extend({ throttle: 100 });
             
         }
         
@@ -120,6 +159,20 @@ module colaunch {
          */
         public checkScreen2(): boolean {
             
+            if(!this.isValidDate()) {
+                toast("Votre date de lancement ne semble pas valide");
+                return false;
+            }
+
+            return true;
+            
+        }
+        
+        /**
+         * Check data from screen 3
+         */
+        public checkScreen3(): boolean {
+            
             if(!(this.email() || '').trim()) {
                 toast("Veuillez renseigner l'adresse email");
                 return false;
@@ -149,16 +202,18 @@ module colaunch {
                 return;   
             }
             
+            if(!this.checkScreen3()) {
+                $('#StartupAddForm').formslider('animate:2');
+                return;   
+            }
+            
             return true;
             
         }
         
         public next(): boolean {
-
-            if(this.checkForm()) {            
-                $('#StartupAddForm').formslider('next');
-                return true;
-            }
+           
+            $('#StartupAddForm').formslider('next');
             return false;
             
         }
@@ -270,7 +325,9 @@ module colaunch {
                 name: this.name(),
                 email: this.email(),
                 punchLine: this.punchLine(),
-                image: this.image(), 
+                image: this.image(),
+                startedMonth: this.month(),
+                startedYear: this.year(),
                 link_twitter: this.twitter(),
                 link_website: this.website(),
                 link_facebook: this.facebook(),

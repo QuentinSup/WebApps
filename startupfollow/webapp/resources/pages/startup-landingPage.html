@@ -5,7 +5,7 @@
 			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
-			<div class="col-sm-1">
+			<div class="col-sm-1 col-xs-2">
 				<!-- if: data() -->
 				<!-- ko with: data() -->
 				<a class="menu clickable">
@@ -24,12 +24,12 @@
 				<!-- /ko -->
 				<!-- /ko -->
 			</div>
-			<ul class="navigation-bar col-sm-8">
-				<li><a href="#" data-bind="click: function() { document.location = host }">Accueil</a></li>
+			<ul class="navigation-bar col-sm-8 col-xs-6">
+				<li><a href="#" data-bind="click: function() { document.location = host }"><span class="fa fa-home"></span></a></li>
 				<li><a href="#members">L'équipe</a></li>
 				<li><a href="#story">Les nouvelles</a></li>
 			</ul>
-			<div class="col-sm-3 text-right">
+			<div class="col-sm-3 col-xs-4 text-right">
 				<div class="col-sm-9">
 				<!-- ko if: !!user.data() -->
 					<!-- ko if: $data.isFollowedByUser() -->

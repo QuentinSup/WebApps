@@ -34,7 +34,7 @@ module colaunch {
             
             $.ajax(request).complete((response, status): void => {
                 if(response.status == 201) {
-                    success("Un email a été envoyé au porteur du projet '" + this.name() + "' ;)", "Super !");
+                    success("Un email a été envoyé au projet '" + this.name() + "' ;)", "Super !");
                     this.name('');
                     this.email('');
                 } else {

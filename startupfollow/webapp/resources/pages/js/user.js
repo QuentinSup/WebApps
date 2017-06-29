@@ -123,7 +123,7 @@ var colaunch;
             var _this = this;
             var request = {
                 type: 'get',
-                url: host + 'rest/user/username/' + name,
+                url: host + 'rest/user/username/' + name + (this.data() ? '?ref=' + this.data().uid : ''),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json'
             };
@@ -144,7 +144,7 @@ var colaunch;
             var _this = this;
             var request = {
                 type: 'get',
-                url: host + 'rest/user/email/' + email,
+                url: host + 'rest/user/email/' + email + (this.data() ? '?ref=' + this.data().uid : ''),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json'
             };

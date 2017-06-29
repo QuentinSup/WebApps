@@ -41,7 +41,7 @@
 <script type="text/javascript" src="{$host}assets/js/sweetalert.min.js"></script>
 <script type="text/javascript" src="{$host}assets/js/izitoast.min.js"></script>
 <script type="text/javascript" src="{$host}assets/js/jquery.timeago-1.5.4.js"></script>
-
+<script type="text/javascript" src="{$host}assets/js/main.js"></script>
 <script type="text/javascript" src="{$host}resources/pages/js/user.js"></script>
 
 
@@ -58,14 +58,12 @@
 		</div>
 	</div>
 
-	<header id="mobileheader" class="navigation-bar-header light visible-xs"></header>
-
 	<div id="app">{include file="./pages/{$pageId}.html"}</div>
 
 	<footer id="footer">
 		<div class="container">
-			<div class="col-sm-3">{if $userName} Bienvenue <strong>{$userName}</strong> {/if}</div>
-			<div class="col-sm-3">
+			<div class="col-sm-3 col-xs-6">{if $userName} Bienvenue <strong>{$userName}</strong> {/if}</div>
+			<div class="col-sm-3 col-xs-6">
 				<ul>
 					<li><a href="{$host}">Accueil</a>
 					{if $userName}
@@ -73,13 +71,13 @@
 					{/if}
 				</ul>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-sm-3 col-xs-6">
 				<strong>startup</strong>
 				<ul>
 					<li><a href="{$host}get-started">Inscription</a>
 				</ul>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-sm-3 col-xs-6">
 				<strong>follower</strong>
 				<ul>
 					<li><a href="{$host}sign-up">Inscription</a>

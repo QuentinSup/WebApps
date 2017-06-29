@@ -15,7 +15,6 @@ module colaunch {
         public name = ko.observable();
         public email = ko.observable();
         public password = ko.observable();
-        public redirectTo = ko.observable();
         
         public isCheckingLogin = ko.observable(false);
         public isCheckingPassword = ko.observable(false);
@@ -46,7 +45,7 @@ module colaunch {
                 this.isCheckingLogin(false);
                 if (response.status == 200) {
                     toast("Bienvenue " + this.name() + " ;)");
-                    document.location.href = host + this.redirectTo() || '';
+                    document.location.href = host + (response.responseJSON.redirect || '');
                 } else {
                     this.password(''); 
                     error("Oups ! Votre identifiant ou votre mot de passe est incorrect");

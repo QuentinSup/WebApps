@@ -15,18 +15,20 @@
 <!-- End Hero Section -->
 
 <!-- Header -->
-<header id="header" class="navigation-bar-header light hidden-xs">
+<header id="header" class="navigation-bar-header">
 	<div class="container">
 		<nav class="navigation">
-			<div class="navigation-txt visible-xs" data-toggle="dropdown">Home</div>
+			<div class="col-xs-10 visible-xs">
+				<a href="{$host}"><span class="fa fa-home"></span>&nbsp;Colaunch Flows</a>
+			</div>
 			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
-			<ul class="navigation-bar col-sm-11">
+			<ul class="navigation-bar col-sm-11 col-xs-12">
 				<li><a href="#about">Intro</a></li>
 				<li><a href="#projects">Voir les projets</a></li>
 			</ul>
-			<div class="col-sm-1 text-right">
+			<div class="col-sm-1 hidden-xs text-right">
 				<!-- ko if: user.data() -->
 				<div class="col-sm-12">
 					<a href="{$host}account" class="menu right">
@@ -68,30 +70,42 @@
 <!-- End Header -->
 <section id="about" class="section dark">
 	<div class="container">
-		<h4>Suivez les projets de vos Startups préférées</h4>
-		<article class="article-big" style="text-align: left;">
-			<p class="big">La vie d'une Startup est mouvementée et il est parfois difficile de suivre son avancement !</p>
+		<h5>Suivez les projets de vos Startups préférées</h5>
+		<div class="icon-wrap">
+			<span class="icon glyphicon glyphicon-road"></span>
+		</div>
+		<hr />
+		<article class="article-big">
+			<p class="big">La vie d'une Startup est mouvementée et suivre son avancement peut être à lui seul un vrai challenge !</p>
 			<p class="big">
-				Grâce à <span class="sublime-text">Colaunch Flows</span>, les porteurs de projets reçoivent régulièrement et automatiquement des invitations à
+				Avec <span class="strong">Colaunch Flows</span>, les porteurs de projets reçoivent régulièrement et automatiquement des invitations à
 				mettre à jour leur profil, et partager leurs principales avancées, pour vous tenir informés !
 			</p>
+			<p class="big">
+				De cette manière, vous restez informés régulièrement en recevant une notification directement dans votre boîte mail !
+			</p>
 		</article>
-		
-		<div class="h7">Rechercher un projet</div>
-		<form class="form-register" data-role="form">
-			<div class="form-group relative">
-				<input type="text" value="" class="form-control" data-bind="value: searchValue, valueUpdate: 'keyup'" placeholder="nom du projet..." />
-				<ul class="search-list">
-					<!-- ko foreach: R -->
-					<li data-bind="click: function() { document.location.href = host + 'follow/' + ref }"><span class="strong" data-bind="text: name"></span> <span data-bind="text: description"></span></li>
-					<!-- /ko -->
-					<!-- ko if: searchValue() -->
-					<li><a href="#add"><strong>Vous ne trouvez pas le projet que vous cherchez ? Ajoutez-le !</strong></a></li>
-					<!-- /ko -->
-				</ul>
+		<br />
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="text-center card clickable" data-bind="click: function() { document.location.href = '{$host}sign-up' }">
+					<div class="h8 text-center">Intéressé ?</div>
+					<hr />
+					<img src="{$host}assets/img/avatars/user-avatar.png" alt="user" class="img-responsive" />
+					<hr />
+					<a href="{$host}sign-up">Je créé mon compte</a>
+				</div>
 			</div>
-		</form>
-		
+			<div class="col-sm-6">
+				<div class="text-center card clickable" data-bind="click: function() { document.location.href = '{$host}get-started' }">
+					<div class="h8 text-center">Un projet ?</div>
+					<hr />
+					<img src="{$host}assets/img/avatars/project-avatar.svg" alt="startup" class="img-responsive" />
+					<hr />
+					<a href="{$host}get-started">Je créé un compte Startup</a>
+				</div>
+			</div>
+		</div>
 	</div>
 </section>
 <!-- 
@@ -129,8 +143,22 @@
 		<div class="icon-wrap">
 			<span class="icon icon-active icon-multimedia-12"></span>
 		</div>
-		<h5>Les Projets de Startups</h5>
-		<div class="sub-title"></div>
+		<h5>Les projets à suivre</h5>
+		<div class="sub-title">
+		<form class="form-register" data-role="form">
+			<div class="form-group relative">
+				<div class="input-group">
+					<span class="input-group-addon transparent"><span class="fa fa-search"></span></span>
+					<input type="text" value="" class="form-control transparent" data-bind="value: searchValue, valueUpdate: 'keyup'" placeholder="recherche..." />
+				</div>
+				<ul class="search-list">
+					<!-- ko foreach: R -->
+					<li data-bind="click: function() { document.location.href = host + 'follow/' + ref }"><span class="strong" data-bind="text: name"></span> <span data-bind="text: description"></span></li>
+					<!-- /ko -->
+				</ul>
+			</div>
+		</form>
+		</div>
 		<br />
 		<section class="row" class="animated hiding" data-animation="fadeInUp" data-delay="1000">
 			<!-- ko foreach: P -->
@@ -161,9 +189,8 @@
 		</section>
 		<section id="add">
 		<div class="container">
-			<div class="h7">Ajouter une startup à la liste ?</div>
 			<p class="big">
-				Si vous ne trouvez pas une Startup dans la liste mais que vous connaissez l'adresse email du porteur de projet, vous pouvez utilisez ce formulaire pour lui demander de rajouter son projet !<br />
+				Si vous ne trouvez pas une Startup dans la liste mais que vous savez comment les contacter, vous pouvez utilisez ce formulaire pour leur demander de rajouter leur projet !<br />
 			</p>
 			<!-- ko with: startupRequestForm -->
 			<form class="form-register" data-role="form">
@@ -173,7 +200,7 @@
 				</div>
 				<div class="form-group">
 					<label for="AddProjectEmail">Adresse email du porteur de projet</label>
-					<input id="AddProjectEmail" type="email" value="" data-bind="value: email, valueUpdate: 'keyup'" class="form-control" placeholder="email du porteur de projet..." required />
+					<input id="AddProjectEmail" type="email" value="" data-bind="value: email, valueUpdate: 'keyup'" class="form-control" placeholder="email de contact du projet..." required />
 				</div>
 				<div class="form-group">
 					<button data-bind="click: function() { submit(); }" class="btn btn-default">Envoyer</button>
