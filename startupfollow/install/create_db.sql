@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  127.0.0.1
--- Généré le :  Mer 28 Juin 2017 à 15:48
+-- Généré le :  Jeu 29 Juin 2017 à 15:01
 -- Version du serveur :  5.7.14
 -- Version de PHP :  5.6.25
 
@@ -36,6 +36,8 @@ CREATE TABLE `startup` (
   `image` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
   `lastContactSentAt` datetime DEFAULT NULL,
   `lastStoryCreatedAt` datetime DEFAULT NULL,
+  `startedMonth` varchar(2) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `startedYear` varchar(4) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `link_website` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -239,22 +241,22 @@ ALTER TABLE `user_story_like`
 -- AUTO_INCREMENT pour la table `startup`
 --
 ALTER TABLE `startup`
-  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT pour la table `startup_event`
 --
 ALTER TABLE `startup_event`
-  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT pour la table `startup_follower`
 --
 ALTER TABLE `startup_follower`
-  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `startup_member`
 --
 ALTER TABLE `startup_member`
-  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT pour la table `startup_request`
 --
@@ -264,17 +266,17 @@ ALTER TABLE `startup_request`
 -- AUTO_INCREMENT pour la table `startup_story`
 --
 ALTER TABLE `startup_story`
-  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT pour la table `user_story_like`
 --
 ALTER TABLE `user_story_like`
-  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `uid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
