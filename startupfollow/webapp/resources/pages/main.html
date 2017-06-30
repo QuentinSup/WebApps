@@ -144,12 +144,12 @@
 			<span class="icon icon-active icon-multimedia-12"></span>
 		</div>
 		<h5>Les projets à suivre</h5>
-		<div class="sub-title">
+		<div>
 		<form class="form-register" data-role="form">
 			<div class="form-group relative">
 				<div class="input-group">
 					<span class="input-group-addon transparent"><span class="fa fa-search"></span></span>
-					<input type="text" value="" class="form-control transparent" data-bind="value: searchValue, valueUpdate: 'keyup'" placeholder="recherche..." />
+					<input type="text" value="" class="form-control transparent" data-bind="value: searchValue, valueUpdate: 'input'" placeholder="recherche..." />
 				</div>
 				<ul class="search-list">
 					<!-- ko foreach: R -->
@@ -188,26 +188,28 @@
 			<!-- /ko -->
 		</section>
 		<section id="add">
-		<div class="container">
 			<p class="big">
 				Si vous ne trouvez pas une Startup dans la liste mais que vous savez comment les contacter, vous pouvez utilisez ce formulaire pour leur demander de rajouter leur projet !<br />
 			</p>
 			<!-- ko with: startupRequestForm -->
 			<form class="form-register" data-role="form">
-				<div class="form-group">
+				<div class="form-group relative">
 					<label for="AddProjectName">Nom du projet / startup</label>
-					<input id="AddProjectName" type="text" value="" data-bind="value: name, valueUpdate: 'keyup'" class="form-control" placeholder="nom du projet..." required />
+					<div class="transparent relative">
+					<input id="AddProjectName" type="text" value="" data-bind="value: name, valueUpdate: 'input'" class="form-control transparent" placeholder="Ex. : NextGen" required />
+					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group relative">
 					<label for="AddProjectEmail">Adresse email du porteur de projet</label>
-					<input id="AddProjectEmail" type="email" value="" data-bind="value: email, valueUpdate: 'keyup'" class="form-control" placeholder="email de contact du projet..." required />
+					<div class="transparent relative">
+					<input id="AddProjectEmail" type="email" value="" data-bind="value: email, valueUpdate: 'input'" class="form-control transparent" placeholder="Ex. : contact@projet.com" required />
+					</div>
 				</div>
 				<div class="form-group">
-					<button data-bind="click: function() { submit(); }" class="btn btn-default">Envoyer</button>
+					<button data-bind="click: function() { submit(); }" class="btn btn-default">Envoyer une invitation !</button>
 				</div>
 			</form>
 			<!-- /ko -->
-		</div>
 		</section>
 	</div>
 </section>

@@ -18,11 +18,7 @@
 				<!-- /ko -->
 			</div>
 			<div class="col-sm-10">
-				<ul class="navigation-bar navigation-bar-left">
-					<li>
-						
-					</li>
-				</ul>
+				<a href="{$host}"><span class="fa fa-home"></span>&nbsp;Colaunch Flows</a>
 			</div>
 			<div class="col-sm-1 text-right">
 				<!-- ko if: user.data() -->
@@ -290,14 +286,13 @@
 												<label></label>
 												<div class="row">
 													<div class="form-group col-sm-12">
-														<input type="text" class="form-control h7" value="" data-bind="value: shortLine, valueUpdate: 'input'"
+														<input type="text" class="form-control transparent" value="" data-bind="value: shortLine, valueUpdate: 'input'"
 															placeholder="Ex. : Startup Weekend nous voilà !" required />
 													</div>
 												</div>
 												<div class="row">
 													<div class="form-group col-sm-12">
-														<div id="form-text" data-bind="html: text" class="tinymce" title="Donnez à vos fans l'envie de vous suivre !"
-															placeholder="Donnez de vos nouvelles à vos fans !"></div>
+														<div id="form-text" data-bind="html: text" class="tinymce" placeholder="Donnez de vos nouvelles à vos fans !"></div>
 													</div>
 												</div>
 												<div class="form-submit">

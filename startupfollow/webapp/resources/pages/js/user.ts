@@ -231,6 +231,50 @@ module colaunch {
         }
         
         /**
+         * Calculate password strength
+         */
+        public calculatePasswordStrength(p: string): number { 
+            if(p.length > 4) {
+                return 50;
+            }
+            return 0;    
+        }
+        
+        /**
+         * Return true if password strength is enought
+         */
+        public isPasswordStrengthOK(p: string): boolean {
+            return this.calculatePasswordStrength(p) >= 50;
+        }
+        
+        /**
+         * Update user password
+         */
+        public changePassword(password: string, callback?: Function): boolean {
+            
+            if(!this.isPasswordStrengthOK(password)) {
+                return false;    
+            }
+            
+            var request = {
+                type: 'put',
+                data: JSON.stringify({ password: password }),
+                url: host + 'rest/user/password',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json' 
+            };
+            
+            $.ajax(request).complete(function(response, status): void {
+                if(typeof(callback) == "function") {
+                    callback.apply(this, arguments);    
+                }
+            });
+            
+            return true;
+            
+        }
+        
+        /**
          * Search users
          */
         public search(data: string, callback?: Function): void {

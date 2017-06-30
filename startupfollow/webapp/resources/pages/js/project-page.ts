@@ -16,6 +16,8 @@ module colaunch {
         public stories = ko.observableArray();
         public events = ko.observableArray();
         public isFollowedByUser = ko.observable(false);
+        public isLoadingData = ko.observable(true);
+        public isLoadingStories = ko.observable(true);
         
         public constructor() {
          
@@ -55,6 +57,8 @@ module colaunch {
         
         public find(id: string) {
         
+            this.isLoadingData(true);
+            
             var request = {
                 type: 'get',
                 url: host + 'rest/startup/' + id,
@@ -63,6 +67,9 @@ module colaunch {
             };
             
             $.ajax(request).complete((response, status): void => {
+                
+                this.isLoadingData(false);
+                
                 if(response.status == 200) {
                     this.data(response.responseJSON);
                 } else {
@@ -77,6 +84,8 @@ module colaunch {
         
         public listStories(): void {
             
+            this.isLoadingStories(true);
+            
             var request = {
                 type: 'get',
                 url: host + 'rest/startup/' + this.data().uid + '/story/all',
@@ -85,6 +94,7 @@ module colaunch {
             };
             
             $.ajax(request).complete((response, status): void => {
+                this.isLoadingStories(false);
                  if(response.status == 200) {
                     this.stories(ko.mapping.fromJS(response.responseJSON)());
                  }

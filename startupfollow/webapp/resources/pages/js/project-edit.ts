@@ -126,6 +126,12 @@ module colaunch.startupEdit {
             
             // Check existing name
             this.name.subscribe((v: string): void => {
+                
+                if(v == this.parent.startup().name) {
+                    this.nameExists(false);
+                    return;
+                }
+                
                 this.nameExists(true);
                 clearTimeout(this.__hdlCheckIfNameExists);
                 if (!v) return;
@@ -626,19 +632,17 @@ module colaunch.startupEdit {
                 theme: 'inlite',
                 contextmenu: "paste pastetext | undo redo | quicklink quickimage",
                 browser_spellcheck: true,
-                insert_toolbar: 'quickimage',
-                selection_toolbar: 'bold italic underline strikethrough | quicklink blockquote code',
+                insert_toolbar: 'bullist bold blockquote| quickimage',
+                selection_toolbar: 'bold italic underline strikethrough | bullist | quicklink blockquote',
                 inline: true,
                 plugins: [
                     "advlist autolink link image lists charmap print hr anchor pagebreak",
                     "searchreplace wordcount visualblocks visualchars code media nonbreaking",
-                    "save contextmenu directionality emoticons template paste textcolor"
+                    "save contextmenu directionality template paste textcolor"
                 ]
             });
-
+            
         }
-
-
 
     }
 

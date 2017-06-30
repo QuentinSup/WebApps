@@ -176,6 +176,42 @@ var colaunch;
             });
         };
         /**
+         * Calculate password strength
+         */
+        UserModel.prototype.calculatePasswordStrength = function (p) {
+            if (p.length > 4) {
+                return 50;
+            }
+            return 0;
+        };
+        /**
+         * Return true if password strength is enought
+         */
+        UserModel.prototype.isPasswordStrengthOK = function (p) {
+            return this.calculatePasswordStrength(p) >= 50;
+        };
+        /**
+         * Update user password
+         */
+        UserModel.prototype.changePassword = function (password, callback) {
+            if (!this.isPasswordStrengthOK(password)) {
+                return false;
+            }
+            var request = {
+                type: 'put',
+                data: JSON.stringify({ password: password }),
+                url: host + 'rest/user/password',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json'
+            };
+            $.ajax(request).complete(function (response, status) {
+                if (typeof (callback) == "function") {
+                    callback.apply(this, arguments);
+                }
+            });
+            return true;
+        };
+        /**
          * Search users
          */
         UserModel.prototype.search = function (data, callback) {

@@ -89,6 +89,10 @@ var colaunch;
                 this.parent = parent;
                 // Check existing name
                 this.name.subscribe(function (v) {
+                    if (v == _this.parent.startup().name) {
+                        _this.nameExists(false);
+                        return;
+                    }
                     _this.nameExists(true);
                     clearTimeout(_this.__hdlCheckIfNameExists);
                     if (!v)
@@ -506,13 +510,13 @@ var colaunch;
                     theme: 'inlite',
                     contextmenu: "paste pastetext | undo redo | quicklink quickimage",
                     browser_spellcheck: true,
-                    insert_toolbar: 'quickimage',
-                    selection_toolbar: 'bold italic underline strikethrough | quicklink blockquote code',
+                    insert_toolbar: 'bullist bold blockquote| quickimage',
+                    selection_toolbar: 'bold italic underline strikethrough | bullist | quicklink blockquote',
                     inline: true,
                     plugins: [
                         "advlist autolink link image lists charmap print hr anchor pagebreak",
                         "searchreplace wordcount visualblocks visualchars code media nonbreaking",
-                        "save contextmenu directionality emoticons template paste textcolor"
+                        "save contextmenu directionality template paste textcolor"
                     ]
                 });
             };

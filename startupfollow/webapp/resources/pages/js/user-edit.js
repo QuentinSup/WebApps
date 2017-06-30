@@ -8,8 +8,8 @@ var colaunch;
             this.email = ko.observable();
             this.firstName = ko.observable();
             this.lastName = ko.observable();
-            this.password = ko.observableArray();
-            this.password2 = ko.observableArray();
+            this.password1 = ko.observable();
+            this.password2 = ko.observable();
             this.image = ko.observable();
             this.website = ko.observable();
             this.twitter = ko.observable();
@@ -22,6 +22,10 @@ var colaunch;
             this.parent = parent;
             this.name.subscribe(function (s) {
                 clearTimeout(_this.__hdlCheckIfExistsName);
+                if (s == user.data().name) {
+                    _this.isUserNameUnique(true);
+                    return;
+                }
                 _this.isUserNameUnique(false);
                 if (!s)
                     return;
@@ -31,6 +35,10 @@ var colaunch;
             });
             this.email.subscribe(function (s) {
                 clearTimeout(_this.__hdlCheckIfExistsEmail);
+                if (s == user.data().email) {
+                    _this.isUserEmailUnique(true);
+                    return;
+                }
                 _this.isUserEmailUnique(false);
                 if (!s)
                     return;
@@ -41,6 +49,13 @@ var colaunch;
                     }, 500);
                 }
             });
+            this.isPassword1Valid = ko.computed(function () {
+                var v = _this.password1() || '';
+                return user.isPasswordStrengthOK(v);
+            }).extend({ throttle: 100 });
+            this.isPassword2Valid = ko.computed(function () {
+                return _this.isPassword1Valid() && _this.password2() == _this.password1();
+            }).extend({ throttle: 100 });
         }
         /**
          * check if user name is already used into database
@@ -136,6 +151,23 @@ var colaunch;
                 }
                 else {
                     success("Well done, vos informations sont à jour !");
+                }
+            });
+            return false;
+        };
+        /**
+         * Submit data
+         */
+        UserForm.prototype.passwordSubmit = function () {
+            if (!this.isPassword1Valid() || !this.isPassword2Valid()) {
+                return false;
+            }
+            user.changePassword(this.password1(), function (response, status) {
+                if (response.status != 200) {
+                    error("Un problème est apparu durant le changement de votre mot de passe :(");
+                }
+                else {
+                    success("Well done, vous allez recevoir une confirmation par email avec votre nouveau mot de passe !");
                 }
             });
             return false;

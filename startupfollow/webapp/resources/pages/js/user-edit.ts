@@ -12,7 +12,6 @@ module colaunch {
     declare function success(message, title?, opts?);
     declare function toast(message, opts?);
 
-
     class UserForm {
 
         public uid = ko.observable();
@@ -20,12 +19,15 @@ module colaunch {
         public email = ko.observable();
         public firstName = ko.observable();
         public lastName = ko.observable();
-        public password = ko.observableArray();
-        public password2 = ko.observableArray();
+        public password1 = ko.observable();
+        public password2 = ko.observable();
         public image = ko.observable();
         public website = ko.observable();
         public twitter = ko.observable();
         public facebook = ko.observable();
+        
+        public isPassword1Valid;
+        public isPassword2Valid;
         
         public isCheckingNameUnique = ko.observable(false);
         public isCheckingEmailUnique = ko.observable(false);
@@ -47,6 +49,12 @@ module colaunch {
             this.name.subscribe((s: string): void => {
                 
                 clearTimeout(this.__hdlCheckIfExistsName);
+                
+                if(s == user.data().name) {
+                    this.isUserNameUnique(true);
+                    return;    
+                }
+                
                 this.isUserNameUnique(false);
                 
                 if(!s) return;
@@ -58,6 +66,11 @@ module colaunch {
             this.email.subscribe((s: string): void => {
                 
                 clearTimeout(this.__hdlCheckIfExistsEmail);
+                
+                if(s == user.data().email) {
+                    this.isUserEmailUnique(true);
+                    return;    
+                }
                 
                 this.isUserEmailUnique(false);
                 
@@ -72,6 +85,15 @@ module colaunch {
                 }
             });
 
+            this.isPassword1Valid = ko.computed((): boolean => {
+                var v: string = this.password1() || '';
+                return user.isPasswordStrengthOK(v);  
+            }).extend({ throttle: 100 });
+            
+            this.isPassword2Valid = ko.computed((): boolean => {
+                return this.isPassword1Valid() && this.password2() == this.password1();
+            }).extend({ throttle: 100 });
+            
         }
 
         /**
@@ -187,6 +209,27 @@ module colaunch {
                       error("Mince, une erreur est apparue est nous n'avons pas pu mettre à jour vos informations :(");
                 } else {
                     success("Well done, vos informations sont à jour !");    
+                }
+            });
+
+            return false;
+
+        }
+        
+        /**
+         * Submit data
+         */
+        public passwordSubmit(): boolean {
+
+            if(!this.isPassword1Valid() || !this.isPassword2Valid()) {
+                return false;
+            }
+
+            user.changePassword(this.password1(), function(response, status) {
+                if(response.status != 200) {
+                      error("Un problème est apparu durant le changement de votre mot de passe :(");
+                } else {
+                    success("Well done, vous allez recevoir une confirmation par email avec votre nouveau mot de passe !");    
                 }
             });
 

@@ -30,6 +30,7 @@
 				<ul class="list">
 					<li class="clickable" data-bind="click: function() { showSection(1) }, css: { 'strong': index() == 1 }">Votre compte</li>
 					<li class="clickable" data-bind="click: function() { showSection(2) }, css: { 'strong': index() == 2 }">Votre profil</li>
+					<li class="clickable" data-bind="click: function() { showSection(3) }, css: { 'strong': index() == 3 }">Modifier votre mot de passe</li>
 				</ul>
 			</div>
 			<div class="col-sm-9">
@@ -126,6 +127,38 @@
 									</div>
 									<div class="form-submit">
 										<button data-bind="click: function() { submit(); }" class="btn btn-default">Enregistrer</button>
+									</div>
+								</form>
+								<!-- /ko -->
+							</section>
+						</li>
+						<li>
+							<section class="content">
+								<div class="h8">Modifier le mot de passe</div>
+								<!-- ko with: form -->
+								<form data-role="form">
+									<div class="form-group row has-feedback">
+										<label for="FormInputPassword1" class="col-sm-12 control-label">Nouveau mot de passe</label>
+										<div class="col-sm-4">
+											<input id="FormInputPassword" type="password" value="" class="form-control" data-bind="value: password1, valueUpdate: 'input'"
+												placeholder="" required />
+												<!-- ko if: $data.isPassword1Valid() -->
+												<span class="glyphicon glyphicon-ok form-control-feedback check" aria-hidden="true"></span>
+												<!-- /ko -->
+										</div>
+									</div>
+									<div class="form-group row has-feedback">
+										<label for="FormInputPassword2" class="col-sm-12 control-label">Confirmer le nouveau mot de passe</label>
+										<div class="col-sm-4">
+											<input id="FormInputPassword2" type="password" value="" class="form-control" data-bind="disable: !password1(), value: password2, valueUpdate: 'input'"
+												placeholder="" required />
+												<!-- ko if: $data.isPassword2Valid() -->
+												<span class="glyphicon glyphicon-ok form-control-feedback check" aria-hidden="true"></span>
+												<!-- /ko -->
+										</div>
+									</div>
+									<div class="form-submit">
+										<button data-bind="disable: !isPassword1Valid() || !isPassword2Valid(), click: function() { passwordSubmit() }" class="btn btn-default">Modifier</button>
 									</div>
 								</form>
 								<!-- /ko -->

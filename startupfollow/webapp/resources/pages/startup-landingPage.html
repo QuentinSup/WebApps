@@ -48,7 +48,7 @@
 							<ul>
 								<!-- ko if: user.data().teams -->
 								<!-- ko foreach: user.data().teams -->
-								<li data-bind="click: function() { document.location.href = host + 'follow/' + ref }" class="clickable">
+								<li data-bind="click: function() { document.location.href = host + 'project/edit/' + ref }" class="clickable">
 									<img class="img-circle" data-bind="attr: { 'src': image || host + 'assets/img/avatars/project-avatar.svg' }" />
 									&nbsp;<span data-bind="text: name"></span>
 									<!-- ko if: $data.lastActivityInDays == -1 || $data.lastActivityInDays > 30 -->
@@ -82,6 +82,7 @@
 	</div>
 </header>
 
+<!-- ko ifnot: isLoadingData() -->
 <!-- ko if: !!data() -->
 <!-- ko with: data() -->
 <section id="hero" class="light bg-video">
@@ -166,8 +167,10 @@
 		<!-- ko if: user.data() && user.canManageStartup(data().uid) -->	
 		<a class="clickable" data-bind="click: function() { document.location.href = host + 'project/edit/' + ref }">
 			<span class="fa fa-gear"></span>&nbsp;Gérer la page
-		</a> 	
+		</a>
+		<hr />
 		<!-- /ko -->
+		<!-- ko ifnot: isLoadingStories() -->
 		<!-- ko if: stories().length == 0 -->
 		<div class="h7">Le projet n'a pas encore donné de nouvelle :( !<br />Suivez le projet pour être informés dès que le projet évolue !</div>
 		<!-- /ko -->
@@ -186,13 +189,25 @@
 		<hr />
 		<!-- /ko -->
 		</div>
+		<!-- /ko -->
+		<!-- ko if: isLoadingStories() -->
+		Chargement en cours...
+		<!-- /ko -->
 	</div>
 </section>
 <!-- /ko -->
 <!-- ko ifnot: !!data() -->
-<section id="story" class="section">
+<section class="section">
 	<div class="container">
 	<div class="h7">Le projet que vous recherchez n'existe pas (encore !)</div>
+	</div>
+</section>
+<!-- /ko -->
+<!-- /ko -->
+<!-- ko if: isLoadingData() -->
+<section class="section">
+	<div class="container">
+	<strong>Chargement en cours...</strong>
 	</div>
 </section>
 <!-- /ko -->

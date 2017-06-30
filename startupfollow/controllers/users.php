@@ -184,26 +184,36 @@ class user extends dwBasicController {
 	
 		if ($user = $doc->get()) {
 				
-			$doc = self::$userEntity->factory ();
-			$doc -> uid = $user -> uid;
-			$doc->password = md5 ( $password = dwString::generate ( "5" ) );
-			
-				
-			if(!$doc -> update()) {
+			if(!$doc -> changePassword($request, $user, dwString::generate ( "5" ))) {
 				return HttpStatus::INTERNAL_SERVER_ERROR;
 			}
-			
-			// Send email
-			$emailer = new classes\Emailer(self::$log, self::$smtp);
-			if(!$emailer -> sendResetPassword($request, $user, $password)) {
-				return HttpStatus::INTERNAL_SERVER_ERROR;
-			}
-			
+		
 			return HttpStatus::OK;
 	
 		}
 	
 		return HttpStatus::NOT_FOUND;
+	}
+	
+	/**
+	 * Update user password
+	 */
+	private function changePassword($request, $user, $password) {
+		$doc = self::$userEntity->factory ();
+		$doc -> uid = $user -> uid;
+		$doc->password = md5 ($password);
+			
+		if(!$doc -> update()) {
+			return false;
+		}
+		
+		// Send email
+		$emailer = new Emailer(self::$log, self::$smtp);
+		if(!$emailer -> sendResetPassword($request, $user, $password)) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -365,14 +375,12 @@ class user extends dwBasicController {
 		$doc->uid = $p_uid;
 		$doc->firstName = @$json->firstName;
 		$doc->lastName = @$json->lastName;
-		$doc->email = $json->email;
+		$doc->email = isset($json->email)?strtolower($json -> email):null;
+		$doc->name = @$json->name;
 		$doc->image = @$json->image;
 		$doc->link_twitter = @$json->link_twitter;
 		$doc->link_website = @$json->link_website;
 		$doc->link_facebook =@$json->link_facebook;
-		if (@$json -> password) {
-			$doc->password = md5 ( $json->password );
-		}
 		
 		if ($doc->update()) {
 			if($this -> updateUserDataSession($p_uid)) {
@@ -381,6 +389,35 @@ class user extends dwBasicController {
 		}
 		
 		return HttpStatus::INTERNAL_SERVER_ERROR;
+	}
+	
+	/**
+	 * @Mapping(method = "put", value="password", consumes="application/json", produces="application/json; charset=utf-8")
+	 */
+	public function updatePassword(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
+	
+		if(!self::$session -> has('user')) {
+			return HttpStatus::FORBIDDEN;
+		}
+	
+		$p_uid = self::$session -> user -> uid;
+	
+		if (self::$log->isTraceEnabled ()) {
+			self::$log->trace ( "Modification du mot de passe utilisateur n$p_uid" );
+		}
+		
+		// Get password from body
+		$json = $request->Body ();
+		if(!isset($json -> password)) {
+			return HttpStatus::BAD_REQUEST;
+		}
+		
+		// Do change password shared treatment
+		if(!$this -> changePassword($request, self::$session -> user, $json -> password)) {
+			return HttpStatus::INTERNAL_SERVER_ERROR;
+		}
+
+		return HttpStatus::OK;
 	}
 	
 	/**

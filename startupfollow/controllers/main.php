@@ -111,6 +111,35 @@ class main extends dwBasicController {
 		
 		return $this -> prepareModel($request, $model, 'user-edit') -> view();
 	}
+	
+	/**
+	 * @Mapping(method = "get", value = "storify/:ref")
+	 */
+	public function storify(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model)
+	{
+		if(!self::$session -> has('user')) {
+			self::$session -> origin = $request -> getOrigin();
+			return self::login($request, $response, $model);
+		}
+		
+		$p_ref = $request -> Path('ref');
+		
+		$startupE = new ProjectEntity(self::$startupEntity);
+		$startup = $startupE -> get($p_ref);
+		
+		if(is_null($startup)) {
+			return self::main($request, $response, $model);
+		}
+		
+		if(!ary::exists(self::$session -> user -> memberOf, $startup -> uid)) {
+			$model -> redirectTo = $request -> getOrigin();
+			return self::login($request, $response, $model);
+		}
+
+		$model -> ref = $p_ref;
+	
+		return $this -> prepareModel($request, $model, 'project-storify') -> view();
+	}
 		
 	/**
 	 * @Mapping(method = "get", value= "request/:id")

@@ -7,6 +7,8 @@ var colaunch;
             this.stories = ko.observableArray();
             this.events = ko.observableArray();
             this.isFollowedByUser = ko.observable(false);
+            this.isLoadingData = ko.observable(true);
+            this.isLoadingStories = ko.observable(true);
             this.stories.subscribe(function () {
                 setTimeout(function () {
                     $('#stories .timeago').timeago();
@@ -32,6 +34,7 @@ var colaunch;
         }
         Model.prototype.find = function (id) {
             var _this = this;
+            this.isLoadingData(true);
             var request = {
                 type: 'get',
                 url: host + 'rest/startup/' + id,
@@ -39,6 +42,7 @@ var colaunch;
                 dataType: 'json'
             };
             $.ajax(request).complete(function (response, status) {
+                _this.isLoadingData(false);
                 if (response.status == 200) {
                     _this.data(response.responseJSON);
                 }
@@ -50,6 +54,7 @@ var colaunch;
         };
         Model.prototype.listStories = function () {
             var _this = this;
+            this.isLoadingStories(true);
             var request = {
                 type: 'get',
                 url: host + 'rest/startup/' + this.data().uid + '/story/all',
@@ -57,6 +62,7 @@ var colaunch;
                 dataType: 'json'
             };
             $.ajax(request).complete(function (response, status) {
+                _this.isLoadingStories(false);
                 if (response.status == 200) {
                     _this.stories(ko.mapping.fromJS(response.responseJSON)());
                 }
