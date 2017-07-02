@@ -184,7 +184,7 @@ class user extends dwBasicController {
 	
 		if ($user = $doc->get()) {
 				
-			if(!$doc -> changePassword($request, $user, dwString::generate ( "5" ))) {
+			if(!$this -> changePassword($request, $user, dwString::generate ( "5" ))) {
 				return HttpStatus::INTERNAL_SERVER_ERROR;
 			}
 		
