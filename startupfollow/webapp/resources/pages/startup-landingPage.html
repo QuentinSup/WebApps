@@ -43,7 +43,7 @@
 				<div class="col-sm-3">
 					<!-- ko if: !!user.data() -->
 					<div class="col-sm-12">
-						<a href="{$host}account" class="menu right">
+						<a class="menu right">
 							<img data-bind="attr: { 'src': user.data().image || host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
 							<ul>
 								<!-- ko if: user.data().teams -->
@@ -67,7 +67,7 @@
 					<!-- /ko -->
 					<!-- ko ifnot: !!user.data() -->
 					<div class="col-sm-12">
-						<a href="{$host}login" class="menu right">
+						<a class="menu right">
 							<img data-bind="attr: { 'src': host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
 							<ul>
 								<li data-bind="click: function() { document.location.href = host + 'login' }" class="clickable"><span class="fa fa-sign-in"></span>&nbsp;Connexion</li>
