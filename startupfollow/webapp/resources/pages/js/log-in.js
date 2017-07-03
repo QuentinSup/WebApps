@@ -26,7 +26,7 @@ var colaunch;
                 _this.isCheckingLogin(false);
                 if (response.status == 200) {
                     toast("Bienvenue " + _this.name() + " ;)");
-                    document.location.href = host + (response.responseJSON.redirect || '');
+                    document.location.href = (response.responseJSON.redirect || host);
                 }
                 else {
                     _this.password('');

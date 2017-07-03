@@ -65,7 +65,8 @@ module colaunch.startupEdit {
                 if(response.status == 200) {
 
                     if(!this.uid()) {
-                         success("Well done ! Vos fans seront prochainement informés de votre nouvelle !");    
+                         success("Well done ! Vos fans seront prochainement informés de votre nouvelle !");
+                         document.location.href = host + "/" + this.uid();
                     }
                     
                 } else {

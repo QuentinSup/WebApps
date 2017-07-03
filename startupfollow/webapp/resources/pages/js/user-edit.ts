@@ -67,6 +67,8 @@ module colaunch {
                 
                 clearTimeout(this.__hdlCheckIfExistsEmail);
                 
+                this.isEmailValid(isValidEmail(s));
+                
                 if(s == user.data().email) {
                     this.isUserEmailUnique(true);
                     return;    
@@ -75,8 +77,6 @@ module colaunch {
                 this.isUserEmailUnique(false);
                 
                 if(!s) return;
-                
-                this.isEmailValid(isValidEmail(s));
                 
                 if(this.isEmailValid()) {
                     this.__hdlCheckIfExistsEmail = setTimeout((): void => {

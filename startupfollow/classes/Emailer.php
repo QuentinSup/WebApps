@@ -113,7 +113,7 @@ class Emailer {
 		$mail_model -> img_logo = self::getLogoBase64Img();
 		$mail_model -> projectName = $startup -> name;
 		$mail_model -> nbDays = $nbDays;
-		$mail_model -> url = $httpRequest -> getBaseUri()."startup/".$startup -> ref;
+		$mail_model -> url = $httpRequest -> getBaseUri()."storify/".$startup -> ref;
 			
 		$str = dwSmartyTemplate::renderize("../emails/startupGetInTouch.html", $mail_model -> toArray());
 			

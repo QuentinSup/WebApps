@@ -45,7 +45,7 @@ module colaunch {
                 this.isCheckingLogin(false);
                 if (response.status == 200) {
                     toast("Bienvenue " + this.name() + " ;)");
-                    document.location.href = host + (response.responseJSON.redirect || '');
+                    document.location.href = (response.responseJSON.redirect || host);
                 } else {
                     this.password(''); 
                     error("Oups ! Votre identifiant ou votre mot de passe est incorrect");

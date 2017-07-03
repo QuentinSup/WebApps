@@ -36,6 +36,8 @@
 	background: transparent !important;
 	color: #fff !important;
 	border: 0px !important;
+	position: relative;
+	z-index: 9999;
 }
 
 .transparent:after {
@@ -48,6 +50,7 @@
     bottom: 0px;
     top: 0px;
     opacity: .05;
+    z-index: -1;
 }
 
 
@@ -938,21 +941,28 @@ article footer {
 	-o-background-size: cover;
 	background-size: cover;
 	background-attachment: fixed;
-	min-height: 500px;
 	position: relative;
-	overflow: hidden;
+	overflow: scroll;
 }
 
 #hero .container {
 	position: static;
 }
 
-#hero .hero-content {
-	position: absolute;
-	top: 40%;
-    left: 1em;
-    right: 1em;
-	margin-top: -195px;
+@media screen and (min-width: 800px) {
+	
+	#hero {
+		min-height: 500px;
+	}
+	
+	#hero .hero-content {
+		position: absolute;
+		top: 40%;
+	    left: 1em;
+	    right: 1em;
+		margin-top: -195px;
+	}
+
 }
 
 #hero hr {

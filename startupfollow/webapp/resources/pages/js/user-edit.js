@@ -35,6 +35,7 @@ var colaunch;
             });
             this.email.subscribe(function (s) {
                 clearTimeout(_this.__hdlCheckIfExistsEmail);
+                _this.isEmailValid(isValidEmail(s));
                 if (s == user.data().email) {
                     _this.isUserEmailUnique(true);
                     return;
@@ -42,7 +43,6 @@ var colaunch;
                 _this.isUserEmailUnique(false);
                 if (!s)
                     return;
-                _this.isEmailValid(isValidEmail(s));
                 if (_this.isEmailValid()) {
                     _this.__hdlCheckIfExistsEmail = setTimeout(function () {
                         _this.verifyUserEmail();

@@ -45,6 +45,7 @@ var colaunch;
                     if (response.status == 200) {
                         if (!_this.uid()) {
                             success("Well done ! Vos fans seront prochainement informés de votre nouvelle !");
+                            document.location.href = host + "/" + _this.uid();
                         }
                     }
                     else {

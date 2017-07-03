@@ -8,7 +8,7 @@
 			</div>
 			<div class="col-sm-1 col-xs-2">
 				<!-- ko if: user.data() -->
-					<a href="{$host}" class="menu right">
+					<a class="menu right">
 						<img data-bind="attr: { 'src': user.data().image || host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
 						<ul>
 							<li data-bind="click: function() { document.location.href = host + 'account' }" class="clickable"><span class="fa fa-gear"></span>&nbsp;Paramètre du compte</li>
