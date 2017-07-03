@@ -37,7 +37,7 @@
 								<!-- ko if: user.data().teams -->
 								<!-- ko foreach: user.data().teams -->
 								<li data-bind="click: function() { document.location.href = host + 'follow/' + ref }" class="clickable">
-									<img class="img-circle" data-bind="attr: { 'src': image || host + 'assets/img/avatars/project-avatar.svg' }" />
+									<img class="img-circle" data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/project-avatar.svg' }" />
 									&nbsp;<span data-bind="text: name"></span>
 									<!-- ko if: $data.lastActivityInDays == -1 || $data.lastActivityInDays > 30 -->
 									<span class="fa fa-lightbulb-o"></span>
