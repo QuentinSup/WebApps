@@ -6,7 +6,7 @@
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
 			<div class="col-sm-1 col-xs-2">
-				<!-- if: data() -->
+				<!-- ko if: data() -->
 				<!-- ko with: data() -->
 				<a class="menu clickable">
 					<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/project-avatar.svg' }" class="img-responsive img-circle" alt="startup" />
@@ -24,13 +24,14 @@
 				<!-- /ko -->
 				<!-- /ko -->
 			</div>
-			<ul class="navigation-bar col-sm-8 col-xs-6">
+			<ul class="navigation-bar col-sm-8 col-xs-10">
 				<li><a href="#" data-bind="click: function() { document.location = host }"><span class="fa fa-home"></span></a></li>
 				<li><a href="#members">L'équipe</a></li>
 				<li><a href="#story">Les nouvelles</a></li>
 			</ul>
-			<div class="col-sm-3 col-xs-4 text-right">
-				<div class="col-sm-9">
+			<div class="col-sm-3 col-xs-fixed col-xs-12">
+				<div class="col-sm-9 hidden-xs">
+				<!-- if: data() -->
 				<!-- ko if: !!user.data() -->
 					<!-- ko if: $data.isFollowedByUser() -->
 					<button data-bind="click: function() { $data.unfollow(); }" class="btn white">ne plus suivre</button>
@@ -38,6 +39,7 @@
 					<!-- ko ifnot: $data.isFollowedByUser() -->
 					<button data-bind="click: function() { $data.follow(); }" class="btn white">suivre</button>
 					<!-- /ko -->
+				<!-- /ko -->
 				<!-- /ko -->
 				</div>
 				<div class="col-sm-3">
@@ -163,6 +165,16 @@
 
 <section id="story" class="section">
 	<div class="container">
+		<!-- ko if: data() -->
+		<!-- ko if: !!user.data() -->
+			<!-- ko if: $data.isFollowedByUser() -->
+			<button data-bind="click: function() { $data.unfollow(); }" class="btn white">ne plus suivre</button>
+			<!-- /ko -->
+			<!-- ko ifnot: $data.isFollowedByUser() -->
+			<button data-bind="click: function() { $data.follow(); }" class="btn white">suivre</button>
+			<!-- /ko -->
+		<!-- /ko -->
+		<!-- /ko -->
 		<h5>Dernières nouvelles !</h5>
 		<!-- ko if: user.data() && user.canManageStartup(data().uid) -->	
 		<a class="clickable" data-bind="click: function() { document.location.href = host + 'project/edit/' + ref }">

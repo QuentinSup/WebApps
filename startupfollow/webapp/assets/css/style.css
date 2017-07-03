@@ -174,7 +174,7 @@ video {
   .bg-video > video {
     width: auto !important; /* En pratique : supérieur à la largeur du viewport */
     height: 100% !important;
-    left: -100%;
+    /*left: -100%;*/
   }
 }
 
@@ -942,7 +942,8 @@ article footer {
 	background-size: cover;
 	background-attachment: fixed;
 	position: relative;
-	overflow: scroll;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 #hero .container {
@@ -961,6 +962,29 @@ article footer {
 	    left: 1em;
 	    right: 1em;
 		margin-top: -195px;
+	}
+
+}
+
+@media screen and (max-width: 800px) {
+	
+	.col-xs-fixed {
+		position: fixed;
+		bottom: 8em;
+		width: 50px;
+		right: 2em;
+	}
+	
+	.col-xs-fixed .menu > ul {
+	    bottom: 20px;
+	    top: auto;
+	    right: 50px;
+	    border-top: 1px solid #dedede;
+	    border-radius: 5px;
+	}
+	
+	.bg-gray {
+		padding-top: 100px !important;
 	}
 
 }
