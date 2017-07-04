@@ -60,6 +60,8 @@
 		app.el['window'].resize(function() {
 			app.fn.screenSize();
 		});
+		
+		var _hdlScrollFocus;
 
 		// fade in .back-to-top
 		$(window).scroll(function() {
@@ -68,6 +70,22 @@
 			} else {
 				app.el['back-to-top'].fadeOut();
 			}
+			
+			$('.col-xs-fixed').addClass('focus');
+			clearTimeout(_hdlScrollFocus);
+			_hdlScrollFocus = setTimeout(function() {
+				$('.col-xs-fixed').removeClass('focus');
+			}, 3000);
+			
+		});
+		
+		$(document).on('mouseover touch click', '.col-xs-fixed', function() {
+			var $this = $(this);
+			$this.addClass('focus');
+			clearTimeout(_hdlScrollFocus);
+			_hdlScrollFocus = setTimeout(function() {
+				$this.removeClass('focus');
+			}, 5000);
 		});
 
 		// scroll body to 0px on click

@@ -255,16 +255,10 @@ module colaunch.startupEdit {
             
             member.email.subscribe((s: string): void => {
                 clearTimeout(this.__hdlCheckIfEmailExists);
-                if(s) {
+                if(s && isValidEmail(s)) {
                     
                     this.__hdlCheckIfEmailExists = setTimeout((): void => {
-                    
-                        if(!isValidEmail(s)) {
-                            toast("Merci de renseigner une adresse email valide !");
-                            member.email('');
-                            return;    
-                        }
-                        
+                                            
                         if(this.isCurrentMember(s, member)) {
                             member.email('');
                             toast("Ce membre est déjà présent dans la liste");

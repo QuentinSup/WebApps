@@ -966,21 +966,39 @@ article footer {
 
 }
 
+.col-xs-fixed {
+	opacity: 1;
+	transition: opacity;
+    transition-duration: .5s;
+}
+
+.col-xs-fixed.focus {
+	opacity: 1 !important;
+}
+
 @media screen and (max-width: 800px) {
 	
 	.col-xs-fixed {
 		position: fixed;
-		bottom: 8em;
-		width: 50px;
-		right: 2em;
+   	 	bottom: 5em;
+    	width: 50px;
+    	left: 50%;
+    	margin-left: -25px;
+    	opacity : .2;
 	}
 	
 	.col-xs-fixed .menu > ul {
-	    bottom: 20px;
-	    top: auto;
-	    right: 50px;
-	    border-top: 1px solid #dedede;
+	    bottom: 75px;
+	    width: 300px;
+	    left: 50%;
+	    margin-left: -150px;
+	    border-top: 1px solid #101010;
 	    border-radius: 5px;
+	    background-color: #404040;
+	}
+	
+	.col-xs-fixed .menu > ul a {
+		color: #fff;
 	}
 	
 	.bg-gray {
