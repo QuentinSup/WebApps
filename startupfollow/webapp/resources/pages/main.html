@@ -6,7 +6,20 @@
 					<span class="sublime-text">Colaunch Flows</span>
 				</div>
 				<div class="hero-normal">
-					<span class="sublime-text">Une nouvelle façon de suivre les Startups</span>							
+					<span class="sublime-text">Une nouvelle façon de suivre les Startups</span>
+					<form class="form-register container" data-role="form">
+						<div class="form-group relative">
+							<div class="input-group">
+								<span class="input-group-addon transparent"><span class="fa fa-search"></span></span>
+								<input type="text" value="" class="form-control transparent" data-bind="value: searchValue, valueUpdate: 'input'" placeholder="recherche..." />
+							</div>
+							<ul class="search-list">
+								<!-- ko foreach: R -->
+								<li data-bind="click: function() { document.location.href = host + 'follow/' + ref }"><span class="strong" data-bind="text: name"></span> <span data-bind="text: description"></span></li>
+								<!-- /ko -->
+							</ul>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -162,7 +175,7 @@
 		<br />
 		<section class="row" class="animated hiding" data-animation="fadeInUp" data-delay="1000">
 			<!-- ko foreach: P -->
-			<div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+			<div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
 				<div class="speaker-item">
 					<div>
 						<div class="img-wrapper clickable" data-bind="click: function() { document.location = host + 'startup/' + $data.ref }">
