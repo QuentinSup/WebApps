@@ -788,9 +788,8 @@ class project extends dwBasicController {
 			// Add event follow
 			$this -> addEvent($startup -> uid, $p_uid, Events::EVENT_FOLLOW, null);
 	
-			$uid = $doc -> getLastInsertId();
 		} else {
-			$response -> statusCode = HttpStatus::INTERNAL_SERVER_ERROR;
+			return HttpStatus::INTERNAL_SERVER_ERROR;
 		}
 	
 	}

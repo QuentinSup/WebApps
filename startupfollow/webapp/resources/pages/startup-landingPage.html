@@ -7,12 +7,22 @@
 				<a class="menu clickable">
 					<img data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/project-avatar.svg' }" class="img-responsive img-circle" alt="startup" />
 					<ul>
-						<li data-bind="click: function() { document.location.href = host + 'follow/' + ref }" class="clickable"><span class="fa fa-flask"></span>&nbsp;Voir la page</li>
-						<li data-bind="click: function() { document.location.href = host + 'project/edit/' + ref }" class="clickable"><span class="fa fa-gear"></span>&nbsp;Gérer</li>
-						<li class="separator"><hr /></li>
 						<!-- ko if: user.data() -->
+						<!-- ko if: $root.isFollowedByUser() -->
+						<li data-bind="click: function() { $root.unfollow(); }" class="clickable"><span class="fa fa-follow"></span>&nbsp;Ne plus suivre</li>
+						<!-- /ko -->
+						<!-- ko ifnot: $root.isFollowedByUser() -->
+						<li data-bind="click: function() { $root.follow(); }" class="clickable"><span class="fa fa-follow"></span>&nbsp;Suivre le projet</li>
+						<!-- /ko -->
+						<!-- /ko -->
+						<!-- ko ifnot: user.data() -->
+						<li data-bind="click: function() { document.location.href = host + 'login' }" class="clickable"><span class="fa fa-flask"></span>&nbsp;Suivre le projet</li>
+						<!-- /ko -->
+						<li data-bind="click: function() { document.location.href = host + 'project/edit/' + ref }" class="clickable"><span class="fa fa-gear"></span>&nbsp;Gérer</li>
+						<!-- ko if: user.data() -->
+						<li class="separator"><hr /></li>
 						<!-- ko foreach: user.data().projects -->
-							<li data-bind="visible: $data.ref != $root.data().ref, click: function() { document.location.href = host + 'follow/' + ref }" class="clickable"><img class="img-circle" data-bind="attr: { 'src': image || host + 'assets/img/avatars/project-avatar.svg' }" />&nbsp;<span data-bind="text: name"></span></li>	
+						<li data-bind="visible: $data.ref != $root.data().ref, click: function() { document.location.href = host + 'follow/' + ref }" class="clickable"><img class="img-circle" data-bind="attr: { 'src': $data.image || host + 'assets/img/avatars/project-avatar.svg' }" />&nbsp;<span data-bind="text: $data.name"></span></li>	
 						<!-- /ko -->
 						<!-- /ko -->
 					</ul>
@@ -42,6 +52,9 @@
 					<!-- ko ifnot: $data.isFollowedByUser() -->
 					<button data-bind="click: function() { $data.follow(); }" class="btn white">suivre</button>
 					<!-- /ko -->
+				<!-- /ko -->
+				<!-- ko ifnot: !!user.data() -->
+					<button data-bind="click: function() { document.location.href = host + 'login' }" class="btn white">suivre</button>	
 				<!-- /ko -->
 				<!-- /ko -->
 				</div>
@@ -168,7 +181,14 @@
 
 <section id="story" class="section">
 	<div class="container">
-		<!-- ko if: data() -->
+		<h5>Dernières nouvelles !</h5>
+		<!-- ko if: user.data() && user.canManageStartup(data().uid) -->
+		<a class="clickable" data-bind="click: function() { document.location.href = host + 'project/edit/' + ref }">
+			<span class="fa fa-gear"></span>&nbsp;Gérer la page
+		</a>
+		<hr />
+		<!-- /ko -->
+
 		<!-- ko if: !!user.data() -->
 			<!-- ko if: $data.isFollowedByUser() -->
 			<button data-bind="click: function() { $data.unfollow(); }" class="btn white">ne plus suivre</button>
@@ -177,14 +197,10 @@
 			<button data-bind="click: function() { $data.follow(); }" class="btn white">suivre</button>
 			<!-- /ko -->
 		<!-- /ko -->
+		<!-- ko ifnot: !!user.data() -->
+			<button data-bind="click: function() { document.location.href = host + 'login' }" class="btn white">suivre</button>
 		<!-- /ko -->
-		<h5>Dernières nouvelles !</h5>
-		<!-- ko if: user.data() && user.canManageStartup(data().uid) -->	
-		<a class="clickable" data-bind="click: function() { document.location.href = host + 'project/edit/' + ref }">
-			<span class="fa fa-gear"></span>&nbsp;Gérer la page
-		</a>
-		<hr />
-		<!-- /ko -->
+
 		<!-- ko ifnot: isLoadingStories() -->
 		<!-- ko if: stories().length == 0 -->
 		<div class="h7">Le projet n'a pas encore donné de nouvelle :( !<br />Suivez le projet pour être informés dès que le projet évolue !</div>

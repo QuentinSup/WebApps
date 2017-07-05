@@ -109,14 +109,16 @@
 		
 		$(window).on("resize", heroInit);
 		$(document).on("ready", heroInit);
-		$(document).on("unsyncready", heroInit);
+		$(document).on("unsyncready", function() {
+			heroInit();
+		});
 
 		$(document).on("ready", function() {
 			setTimeout(function() {
 				$('*[title]').tooltipster();
 			}, 1000);
 		});
-		
+				
 		$('.navigation-bar').onePageNav({
 			currentClass : 'active',
 			changeHash : true,
