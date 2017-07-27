@@ -232,6 +232,7 @@ class user extends dwBasicController {
 			// Look for member teams
 			$docMemberTeam = self::$memberEntity->factory ();
 			$docMemberTeam -> user_uid = $user -> uid;
+			$docMemberTeam -> joined = 1;
 			$memberOf = array();
 			$teams = array();
 			if($docMemberTeam -> find()) {

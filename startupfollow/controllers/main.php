@@ -192,7 +192,7 @@ class main extends dwBasicController {
 		$ref = $request -> Path('ref');
 		$uid = $request -> Path('uid');
 		
-		if(!self::$session -> has('user') || $uid != self::$session -> user -> uid) {
+		if(!self::$session -> has('user')) {
 			self::$session -> origin = $request -> getOrigin();
 			return self::login($request, $response, $model);
 		}
