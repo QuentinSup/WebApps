@@ -73,11 +73,11 @@
 
 	<footer id="footer">
 		<div class="container">
-			<div class="col-sm-3 col-xs-6">{if $userName} Bienvenue <strong>{$userName}</strong> {/if}</div>
+			<div class="col-sm-3 col-xs-6">{if isset($userName)} Bienvenue <strong>{$userName}</strong> {/if}</div>
 			<div class="col-sm-3 col-xs-6">
 				<ul>
 					<li><a href="{$host}">Accueil</a>
-					{if $userName}
+					{if isset($userName)}
 					<li><a href="#" data-bind="click: function() { user.logout(); }">Déconnexion</a></li>
 					{/if}
 				</ul>
@@ -103,7 +103,7 @@
 
 	<script type="text/javascript" src="{$host}assets/js/scripts.js"></script>
 	<script type="text/javascript">
-		{if $userName}
+		{if isset($userName)}
 		user.load();
 		{/if}
 	</script>
