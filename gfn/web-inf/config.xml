@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<application>
+<about>
+	<name>GFN</name>
+	<author>Quentin Supernant</author>
+	<version>1.0</version>
+	<description></description>
+</about>
+<properties>
+	<property name="gfn:api:login">QuentinSup</property>
+	<property name="gfn:api:password">1Br4srleE2V00lImMCkp0ug9e2j6141s7uqJtpomanHpkfu3i07H</property>
+	<property name="gfn:api:uri">http://data.footprintnetwork.org/api</property>
+</properties>
+<config>
+	<application run="0" lang="fr" />
+	<connectors />
+</config>
+<plugins />
+</application>

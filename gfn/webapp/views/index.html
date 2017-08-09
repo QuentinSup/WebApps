@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<title>The Overshoot Day</title>
+<meta charset="utf-8" />
+<link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900|Open+Sans:400,700,900|Lato:400,700,900" />
+<link type="text/css" rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
+<style>
+
+	body {
+		font-size: : 16px;
+		font-family: 'Montserrat', sans-serif;
+	}
+	
+	#regions_div {
+		position	: fixed;
+		top			: 0px;
+		bottom		: 0px;
+		left		: 0px;
+		right		: 0px;
+	}
+	
+	#globalOvershootDay {
+	    position: absolute;
+	    color: #fff;
+	    z-index: 9999;
+	    top: 5%;
+	    left: 50%;
+	    width: 80%;
+	    margin-left: -40%;
+	    font-size: 3em;
+	    text-align: center;
+	    display: none;
+	    transition: bottom 2s, opacity 5s;
+	    text-shadow: 2px 2px 10px #101010;
+	}
+	
+	#regions_detail {
+	    opacity: 0;
+	    position: absolute;
+	    border: 1px solid #101010;
+	    color: #fff;
+	    z-index: 9999;
+	    bottom: 0;
+	    left: 0;
+	    right: 0;
+	    height: 0;
+	    font-size: 1.5em;
+	    transition: height 2s, opacity 2s;
+	    overflow: hidden;
+	}
+	
+	#regions_detail::after {
+		display: block;
+		content: '';
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		background: #111;
+		opacity: .8;
+		z-index: -1;
+	}
+	
+	#regions_detail .dialog {
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		right: 0px;
+	}
+	
+	.dialog-head {
+		padding: 1em;
+		font-size: 1.1em;
+	}
+	
+	.dialog-body {
+		padding: 1em;
+	}
+	
+	.earth-prog {
+		background-image: url('assets/images/earth-2.png');
+		background-repeat: repeat-x;
+		background-size: 30px 30px;
+		height: 30px;
+	}
+	
+</style>
+
+</head>
+<body>
+
+	<div id="regions_div"></div>
+	
+	<div id="view">
+		<!-- ko if: globalOvershootDay() -->
+			<div id="globalOvershootDay">
+				<span>Mondial Overshoot Day : </span><span data-bind="text: globalOvershootDayString"></span>
+			</div>
+		<!-- /ko -->
+		<!-- ko if: region -->
+		<div id="regions_detail" data-bind="with: region">
+			<div class="dialog">
+			<div class="dialog-head">
+				<div class="dialog-head-title">
+					<span data-bind="text: countryName"></span>
+				</div>
+			</div>
+			<div class="dialog-body">
+				<div class="dialog-body-content">
+					<!-- ko if: isDataLoaded() -->
+					<!-- ko with: data() -->
+					<div class="row">
+						<div class="col-sm-4">Overshoot day</div>
+						<div class="col-sm-8">
+							<span data-bind="text: overshootDayString"></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4">Number of earths</div>
+						<div class="col-sm-8">
+							<div class="earth-prog" data-bind="attr: { 'style': 'width:' + (numberOfEarths * 30) + 'px' }"></div>
+							<span data-bind="text: numberOfEarths"></span>
+						</div>
+					</div>
+					<!-- /ko -->
+					<!-- /ko -->
+				</div>
+			</div>
+			</div>
+		</div>
+		<!-- /ko -->
+	</div>
+	
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script>
+
+		(function($) {
+	
+			var regionsData = {};
+			var model = {
+				region: ko.observable(),
+				globalOvershootDay: ko.observable(),
+				globalOvershootDayString: ko.observable()
+			};
+			
+			model.globalOvershootDay.subscribe(function(d) {
+				model.globalOvershootDayString(buildOvershootDayString(d));
+				$('#globalOvershootDay').show('slow');
+			});
+			
+			model.region.subscribe(function(d) {
+
+			});
+			
+			$(document).on('click', '#regions_detail', function() {
+				hideDetails();
+			});
+
+			function loadEarths() {
+				$.get('http://localhost:8080/gfn/api/data/earths/2013').done(function(jsonArray) {
+					var data = [['Pays', 'Number of earths']];
+					var nbEarthsTot = 0;
+					var nbEarthsCount = 0;
+					$.each(jsonArray, function(k, v) {
+						var countryName = v.countryName;
+						var nbEarths 	= v.value;
+						var year		= v.year;
+						var iso			= v.isoa2;
+						data.push([{ v: iso, f: countryName }, Math.round(nbEarths * 10) / 10]);
+						
+						regionsData[iso] = {
+							countryName: countryName,
+							numberOfEarths: nbEarths,
+							iso: iso,
+							countryCode: v.countryCode,
+							data: ko.observable(),
+							isDataLoaded: ko.observable(false)
+						};
+						
+						nbEarthsTot += nbEarths;
+						nbEarthsCount++;
+						
+					});
+					
+					var d = calculateOvershootDay(nbEarthsTot / nbEarthsCount);
+					model.globalOvershootDay(d);
+
+					drawRegionsMap(data);
+				});
+				
+			}
+			
+			function hideDetails() {
+				$('#regions_detail')
+				.css('transition', 'opacity 1s, height 1s')
+				.css('opacity', '0')
+				.css('height', '0');	
+			}
+			
+			function showDetails(regionData) {
+				var timeout = 0;
+				if($('#regions_detail').is(':visible')) {
+					hideDetails();
+					timeout = 1000;
+				}
+				setTimeout(function() {
+					model.region(regionData);
+					setTimeout(function() { 
+						$('#regions_detail')
+						.css('transition', 'opacity 2s, height 2s')
+						.css('opacity', '1')
+						.css('height', '80%');
+					}, 100);
+				}, timeout)
+			}
+			
+			function loadRegionData(iso) {
+				
+				var regionData = regionsData[iso];
+
+				if(regionData.isDataLoaded()) {
+					showDetails(regionData);
+				} else {
+					
+					hideDetails();
+				
+					$.get('http://localhost:8080/gfn/api/data/country/' + regionData.countryCode + '/2013').done(function(jsonArray) {
+						var data = [[ 'Country', 'Number of earths']];
+						var EFi = 0;
+						var EFe = 0;
+						var EFc = 0;
+						var year = 0;
+						var BiocapPerCap = 0;
+						var EFProdPerCap = 0;
+						var EFConsPerCap = 0;
+						var nbEarths = 0;
+						var countryName = '';
+						var iso = '';
+						$.each(jsonArray, function(k, v) {
+	
+							if(v.record == 'Earths') {
+								countryName = v.countryName;
+								nbEarths 	= v.value;
+								year		= v.year;
+								iso			= v.isoa2;
+								data.push([{ v: iso, f: countryName }, nbEarths]);
+							}
+							if(v.record == 'BiocapPerCap') {
+								BiocapPerCap = v.value;	
+							}
+							if(v.record == 'EFExportsPerCap') {
+								EFe = v.value;
+							}
+							if(v.record == 'EFImportsPerCap') {
+								EFi = v.value;
+							}
+							if(v.record == 'EFProdPerCap') {
+								EFProdPerCap = v.value;
+							}
+							if(v.record == 'EFConsPerCap') {
+								EFConsPerCap = v.value;
+							}
+							
+						});
+						EFc = EFProdPerCap + EFi - EFe;
+						console.info("[", countryName, "]");
+						console.log("EFc = " + EFc);
+						console.log("BiocapPerCap = " + BiocapPerCap);
+						console.log("EFExportsPerCap = " + EFe);
+						console.log("EFImportsPerCap = " + EFi);
+						console.log("EFProdPerCap = " + EFProdPerCap);
+						console.log("EFConsPerCap = " + EFConsPerCap);
+						console.log("BiocapPerCap - EFConsPerCap = " + (BiocapPerCap - EFConsPerCap));
+						console.log("nbEarths = " + nbEarths);
+						console.log("nbEarths = " + EFConsPerCap / 1.71);
+						console.log("nbEarths relative to Biocap = " + ((BiocapPerCap - EFConsPerCap) / 1.71));
+						
+						var d = calculateOvershootDay(nbEarths);
+						
+						var overshootDate = d;
+						var overshootDayString = buildOvershootDayString(overshootDate);
+						
+						var data = {
+							countryName		: countryName,
+							BiocapPerCap	: BiocapPerCap,
+							EFExportsPerCap	: EFe,
+							EFImportsPerCap	: EFi,
+							EFProdPerCap	: EFProdPerCap,
+							EFConsPerCap	: EFConsPerCap,
+							numberOfEarths	: Math.round(nbEarths * 10) / 10,
+							overshootDay	: overshootDate,
+							overshootDayString	: overshootDayString
+						};
+						
+						regionData.data(data);
+						regionData.isDataLoaded(true);
+						
+						showDetails(regionData);
+	
+					});
+				}
+			}
+			
+			google.charts.load('current', {
+				'packages' : [ 'geochart' ],
+				// Note: you will need to get a mapsApiKey for your project.
+				// See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
+				'mapsApiKey' : 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+			});
+			google.charts.setOnLoadCallback(loadEarths);
+
+			function selectHandler(r) {
+				loadRegionData(r.region);
+			}
+			
+			function calculateOvershootDay(numberOfEarths, year) {
+				if(numberOfEarths > 1) {
+					var d = new Date(year || new Date().getFullYear(), 1, 1);
+					d.setDate(360 / numberOfEarths);
+					return d;
+				}
+				return null;
+			}
+			
+			function buildOvershootDayString(d) {
+				return d == null?"-":d.toLocaleDateString();
+			}
+			
+			function drawRegionsMap(data) {
+				var map = google.visualization.arrayToDataTable(data);
+				var options = {
+					backgroundColor: { fill: '#b0c5d2' },
+					magnifyingGlass: { enable: true, zoomFactor: 7.5 },
+					markerOpacity: .5,
+					legend: 'none',
+					sizeAxis: { minValue: 0,  maxSize: 20 },
+					colorAxis: { colors: ['green', '#72cc18', '#f4aa42', '#f47441', '#cc3318', '#bf2a28', 'red'], values: [ 0, 1, 1.5, 2, 4, 6, 7 ] }
+				};
+				var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+				
+				chart.draw(map, options);
+				
+				google.visualization.events.addListener(chart, 'regionClick', selectHandler);
+				
+				ko.applyBindings(model, $('#view')[0]);
+				
+			}
+			
+		})(jQuery);
+	</script>
+</body>
+</html>
