@@ -12,9 +12,9 @@
 		<connector name="db" type="dbi" dsn="mysqli://root:@localhost:/myapi" autoconnect="1" />
 		<connector name="mail" type="mail" from="no-reply@template.fr" />
 	</connectors>	
-	<listeners>
-		<listener name="accessControl" />
-	</listeners>
+	<interceptors>
+		<interceptor name="accessControl" />
+	</interceptors>
 	<security>
 		<adapters>
 			<adapter name="Basic" class="dw\adapters\security\dwBasicAuthorization">
