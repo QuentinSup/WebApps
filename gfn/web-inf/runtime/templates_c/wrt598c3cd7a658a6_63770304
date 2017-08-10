@@ -1,4 +1,25 @@
-<!DOCTYPE html>
+<?php /* Smarty version Smarty-3.1.18, created on 2017-08-10 13:00:39
+         compiled from "views\index.html" */ ?>
+<?php /*%%SmartyHeaderCode:23764598ab91b67e041-88279181%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+$_valid = $_smarty_tpl->decodeProperties(array (
+  'file_dependency' => 
+  array (
+    '9fe7885bb06e4f73d1b877fe5057670fe3e90c74' => 
+    array (
+      0 => 'views\\index.html',
+      1 => 1502362832,
+      2 => 'file',
+    ),
+  ),
+  'nocache_hash' => '23764598ab91b67e041-88279181',
+  'function' => 
+  array (
+  ),
+  'version' => 'Smarty-3.1.18',
+  'unifunc' => 'content_598ab91b6b89c5_55221252',
+  'has_nocache_code' => false,
+),false); /*/%%SmartyHeaderCode%%*/?>
+<?php if ($_valid && !is_callable('content_598ab91b6b89c5_55221252')) {function content_598ab91b6b89c5_55221252($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
@@ -7,89 +28,8 @@
 <meta charset="utf-8" />
 <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900|Open+Sans:400,700,900|Lato:400,700,900" />
 <link type="text/css" rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
-<style>
-
-	body {
-		font-size: : 16px;
-		font-family: 'Montserrat', sans-serif;
-	}
-	
-	#regions_div {
-		position	: fixed;
-		top			: 0px;
-		bottom		: 0px;
-		left		: 0px;
-		right		: 0px;
-	}
-	
-	#globalOvershootDay {
-	    position: absolute;
-	    color: #fff;
-	    z-index: 9999;
-	    top: 5%;
-	    left: 50%;
-	    width: 80%;
-	    margin-left: -40%;
-	    font-size: 3em;
-	    text-align: center;
-	    display: none;
-	    transition: bottom 2s, opacity 5s;
-	    text-shadow: 2px 2px 10px #101010;
-	}
-	
-	#regions_detail {
-	    opacity: 0;
-	    position: absolute;
-	    border: 1px solid #101010;
-	    color: #fff;
-	    z-index: 9999;
-	    bottom: 0;
-	    left: 0;
-	    right: 0;
-	    height: 0;
-	    font-size: 1.5em;
-	    transition: height 2s, opacity 2s;
-	    overflow: hidden;
-	}
-	
-	#regions_detail::after {
-		display: block;
-		content: '';
-		position: absolute;
-		left: 0px;
-		top: 0px;
-		right: 0px;
-		bottom: 0px;
-		background: #111;
-		opacity: .8;
-		z-index: -1;
-	}
-	
-	#regions_detail .dialog {
-		position: absolute;
-		left: 0px;
-		top: 0px;
-		right: 0px;
-	}
-	
-	.dialog-head {
-		padding: 1em;
-		font-size: 1.1em;
-	}
-	
-	.dialog-body {
-		padding: 1em;
-	}
-	
-	.earth-prog {
-		background-image: url('assets/images/earth-2.png');
-		background-repeat: repeat-x;
-		background-size: 30px 30px;
-		height: 30px;
-	}
-	
-</style>
-
+<link type="text/css" rel="stylesheet" href="assets/css/animate.css" />
+<link type="text/css" rel="stylesheet" href="assets/css/main.css" />
 </head>
 <body>
 
@@ -111,23 +51,69 @@
 			</div>
 			<div class="dialog-body">
 				<div class="dialog-body-content">
-					<!-- ko if: isDataLoaded() -->
-					<!-- ko with: data() -->
-					<div class="row">
-						<div class="col-sm-4">Overshoot day</div>
-						<div class="col-sm-8">
-							<span data-bind="text: overshootDayString"></span>
+					<div class="col-sm-7">
+						<!-- ko if: isDataLoaded() -->
+						<!-- ko with: data() -->
+						<div class="line animated counter" data-animation="fadeInDown" data-delay="1000">
+						<div class="row">
+							<div class="col-sm-5">
+								<span data-bind="text: overshootDayString"></span>
+							</div>
+							<div class="col-sm-7">
+								Overshoot day
+								<p>
+								The day when all the resources of the earth can produce are consumed if every countries consume like this country. 
+								</p>	
+							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-4">Number of earths</div>
-						<div class="col-sm-8">
-							<div class="earth-prog" data-bind="attr: { 'style': 'width:' + (numberOfEarths * 30) + 'px' }"></div>
-							<span data-bind="text: numberOfEarths"></span>
 						</div>
+						<div class="line animated counter" data-animation="fadeInDown" data-delay="1400">
+						<div class="row">
+							<div class="col-sm-5">
+								<div class="earth-prog" data-bind="attr: { 'style': 'width:' + (numberOfEarths * 30) + 'px' }"></div>
+								<span class="small value" data-from="0" data-to="" data-bind="attr: { 'data-to': numberOfEarths }"></span>
+							</div>
+							<div class="col-sm-7">
+								Number of earths
+								<p>
+								The number of earths that humanity would needed if every countries consume like this country.
+								</p>	
+							</div>
+						</div>
+						</div>
+						<div class="line animated counter" data-animation="fadeInDown" data-delay="1800">
+						<div class="row">
+							<div class="col-sm-5">
+								<span class="value" data-from="0" data-to="" data-bind="attr: { 'data-to': EFConsPerCap }"></span> gha / h
+							</div>
+							<div class="col-sm-7">
+								Ecological Footprint (of consumption)
+								<p>
+								A measure of how much area of biologically productive land and water an individual, population, or activity requires to produce all the resources it consumes and to absorb the waste it generates, using prevailing technology and resource management practices.
+								</p>	
+							</div>
+						</div>
+						</div>
+						<div class="line animated counter" data-animation="fadeInDown" data-delay="2100">
+						<div class="row">
+							<div class="col-sm-5">
+								<span class="value" data-from="0" data-to="" data-bind="attr: { 'data-to': BiocapPerCap }"></span> gha / h
+							</div>
+							<div class="col-sm-7">
+								Biocapacity
+								<p>
+								The biocapacity of a surface represents its ability to renew what people demand.
+								Biocapacity can change from year to year due to climate, management, and proportion considered useful inputs to the human economy. 
+								</p>
+							</div>
+						</div>
+						</div>
+						<!-- /ko -->
+						<!-- /ko -->
 					</div>
-					<!-- /ko -->
-					<!-- /ko -->
+					<div class="col-sm-5">
+						<div id="regions_detail_records"></div>
+					</div>
 				</div>
 			</div>
 			</div>
@@ -138,6 +124,9 @@
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="assets/js/jquery/jquery.appear.js"></script>
+	<script type="text/javascript" src="assets/js/jquery/jquery.countTo.js"></script>
+	<script type="text/javascript" src="assets/js/main.js"></script>
 	<script>
 
 		(function($) {
@@ -180,7 +169,9 @@
 							iso: iso,
 							countryCode: v.countryCode,
 							data: ko.observable(),
-							isDataLoaded: ko.observable(false)
+							records: ko.observable(),
+							isDataLoaded: ko.observable(false),
+							isRecordsLoaded: ko.observable(false)
 						};
 						
 						nbEarthsTot += nbEarths;
@@ -211,6 +202,29 @@
 				}
 				setTimeout(function() {
 					model.region(regionData);
+					
+					$('#regions_detail .animated').each(function() {
+						var element = $(this);
+						var animation = element.data('animation');
+						var animationDelay = element.data('delay');
+						element.addClass('hiding').removeClass(animation + " visible");
+						if (animationDelay) {
+							setTimeout(function() {
+								element.addClass(animation + " visible");
+								element.removeClass('hiding');
+								if (element.hasClass('counter')) {
+									element.find('.value').countTo();
+								}
+							}, animationDelay);
+						} else {
+							element.addClass(animation + " visible");
+							element.removeClass('hiding');
+							if (element.hasClass('counter')) {
+								element.find('.value').countTo();
+							}
+						}
+					});
+					
 					setTimeout(function() { 
 						$('#regions_detail')
 						.css('transition', 'opacity 2s, height 2s')
@@ -218,6 +232,51 @@
 						.css('height', '80%');
 					}, 100);
 				}, timeout)
+			}
+			
+			function loadRegionRecords(iso, record) {
+
+				var record = record || 'earth';
+				var regionData = regionsData[iso];
+				
+				if(regionData.isRecordsLoaded()) {
+					drawRecords(regionData.records());	
+				} else {
+				
+					$.get('http://localhost:8080/gfn/api/data/country/' + regionData.countryCode + '/all/' + record).done(function(jsonArray) {
+	
+						var data = [['Year', 'Number of earths']];
+						
+						$.each(jsonArray, function(k, v) {
+							data.push([v.year, v.value]);
+						});
+
+						regionData.records(data);
+						regionData.isRecordsLoaded(true);
+						
+						drawRecords(data);
+	
+					});
+				}
+
+			}
+			
+			function drawRecords(data) {
+				
+				var map = google.visualization.arrayToDataTable(data);
+
+		        var opts = {
+		        	animation: {
+		        		duration: 2000,
+		        		easing: 'inAndOut'
+		        	},
+		          	curveType: 'function',
+		          	legend: 'none'
+		        }
+		        
+			    var chart = new google.visualization.LineChart(document.getElementById('regions_detail_records'));
+
+			    chart.draw(map, opts);
 			}
 			
 			function loadRegionData(iso) {
@@ -231,7 +290,6 @@
 					hideDetails();
 				
 					$.get('http://localhost:8080/gfn/api/data/country/' + regionData.countryCode + '/2013').done(function(jsonArray) {
-						var data = [[ 'Country', 'Number of earths']];
 						var EFi = 0;
 						var EFe = 0;
 						var EFc = 0;
@@ -278,8 +336,8 @@
 						console.log("EFConsPerCap = " + EFConsPerCap);
 						console.log("BiocapPerCap - EFConsPerCap = " + (BiocapPerCap - EFConsPerCap));
 						console.log("nbEarths = " + nbEarths);
-						console.log("nbEarths = " + EFConsPerCap / 1.71);
-						console.log("nbEarths relative to Biocap = " + ((BiocapPerCap - EFConsPerCap) / 1.71));
+						console.log("nbEarths = " + EFConsPerCap / 1.72);
+						console.log("nbEarths relative to Biocap = " + ((BiocapPerCap - EFConsPerCap) / 1.72));
 						
 						var d = calculateOvershootDay(nbEarths);
 						
@@ -288,11 +346,11 @@
 						
 						var data = {
 							countryName		: countryName,
-							BiocapPerCap	: BiocapPerCap,
-							EFExportsPerCap	: EFe,
-							EFImportsPerCap	: EFi,
-							EFProdPerCap	: EFProdPerCap,
-							EFConsPerCap	: EFConsPerCap,
+							BiocapPerCap	: Math.round(BiocapPerCap * 10) / 10,
+							EFExportsPerCap	: Math.round(EFe * 10) / 10,
+							EFImportsPerCap	: Math.round(EFi * 10) / 10,
+							EFProdPerCap	: Math.round(EFProdPerCap * 10) / 10,
+							EFConsPerCap	: Math.round(EFConsPerCap * 10) / 10,
 							numberOfEarths	: Math.round(nbEarths * 10) / 10,
 							overshootDay	: overshootDate,
 							overshootDayString	: overshootDayString
@@ -308,7 +366,7 @@
 			}
 			
 			google.charts.load('current', {
-				'packages' : [ 'geochart' ],
+				'packages' : [ 'geochart', 'corechart' ],
 				// Note: you will need to get a mapsApiKey for your project.
 				// See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
 				'mapsApiKey' : 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
@@ -317,12 +375,13 @@
 
 			function selectHandler(r) {
 				loadRegionData(r.region);
+				loadRegionRecords(r.region);
 			}
 			
 			function calculateOvershootDay(numberOfEarths, year) {
 				if(numberOfEarths > 1) {
 					var d = new Date(year || new Date().getFullYear(), 1, 1);
-					d.setDate(360 / numberOfEarths);
+					d.setDate(365 / numberOfEarths);
 					return d;
 				}
 				return null;
@@ -355,4 +414,4 @@
 		})(jQuery);
 	</script>
 </body>
-</html>
+</html><?php }} ?>
