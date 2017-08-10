@@ -1,4 +1,25 @@
-<!DOCTYPE html>
+<?php /* Smarty version Smarty-3.1.18, created on 2017-08-10 22:43:05
+         compiled from "views\map.html" */ ?>
+<?php /*%%SmartyHeaderCode:21663598ca4520c7195-29447025%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+$_valid = $_smarty_tpl->decodeProperties(array (
+  'file_dependency' => 
+  array (
+    'd7db44eb1a8a006f4cf34e50c5e2a92e008cd93c' => 
+    array (
+      0 => 'views\\map.html',
+      1 => 1502397784,
+      2 => 'file',
+    ),
+  ),
+  'nocache_hash' => '21663598ca4520c7195-29447025',
+  'function' => 
+  array (
+  ),
+  'version' => 'Smarty-3.1.18',
+  'unifunc' => 'content_598ca4520ee296_42760279',
+  'has_nocache_code' => false,
+),false); /*/%%SmartyHeaderCode%%*/?>
+<?php if ($_valid && !is_callable('content_598ca4520ee296_42760279')) {function content_598ca4520ee296_42760279($_smarty_tpl) {?><!DOCTYPE html>
 <html>
 <head>
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
@@ -139,12 +160,12 @@
 	<script type="text/javascript" src="assets/js/map.js"></script>
 
 	<script>
-		{literal}
+		
 		$("#shareit").jsSocials({
             shares: ["twitter", "facebook", "googleplus", "linkedin", "whatsapp"]
         });
-		{/literal}
+		
 	</script>
 
 </body>
-</html>
+</html><?php }} ?>

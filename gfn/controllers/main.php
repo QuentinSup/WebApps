@@ -43,7 +43,7 @@ class main extends dwBasicController
 		$uri		= dw::App() -> getProperty('gfn:api:uri');
 		
 		$url =  "$uri/v1/data/all/$year/earth";
-		$opts = array("proxy" => "http://muz11-wbsswsg.ca-technologies.fr:8080");
+		//$opts = array("proxy" => "http://muz11-wbsswsg.ca-technologies.fr:8080");
 		
 		$http = new dwHttpSocket();
 		$http -> setHeaders(array("Authorization" => "Basic ".base64_encode($login.":".$password)));
@@ -73,7 +73,7 @@ class main extends dwBasicController
 		$uri		= dw::App() -> getProperty('gfn:api:uri');
 	
 		$url =  "$uri/v1/data/$country/$year/$record";
-		$opts = array("proxy" => "http://muz11-wbsswsg.ca-technologies.fr:8080");
+		//$opts = array("proxy" => "http://muz11-wbsswsg.ca-technologies.fr:8080");
 	
 		$http = new dwHttpSocket();
 		$http -> setHeaders(array("Authorization" => "Basic ".base64_encode($login.":".$password)));

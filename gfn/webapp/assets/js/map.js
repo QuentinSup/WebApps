@@ -31,7 +31,7 @@
 	});
 
 	function loadEarths() {
-		$.get('http://localhost:8080/gfn/api/data/earths/2013').done(function(jsonArray) {
+		$.get('api/data/earths/2013').done(function(jsonArray) {
 			var data = [['Pays', 'Number of earths']];
 			var nbEarthsTot = 0;
 			var nbEarthsCount = 0;
@@ -126,7 +126,7 @@
 		
 			loading(true);
 			
-			$.get('http://localhost:8080/gfn/api/data/country/' + regionData.countryCode + '/all/' + record).done(function(jsonArray) {
+			$.get('api/data/country/' + regionData.countryCode + '/all/' + record).done(function(jsonArray) {
 
 				var data = [];
 				
@@ -215,7 +215,7 @@
 			
 			loading(true);
 		
-			$.get('http://localhost:8080/gfn/api/data/country/' + regionData.countryCode + '/2013').done(function(jsonArray) {
+			$.get('api/data/country/' + regionData.countryCode + '/2013').done(function(jsonArray) {
 				var EFi = 0;
 				var EFe = 0;
 				var EFc = 0;

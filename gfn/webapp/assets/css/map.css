@@ -153,3 +153,15 @@ div#globalOvershootDay::after {
 	transition: width 3s;
 	display: inline-block;
 }
+
+
+#shareit {
+	position: absolute;
+	left: 20px;
+	bottom: 20px;
+}
+
+
+.jssocials-share-no-count {
+	display: none;
+}
