@@ -54,7 +54,7 @@
 				var iso = v.isoa2;
 				
 				if(iso) {
-				
+					
 					regionsData[iso] = {
 						countryName : countryName,
 						numberOfEarths : nbEarths,
@@ -72,9 +72,11 @@
 					});
 				
 				}
-
-				nbEarthsTot += nbEarths;
-				nbEarthsCount++;
+				
+				if(nbEarths > 0) {
+					nbEarthsTot += nbEarths;
+					nbEarthsCount++;
+				}
 
 			});
 

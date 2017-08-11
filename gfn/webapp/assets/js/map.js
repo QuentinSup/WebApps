@@ -46,6 +46,7 @@
 			var data = [ [ 'Pays', 'Number of earths' ] ];
 			var nbEarthsTot = 0;
 			var nbEarthsCount = 0;
+			var biocapacity = 0;
 			$.each(jsonArray, function(k, v) {
 				var countryName = v.countryName;
 				var nbEarths = v.value;
@@ -74,10 +75,12 @@
 						key: iso,
 						value: countryName
 					});
-					
+										
+				}
+
+				if(nbEarths > 0) {
 					nbEarthsTot += nbEarths;
 					nbEarthsCount++;
-					
 				}
 
 			});
