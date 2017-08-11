@@ -1,36 +1,9 @@
-.hiding {
-	opacity: 0;
-}
-
-.visible {
-	opacity: 1;
-}
-
-.smaller {
-	font-size: .8em;
-}
-
-.bigger {
-	font-size: 2em;
-}
-
-p {
-	font-size: 0.6em;
-	color: #dedede;
-}
-
-.line {
-	padding: .3em 1em;
-}
-
-.text-center {
-	text-align: center;
-}
+@import 'commons.css';
 
 body {
 	font-size: : 16px;
 	overflow: hidden;
-	background: #607D8B;
+	background: #000;
 	font-family: 'Montserrat', sans-serif;
 }
 
@@ -60,11 +33,115 @@ body {
 	z-index: 99999;
 }
 
+#countries {
+    position: absolute;
+    width: 350px;
+    color: #fff;
+    max-height: 150px;
+    overflow: hidden;
+    padding: .1em;
+    z-index: 99999999;
+}
+
+#countries::after {
+	display: block;
+    content: '';
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: #111;
+    opacity: .8;
+    z-index: -1;
+    border: 1px solid #000;
+}
+
+#countries li {
+	height: 30px;
+	position: relative;
+}
+
+#countries a {
+	color: #fff;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	padding: 0em .5em;
+	line-height: 30px;
+	font-size: .9em;
+}
+
+#countries a:hover {
+	text-decoration: none;
+}
+
+#countries a.selected::after {
+	display: block;
+	content: '';
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	background: orange;
+	opacity: .8;
+	z-index: -1;	
+}
+
+#countries a:hover::after {
+	display: block;
+	content: '';
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	background: #fefefe;
+	opacity: .7;
+	z-index: -1;	
+}
+
+
+input, select {
+	background: transparent;
+	border: 0px;
+	color: #fff;	
+	width: 100%;
+	padding: 0em .5em;
+}
+
+#country-search-area {
+	display: inline-block;
+}
+
+.search-input {
+	position: relative;
+	z-index: 1;
+	border-radius: 10px;
+	padding: .1em;
+}
+
+.search-input::after {
+	display: block;
+	content: '';
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	background: #111;
+	opacity: .1;
+	z-index: -1;
+}
+
 #globalOvershootDay {
 	position: absolute;
 	color: #fff;
 	z-index: 9999;
-	top: 50%;
+	top: -50%;
 	padding: 100px;
 	line-height: 100%;
 	margin-top: -100px;
@@ -95,7 +172,6 @@ div#globalOvershootDay::after {
 #regions_detail {
 	opacity: 0;
 	position: absolute;
-	border: 1px solid #101010;
 	color: #fff;
 	z-index: 9999;
 	bottom: 0;
@@ -106,6 +182,7 @@ div#globalOvershootDay::after {
 	transition: height 2s, opacity 2s;
 	overflow: hidden;
 	overflow-y: auto;
+	max-height: 80%;
 }
 
 #regions_detail .dialog::after {
@@ -117,7 +194,7 @@ div#globalOvershootDay::after {
 	right: 0px;
 	bottom: 0px;
 	background: #111;
-	opacity: .8;
+	opacity: .2;
 	z-index: -1;
 }
 
@@ -129,18 +206,10 @@ div#globalOvershootDay::after {
 	padding-bottom: 1.5em;
 }
 
-select {
-	background: transparent;
-	padding: .2em;
-	font-size: 2em;
-	border: 0px;
-	color: #fff;
-}
 
 .dialog-head {
 	padding: 1em;
 	font-size: 1.1em;
-	border-bottom: 1px solid #966c6c;
 }
 
 .dialog-body {
@@ -155,4 +224,36 @@ select {
 	width: 0px;
 	transition: width 3s;
 	display: inline-block;
+}
+
+.box {
+	margin: .1em;
+	padding: .3em 1em;
+	position: relative;
+}
+
+.box a {
+	/*color: #fff;*/
+}
+
+.box::after {
+	display: block;
+	content: '';
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	background: #111;
+	opacity: .6;
+	z-index: -1;
+	border-radius: 5px;
+}
+
+@media screen and (max-width: 800px) {
+	
+	#regions_detail {
+		max-height: 100%;
+	}
+	
 }

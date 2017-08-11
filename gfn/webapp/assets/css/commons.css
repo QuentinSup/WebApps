@@ -1,0 +1,87 @@
+.hiding {
+	opacity: 0;
+}
+
+.visible {
+	opacity: 1;
+}
+
+.smaller {
+	font-size: .8em;
+}
+
+.bigger {
+	font-size: 2em;
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+p {
+	font-size: 0.6em;
+	color: #dedede;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.text-left {
+	text-align: left;
+}
+
+ul {
+	padding: 0;
+	margin: 0;
+}
+
+ul > li {
+	padding: 0;
+	margin: 0;
+}
+
+
+video {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+  	background-color: #000;
+  	background-position: center center;
+  	background-size: contain;
+}
+
+.ico-heart {
+	background-image: url('../images/heart.png');
+	background-repeat: no-repeat;
+	background-size: 100%;
+	width: 10px;
+	height: 10px;
+	display: inline-block;
+}
+
+@media (min-aspect-ratio: 16/9) {
+  video {
+    width: 100% !important;
+    height: auto !important; /* En pratique : supérieur à la hauteur du viewport */
+  }
+}
+
+@media (max-aspect-ratio: 16/9) {
+  video {
+    width: auto !important; /* En pratique : supérieur à la largeur du viewport */
+    height: 100% !important;
+    /*left: -100%;*/
+  }
+}
+
+#shareit {
+	position: absolute;
+	left: 20px;
+	bottom: 20px;
+}
+
+.jssocials-share-no-count {
+	display: none;
+}

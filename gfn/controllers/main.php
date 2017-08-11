@@ -8,6 +8,7 @@ use dw\classes\dwHttpRequest;
 use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
 use dw\classes\http\dwHttpSocket;
+use dw\classes\dwCache;
 use dw\classes\controllers\dwBasicController;
 
 
@@ -24,9 +25,47 @@ class main extends dwBasicController
 	public static $log;
 	
 	public function __construct() {
+
+	}
+	
+	/**
+	 * 
+	 * @param unknown $uri
+	 * @return unknown|boolean
+	 */
+	public function dataGet($uri) {
 		
+		if(self::$log -> isTraceEnabled()) {
+			self::$log -> trace("Retrieve data from $uri");
+		}
 		
+		$login 		= dw::App() -> getProperty('gfn:api:login');
+		$password 	= dw::App() -> getProperty('gfn:api:password');
+		$host		= dw::App() -> getProperty('gfn:api:uri');
+		$proxy		= dw::App() -> getProperty('http:proxy');
 		
+		$opts = array("proxy" => $proxy);
+		
+		$url = $host.'/'.$uri;
+		
+		$cache = new dwCache($url, 86400); // 1day
+		
+		if($data = $cache -> get()) {
+			return $data;
+		}
+		
+		$http = new dwHttpSocket();
+		$http -> setHeaders(array("Authorization" => "Basic ".base64_encode($login.":".$password)));
+		
+		$response = $http -> Get($url, $opts);
+		
+		if($response !== FALSE && $response -> status_code == 200) {
+			$data = $response -> body;
+			$cache -> put($data);
+			return $data;
+		}
+		
+		return FALSE;
 		
 	}
 	
@@ -37,21 +76,11 @@ class main extends dwBasicController
 	public function apiEarthsData(dwHttpRequest $request, dwHttpResponse $response, dwModel $model) {
 
 		$year 	 = $request -> Path('year', 2013);
-		
-		$login 		= dw::App() -> getProperty('gfn:api:login');
-		$password 	= dw::App() -> getProperty('gfn:api:password');
-		$uri		= dw::App() -> getProperty('gfn:api:uri');
-		
-		$url =  "$uri/v1/data/all/$year/earth";
-		//$opts = array("proxy" => "http://muz11-wbsswsg.ca-technologies.fr:8080");
-		
-		$http = new dwHttpSocket();
-		$http -> setHeaders(array("Authorization" => "Basic ".base64_encode($login.":".$password)));
 
-		$response = $http -> Get($url, $opts);
-		
-		if($response !== FALSE && $response -> status_code == 200) {
-			return "text:".$response -> body;
+		$uri =  "v1/data/all/$year/earth";
+
+		if($data = $this -> dataGet($uri)) {
+			return 'text:'.$data;
 		}
 		
 		return;
@@ -68,31 +97,17 @@ class main extends dwBasicController
 		$year 	 = $request -> Path('year', 2013);
 		$record  = $request -> Path('record', 'all');
 	
-		$login 		= dw::App() -> getProperty('gfn:api:login');
-		$password 	= dw::App() -> getProperty('gfn:api:password');
-		$uri		= dw::App() -> getProperty('gfn:api:uri');
-	
-		$url =  "$uri/v1/data/$country/$year/$record";
-		//$opts = array("proxy" => "http://muz11-wbsswsg.ca-technologies.fr:8080");
-	
-		$http = new dwHttpSocket();
-		$http -> setHeaders(array("Authorization" => "Basic ".base64_encode($login.":".$password)));
-	
-		$response = $http -> Get($url, $opts);
-	
-		if($response !== FALSE && $response -> status_code == 200) {
-			return "text:".$response -> body;
+		$uri =  "v1/data/$country/$year/$record";
+
+		if($data = $this -> dataGet($uri)) {
+			return 'text:'.$data;
 		}
-	
-		return;
 	
 	}
 
 	
 	/**
-	 * 
-	 * @Mapping(value = '/', method = "get")
-	 * @Mapping(value = '/map', method = "get")
+	 * @Mapping(value = '/worldmap', method = "get")
 	 */
 	public function map(dwHttpRequest $request, dwHttpResponse $response, dwModel $model) {
 				
@@ -101,10 +116,13 @@ class main extends dwBasicController
 	
 	/**
 	 *
-	 * @Mapping(value = '/day', method = "get")
+	 * @Mapping(value = '/', method = "get")
+	 * @Mapping(value = '/:lang', method = "get")
 	 */
 	public function day(dwHttpRequest $request, dwHttpResponse $response, dwModel $model) {
 	
+		$model -> lang = $request -> Path('lang');
+		
 		return 'view:views/overshootday.html';
 	}
 

@@ -49,7 +49,7 @@
                                         $self.removeData('countTo');
                                         clearInterval(data.interval);
                                         value = settings.to;
-
+                                        
                                         if (typeof(settings.onComplete) == 'function') {
                                                 settings.onComplete.call(self, value);
                                         }

@@ -4,12 +4,15 @@
 
 	var regionsData = {};
 	var model = {
+		countries : ko.observableArray(),
+		countrySearch: ko.observable(),
 		selectedCountry: ko.observable(),
 		region: ko.observable(),
-		countries : ko.observableArray(),
 		globalOvershootDay : ko.observable(),
 		globalOvershootDayString : ko.observable()
 	};
+	
+	window.model = model;
 
 	model.globalOvershootDay.subscribe(function(d) {
 		model.globalOvershootDayString(buildOvershootDayString(d));
@@ -23,11 +26,12 @@
 	});
 	
 	model.selectedCountry.subscribe(function(country) {
-		loadRegionData(country.key);
+		if(!country) return;
+		loadRegionData(country.toUpperCase());
 	});
 	
 	ko.applyBindings(model, $('#view')[0]);
-
+	
 	loading.subscribe(function(b) {
 		if (b) {
 			$('#loading').show(200);
@@ -49,21 +53,25 @@
 				var year = v.year;
 				var iso = v.isoa2;
 				
-				regionsData[iso] = {
-					countryName : countryName,
-					numberOfEarths : nbEarths,
-					iso : iso,
-					countryCode : v.countryCode,
-					data : ko.observable(),
-					records : ko.observable(),
-					overshootDate: calculateOvershootDay(nbEarths),
-					isDataLoaded : ko.observable(false)
-				};
+				if(iso) {
 				
-				countries.push({
-					key: iso,
-					value: countryName
-				});
+					regionsData[iso] = {
+						countryName : countryName,
+						numberOfEarths : nbEarths,
+						iso : iso,
+						countryCode : v.countryCode,
+						data : ko.observable(),
+						records : ko.observable(),
+						overshootDate: calculateOvershootDay(nbEarths),
+						isDataLoaded : ko.observable(false)
+					};
+					
+					countries.push({
+						key: iso,
+						value: countryName
+					});
+				
+				}
 
 				nbEarthsTot += nbEarths;
 				nbEarthsCount++;
@@ -75,9 +83,16 @@
 
 			model.countries(countries);
 			
+			// Select current country
+			model.selectedCountry(window.forcedLang || extractIso(navigator.language));
+			
 			
 		});
 
+	}
+	
+	function extractIso(lang) {
+		return lang.split('_')[0];
 	}
 
 	function hideDetails() {
@@ -96,6 +111,7 @@
 		setTimeout(function() {
 
 			model.region(regionData);
+			model.countrySearch(regionData.countryName);
 
 			$('#regions_detail .animated').each(function() {
 				var element = $(this);
@@ -123,7 +139,7 @@
 				$('#regions_detail')
 					.css('transition', 'opacity 2s, height 2s')
 					.css('opacity', '1')
-					.css('height', '80%');
+					.css('height', '100%');
 			}, 100);
 		}, timeout)
 	}

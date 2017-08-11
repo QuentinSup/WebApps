@@ -1,37 +1,14 @@
-.hiding {
-	opacity: 0;
-}
-
-.visible {
-	opacity: 1;
-}
-
-.smaller {
-	font-size: .8em;
-}
-
-.bigger {
-	font-size: 2em;
-}
-
-p {
-	font-size: 0.6em;
-	color: #dedede;
-}
-
-.line {
-	padding: .3em 1em;
-}
-
-.text-center {
-	text-align: center;
-}
+@import 'commons.css';
 
 body {
 	font-size: : 16px;
 	overflow: hidden;
 	background: #607D8B;
 	font-family: 'Montserrat', sans-serif;
+}
+
+.line {
+	padding: .3em 1em;
 }
 
 #preloader {
@@ -111,6 +88,7 @@ div#globalOvershootDay::after {
 	transition: height 2s, opacity 2s;
 	overflow: hidden;
 	overflow-y: auto;
+	max-height: 80%;
 }
 
 #regions_detail .dialog::after {
@@ -140,6 +118,12 @@ div#globalOvershootDay::after {
 	border-bottom: 1px solid #966c6c;
 }
 
+.dialog-head-close {
+	position: absolute;
+	right: 1.5em;
+	top: 10px;
+}
+
 .dialog-body {
 	padding: 1em;
 }
@@ -154,14 +138,121 @@ div#globalOvershootDay::after {
 	display: inline-block;
 }
 
+#countries {
+    position: absolute;
+    width: 350px;
+    color: #fff;
+    max-height: 150px;
+    overflow: hidden;
+    padding: .1em;
+    z-index: 99999999;
+}
 
-#shareit {
+#countries::after {
+	display: block;
+    content: '';
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: #111;
+    opacity: .8;
+    z-index: -1;
+    border: 1px solid #000;
+}
+
+#countries li {
+	height: 30px;
+	position: relative;
+}
+
+#countries a {
+	color: #fff;
 	position: absolute;
-	left: 20px;
-	bottom: 20px;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	padding: 0em .5em;
+	line-height: 30px;
+	font-size: .9em;
+}
+
+#countries a:hover {
+	text-decoration: none;
+}
+
+#countries a.selected::after {
+	display: block;
+	content: '';
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	background: orange;
+	opacity: .8;
+	z-index: -1;	
+}
+
+#countries a:hover::after {
+	display: block;
+	content: '';
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	background: #fefefe;
+	opacity: .7;
+	z-index: -1;	
 }
 
 
-.jssocials-share-no-count {
-	display: none;
+input, select {
+	background: transparent;
+	border: 0px;
+	color: #fff;	
+	width: 100%;
+	padding: 0em .5em;
+}
+
+#country-search-area {
+	display: inline-block;
+}
+
+.search-input {
+	position: relative;
+	z-index: 1;
+	border-radius: 10px;
+	padding: .1em;
+}
+
+.search-input::after {
+	display: block;
+	content: '';
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	background: #111;
+	opacity: .1;
+	z-index: -1;
+}
+
+
+@media screen and (max-width: 800px) {
+	
+	#regions_detail {
+		max-height: 100%;
+	}
+	
+}
+
+#footer {
+	position: absolute;
+	right: 1em;
+	bottom: 1em;
 }
