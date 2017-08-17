@@ -94,7 +94,7 @@
 	}
 	
 	function extractIso(lang) {
-		return lang.split('_')[0];
+		return lang.split('_')[0].split('-')[0];
 	}
 
 	function hideDetails() {
