@@ -7,7 +7,7 @@ use dw\accessors\request;
 use dw\classes\dwHttpRequest;
 use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
-use dw\classes\http\dwHttpSocket;
+use dw\classes\http\dwHttpClient;
 use dw\classes\dwCache;
 use dw\classes\controllers\dwBasicController;
 
@@ -54,7 +54,7 @@ class main extends dwBasicController
 			return $data;
 		}
 		
-		$http = new dwHttpSocket();
+		$http = new dwHttpClient();
 		$http -> setHeaders(array("Authorization" => "Basic ".base64_encode($login.":".$password)));
 		
 		$response = $http -> Get($url, $opts);

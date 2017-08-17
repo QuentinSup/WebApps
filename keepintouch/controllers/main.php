@@ -6,7 +6,7 @@ use dw\dwFramework as dw;
 use dw\classes\dwHttpRequest;
 use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
-use dw\classes\http\dwHttpSocket;
+use dw\classes\http\dwHttpClient;
 use dw\enums\HttpStatus;
 use dw\classes\controllers\dwBasicController;
 
@@ -43,7 +43,7 @@ class main extends dwBasicController {
 	{
 		$p_id = $request -> Path('id');
 		
-		$resp = dwHttpSocket::request('GET', "http://localhost:8080/myapi/api/QuentinSup/keepintouch/request/$p_id", null, array("Content-Type" => "application/json; charset=utf8"));
+		$resp = dwHttpClient::request('GET', "http://localhost:8080/myapi/api/QuentinSup/keepintouch/request/$p_id", null, array("Content-Type" => "application/json; charset=utf8"));
 		
 		$json = json_decode($resp -> body);
 

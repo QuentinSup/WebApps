@@ -5,7 +5,7 @@ namespace keepintouch;
 use dw\classes\dwHttpRequest;
 use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
-use dw\classes\http\dwHttpSocket;
+use dw\classes\http\dwHttpClient;
 use dw\enums\HttpStatus;
 use dw\helpers\dwFile;
 use dw\classes\dwObject;
@@ -43,7 +43,7 @@ class request extends dwBasicController {
 		
 		$content = $request -> getRequestBody();
 
-		$resp = dwHttpSocket::request('POST', 'http://localhost:8080/myapi/api/QuentinSup/keepintouch/request', $content, array("Content-Type" => "application/json; charset=utf8"));
+		$resp = dwHttpClient::request('POST', 'http://localhost:8080/myapi/api/QuentinSup/keepintouch/request', $content, array("Content-Type" => "application/json; charset=utf8"));
 		
 		$response -> statusCode = $resp -> status_code;
 
@@ -87,7 +87,7 @@ class request extends dwBasicController {
 		$p_id = $request -> Path('id');
 		$content = $request -> getRequestBody();
 		
-		$resp = dwHttpSocket::request('PUT', "http://localhost:8080/myapi/api/QuentinSup/keepintouch/request/$p_id", $content, array("Content-Type" => "application/json; charset=utf8"));
+		$resp = dwHttpClient::request('PUT', "http://localhost:8080/myapi/api/QuentinSup/keepintouch/request/$p_id", $content, array("Content-Type" => "application/json; charset=utf8"));
 
 		if($resp -> status_code == HttpStatus::OK) {
 			
