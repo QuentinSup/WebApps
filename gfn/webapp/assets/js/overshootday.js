@@ -86,7 +86,9 @@
 
 			model.countries(countries);
 			
-      resolveLocation();
+      setTimeout(function() {
+				resolveLocation();
+			}, 0);
       
 		}).always(function() {
       loading(false);
@@ -110,7 +112,14 @@
     
     if(navigator.geolocation) {
      
+				var options = {
+					enableHighAccuracy: false,
+					timeout: 3000,
+					maximumAge: 0
+				};
+			
         navigator.geolocation.getCurrentPosition(function(pos) {
+					
              $.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + pos.coords.latitude + ',' + pos.coords.longitude + '&sensor=false').done(function(data) {
 							 
                 if(data.status != 'OK') {
@@ -132,13 +141,15 @@
              });
         }, function() {
             defaultLocation(); 
-        });
+        },
+				options);
     } else {
       defaultLocation();
     }
   }
 	
 	function extractIso(lang) {
+
 		var languages = lang.split('_');
 		if(languages.length == 2) {
 			return languages[1];
@@ -200,7 +211,7 @@
 	}
 
 	function loadRegionData(iso) {
-		
+
 		var regionData = regionsData[iso];
 
 		if(!regionData) {
