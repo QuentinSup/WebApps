@@ -201,8 +201,6 @@
 
 	function loadRegionData(iso) {
 		
-		alert(iso);
-
 		var regionData = regionsData[iso];
 
 		if(!regionData) {
