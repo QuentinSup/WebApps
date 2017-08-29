@@ -110,7 +110,7 @@ class main extends dwBasicController
 	 * @Mapping(value = '/worldmap', method = "get")
 	 */
 	public function map(dwHttpRequest $request, dwHttpResponse $response, dwModel $model) {
-				
+		$model -> appver = dw::App() -> getVersion();
 		return 'view:views/map.html';
 	}
 	
@@ -120,7 +120,7 @@ class main extends dwBasicController
 	 * @Mapping(value = '/:lang', method = "get")
 	 */
 	public function day(dwHttpRequest $request, dwHttpResponse $response, dwModel $model) {
-	
+		$model -> appver = dw::App() -> getVersion();
 		$model -> lang = $request -> Path('lang');
 		
 		return 'view:views/overshootday.html';

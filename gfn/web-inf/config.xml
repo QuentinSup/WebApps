@@ -3,14 +3,14 @@
 <about>
 	<name>GFN</name>
 	<author>Quentin Supernant</author>
-	<version>1.0</version>
+	<version>1.1</version>
 	<description></description>
 </about>
 <properties>
 	<property name="gfn:api:login">QuentinSup</property>
 	<property name="gfn:api:password">1Br4srleE2V00lImMCkp0ug9e2j6141s7uqJtpomanHpkfu3i07H</property>
 	<property name="gfn:api:uri">http://data.footprintnetwork.org/api</property>
-	<property name="http:proxy">http://muz11-wbsswsg.ca-technologies.fr:8080</property>
+	<property name="http:proxy"></property>
 </properties>
 <config>
 	<application run="0" lang="fr" />
