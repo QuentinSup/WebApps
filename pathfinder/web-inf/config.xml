@@ -6,10 +6,13 @@
 	<version>1.0</version>
 	<description></description>
 </about>
+<properties>
+	<property name="GMAP_API_KEY">AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY</property>
+</properties>
 <config>
 	<application ns="plebe" run="0" lang="fr" />
 	<connectors>
-		<connector name="db" type="dbi" dsn="mysqli://root:@localhost:/pathfinder" autoconnect="1" />
+		<connector name="db" type="dbi" dsn="mysqli://root:@localhost:/gmap" autoconnect="1" />
 		<connector name="mail" type="mail" from="no-reply@plebe.fr" />
 	</connectors>	
 </config>

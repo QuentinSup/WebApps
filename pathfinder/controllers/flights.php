@@ -6,31 +6,28 @@ use dw\dwFramework as dw;
 use dw\classes\dwHttpRequest;
 use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
-use dw\classes\dwCacheFile;
-use dw\classes\dwObject;
+use dw\classes\dwCache;
 use dw\classes\controllers\dwBasicController;
 
 /**
  * Gestion des vols
  * @Mapping(value = 'flights')
  */
-class flights extends dwBasicController
-{
-	public $cache;
-	
-	public function __construct() {
-		$this -> cache = new dwCacheFile();
-	}
-	
+class flights extends dwBasicController {
+
 	/**
-	 * Retourne un flux RSS des publications
-	 * @Mapping(value = 'airports', method = "get", produces = 'application/json')
+	 * Return list of airports
+	 * @Mapping(value = 'airports', method = "get", produces = 'application/json; charset=utf8')
 	 */
 	public function airports(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
 		
 		$cacheId = "flights/airports";
-		$json =  $this -> cache -> getCache($cacheId);
-		if(!$json) {
+		
+		$cache = new dwCache($cacheId, 86400); // 1day
+		
+		$items = $cache -> get();
+	
+		if(!$items) {
 		
 			$db = dw::App() -> getConnector('db');
 			$items = array();
@@ -52,13 +49,10 @@ class flights extends dwBasicController
 				} while($doc -> fetch());
 			}
 			
-			$json = json_encode($items, JSON_UNESCAPED_UNICODE);
-			$this -> cache -> setCache($cacheId, $json);
+			$cache-> put($items);
 		}
-		
-		$response -> statusCode = 200;
-		
-		return $json;
+
+		return $items;
 		
 	}
 	
@@ -91,21 +85,19 @@ class flights extends dwBasicController
 	
 	/**
 	 * Retourne les aéroports qui desservent l'aéroport
-	 * @Mapping(value = 'routes/to/:apid', method = "get", produces = 'application/json')
+	 * @Mapping(value = 'routes/to/:apid', method = "get", produces = 'application/json; charset=utf8')
 	 */
 	public function routesTo(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
-		$response -> statusCode = 200;
-		return json_encode($this -> getRoutesTo($request -> Path('apid')), JSON_UNESCAPED_UNICODE);
+		return $this -> getRoutesTo($request -> Path('apid'));
 		
 	}
 	
 	/**
 	 * Retourne les destinations d'un aéroport
-	 * @Mapping(value = 'routes/from/:apid', method = "get", produces = 'application/json')
+	 * @Mapping(value = 'routes/from/:apid', method = "get", produces = 'application/json; charset=utf8')
 	 */
 	public function routesFrom(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
-		$response -> statusCode = 200;
-		return json_encode($this -> getRoutesFrom($request -> Path('apid')), JSON_UNESCAPED_UNICODE);
+		return $this -> getRoutesFrom($request -> Path('apid'));
 	}
 	
 	/**

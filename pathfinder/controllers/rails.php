@@ -6,8 +6,7 @@ use dw\dwFramework as dw;
 use dw\classes\dwHttpRequest;
 use dw\classes\dwHttpResponse;
 use dw\classes\dwModel;
-use dw\classes\dwObject;
-use dw\classes\dwCacheFile;
+use dw\classes\dwCache;
 use dw\classes\controllers\dwBasicController;
 
 /**
@@ -17,27 +16,26 @@ use dw\classes\controllers\dwBasicController;
 class rails extends dwBasicController
 {
 	
-	public $cache;
-	
-	public function __construct() {
-		$this -> cache = new dwCacheFile();
-	}
-	
 	/**
 	 * Retourne un flux RSS des publications
-	 * @Mapping(value = 'stops', method = "get", produces = 'application/json')
+	 * @Mapping(value = 'stops', method = "get", produces = 'application/json; charset=utf8')
 	 */
 	public function stops(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
 		$cacheId = "rails/stops";
-		$json =  $this -> cache -> getCache($cacheId);
-		if(!$json) {
+		
+		$cache = new dwCache($cacheId, 86400); // 1day
+		
+		$items = $cache -> get();
+
+		if(!$items) {
 		
 			$db = dw::App() -> getConnector('db');
 			$items = array();
 			$doc = $db -> query("SELECT * FROM rails_stops WHERE parent_station <> ''");
-
+			
 			if($doc && $doc -> fetch()) {
 				do {
+					
 					$data = [
 						"id" 	=> $doc -> stop_id,
 						"code"	=> $doc -> stop_id,
@@ -50,13 +48,10 @@ class rails extends dwBasicController
 				} while($doc -> fetch());
 			}
 			
-			$json = json_encode($items,JSON_UNESCAPED_UNICODE);
-			
-			$this -> cache -> setCache($cacheId, $json);
+			$cache-> put($items);
 		}
-		$response -> statusCode = 200;
 
-		return $json;
+		return $items;
 		
 	}
 
@@ -92,14 +87,14 @@ class rails extends dwBasicController
 	 * @Mapping(value = 'routes/to/:id', method = "get", produces = 'application/json')
 	 */
 	public function routesTo(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
-		$response -> statusCode = 200;
 		$cacheId = 'rails/routes/to/'.$request -> Path('id');
-		$json = $this -> cache -> getCache($cacheId);
-		if(!$json) {
-			$json = json_encode($this -> getRoutesTo($request -> Path('id')), JSON_UNESCAPED_UNICODE);
-			$this -> cache -> setCache($cacheId, $json);
+		$cache = new dwCache($cacheId, 86400); // 1day
+		$items= $cache-> get();
+		if(!$items) {
+			$items = $this -> getRoutesTo($request -> Path('id'));
+			$cache-> put($items);
 		}
-		return $json;
+		return $items;
 		
 	}
 	
@@ -110,10 +105,11 @@ class rails extends dwBasicController
 	public function routesFrom(dwHttpRequest &$request, dwHttpResponse &$response, dwModel &$model) {
 		$response -> statusCode = 200;
 		$cacheId = 'rails/routes/from/'.$request -> Path('id');
-		$json = null; //$this -> cache -> getCache($cacheId);
-		if(!$json) {
-			$json = json_encode($this -> getRoutesFrom($request -> Path('id')), JSON_UNESCAPED_UNICODE);
-			$this -> cache -> setCache($cacheId, $json);
+		$cache = new dwCache($cacheId, 86400); // 1day
+		$items= $cache-> get();
+		if(!$items) {
+			$items= $this -> getRoutesFrom($request -> Path('id'));
+			$cache-> put($items);
 		}
 		return $json;
 	}
