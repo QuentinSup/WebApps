@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<application>
+<about>
+	<name>Clevertech</name>
+	<author>QuentinSup</author>
+	<version>1.0</version>
+	<description></description>
+</about>
+<config>
+	<application run="0" lang="fr" ns="clevertech" />
+	<connectors>
+		<!--
+		connector name="db" type="dbi" dsn="mysqli://root:@localhost:/clevertech" autoconnect="1" /> 
+		<connector name="mail" type="smtp" from="no-reply@clevertech-it.fr" />
+		-->
+	</connectors>
+	<properties>
+	</properties>
+</config>
+<plugins />
+</application>
