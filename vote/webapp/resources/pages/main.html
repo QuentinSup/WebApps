@@ -1,0 +1,17 @@
+<div id="vote-area">
+	
+	<div id="vote-question" data-bind="text: questionLabel"></div>
+	
+	<div id="vote-choix" data-bind="foreach: questionAnswers, css: { 'unclickable': !canVote() }">
+		<div class="btn-choix-vote">
+			<input type="radio" data-bind="checked: $parent.questionValue, attr: { 'value': value, 'name': 'vote-' + $parent.questionId(), 'id': 'answer-' + id }" />
+			<label data-bind="attr: { 'for': 'answer-' + id }, text: label"></label>
+		</div>
+	</div>
+
+	<label data-bind="text: questionValue()"></label>
+
+	<div class="circle">
+	  <strong></strong>
+	</div>
+</div>

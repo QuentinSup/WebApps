@@ -1,0 +1,127 @@
+html, body {
+	font-size: 16px;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.unclickable {
+	pointer-events: none;
+}
+
+#vote-area {
+	position: absolute;
+	max-width: 800px;
+	left: 50%;
+	margin-left: -200px;
+	padding: 2em;
+	border: 0px solid #dedede;
+	font-family: 'Montserrat', sans-serif;
+	font-size: .9em;
+}
+
+#vote-question {
+	padding: 1em .2em;
+}
+
+.btn-choix-vote {
+    border: 2px solid #efefef;
+    border-radius: 20px;
+    padding: 1em 2.5em;
+    margin: .2em 0em;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-choix-vote input {
+	position: relative;
+	z-index: 99;
+	left: -25px;
+}
+
+.btn-choix-vote input:after,
+.btn-choix-vote input:before {
+	transition: border .5s, border-color 1s, background .5s, background-color .5s;
+}
+
+.btn-choix-vote input:before {
+	position: absolute;
+    content: '';
+    display: block;
+    border-radius: 50px;
+    right: 0;
+    z-index: 91;
+    width: 8px;
+    height: 8px;
+    left: 50%;
+    margin-left: -3px;
+    top: 50%;
+    margin-top: -3px;
+	background-color: #fff;
+}
+
+.btn-choix-vote input:after {
+	position: absolute;
+    content: '';
+    display: block;
+    border-radius: 50px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    right: 0;
+    z-index: 90;
+    width: 16px;
+    height: 16px;
+    left: 50%;
+    margin-left: -8px;
+    top: 50%;
+    margin-top: -8px;
+}
+
+.btn-choix-vote input:checked:after {
+	border-color: #0681c4;
+}
+
+.btn-choix-vote input:checked:before {
+    background-color: #0681c4;
+}
+
+.btn-choix-vote label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #fff;
+    cursor: pointer;
+    padding: 1em 2.5em;
+    padding-left: 3em;
+}
+
+#vote-question {
+	font-weight: bold;
+}
+
+.circle {
+	margin-top: 2em;
+	width: 150px;
+	position: relative;
+	text-align: center;
+	left: 50%;
+	margin-left: -75px;
+}
+
+.circle canvas {
+	vertical-align: top;
+}
+
+.circle strong {
+	position: absolute;
+	top: 50%;
+	margin-top: -.7em; left : 0;
+	width: 100%;
+	text-align: center;
+	/* line-height: 40px; */
+	font-size: 4em;
+	color: #4e4e4e;
+	font-weight: 200;
+	left: 0;
+}
