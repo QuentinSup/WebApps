@@ -1,5 +1,8 @@
 eclipse.preferences.version=1
+<<<<<<< HEAD
 encoding//clevertech/webapp/resources=UTF-8
+=======
+>>>>>>> branch 'master' of https://github.com/QuentinSup/WebApps.git
 encoding//clevertech/webapp/resources/pages/main.html=UTF-8
 encoding//myapi/controllers/api.php=UTF-8
 encoding//myapi/controllers/user.php=UTF-8

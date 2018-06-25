@@ -16,17 +16,17 @@
 				<div class="row">
 					<div class="col-xs-12 col-sm-4 col-lg-offset-1 col-lg-3">
 						<div class="text-center">
-							<button data-delay="2000" data-animation="fadeIn" data-bind="click: function() { document.location = '#devops' }" class="btn-devops animated hiding full-width-xs">Développements</button>
+							<button data-delay="750" data-animation="fadeIn" data-bind="click: function() { scrollTo('#devops') }" class="btn-devops animated hiding full-width-xs">Développement</button>
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4 col-lg-4">
 						<div class="text-center">
-							<button data-delay="2500" data-animation="fadeIn" data-bind="click: function() { document.location = '#tmma' }" class="btn-tmma animated hiding full-width-xs">Maintenance</button>
+							<button data-delay="1750" data-animation="fadeIn" data-bind="click: function() { scrollTo('#tmma') }" class="btn-tmma animated hiding full-width-xs">Maintenance</button>
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4 col-lg-3">
 						<div class="text-center">
-							<button data-delay="3000" data-animation="fadeIn" data-bind="click: function() { document.location = '#mco' }" class="btn-mco animated hiding full-width-xs">Hébergement</button>
+							<button data-delay="2750" data-animation="fadeIn" data-bind="click: function() { scrollTo('#mco') }" class="btn-mco animated hiding full-width-xs">Hébergement MCO</button>
 						</div>
 					</div>
 				</div>
@@ -36,103 +36,94 @@
 	</div>
 </section>
 <!-- End Hero Section -->
-
-<!-- Header
-<header id="header" class="navigation-bar-header">
-	<div class="container">
-		<nav class="navigation">
-			<div class="col-xs-9 visible-xs">
-				<a href="{$host}"><span class="fa fa-home"></span>&nbsp;Clevertech</a>
-			</div>
-			<button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
-				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
-			</button>
-			<ul class="navigation-bar col-sm-11 col-xs-12">
-				<li class="'hidden-xs"><img src="{$host}assets/img/logo_clevertech.png" alt="Clevertech" /></li>
-				<li><a href="#devops">Développement</a></li>
-				<li><a href="#tmma">Maintenance</a></li>
-				<li><a href="#mco">Hébergement MCO</a></li>
-			</ul>
-		</nav>
-	</div>
-</header> -->
-<!-- End Header -->
 <section class="section">
 <div class="row">
 <div class="col-md-4">
-	<section id="devops" class="animated hiding" data-animation="fadeInLeft" data-delay="1000">
+	<section id="devops" class="animated hiding" data-animation="fadeInLeft" data-delay="500">
 		<div class="w-content window-height devops-color">
-			<h5 class="text-uppercase">Développements</h5>
-			<article class="article-big">
-				<div class="animated hiding" data-animation="fadeInLeft" data-delay="100">
-				<p class="big">
-				Nous confier la réalisation de vos projets informatiques vous permet de vous concentrer sur votre organisation et vos systèmes stratégiques.
-				</p>
-				</div>
-				<div class="animated hiding" data-animation="fadeInLeft" data-delay="200">
-				<p class="big">
-				La plupart de nos clients souhaitent disposer d’une application qui corresponde exactement à leur besoin. Nous leur apportons l'expertise nécessaire à la conception, à la réalisation et au pilotage de leur projet.
-				</p>
-				</div>
-				<div class="animated hiding" data-animation="fadeInLeft" data-delay="300">
-				<h8>Notre engagement</h8>
-				<p class="big">
-				En nous engageant principalement au forfait dans la réalisation des projets, nous nous engageons en terme de résultats tout en garantissant à nos clients la maîtrisant des coûts.  
-				</p>
-				</div>
-				<div class="animated hiding" data-animation="fadeInLeft" data-delay="400">
-				<h8>Une offre transverse</h8>
-				<p class="big">
-				La réalisation de développements informatiques peut s'inscrire dans une offre plus globale de services avec notre convention de service TMA/TMMA, ainsi que notre convention de service MCO.
-				</p>
-				</div>
-			</article>
+			<div class="nano">
+			<div class="nano-content">
+				<h5 class="text-uppercase">Développement</h5>
+				<article class="article-big">
+					<div class="animated hiding" data-animation="fadeInLeft" data-delay="2000">
+					<p class="big">
+					Nous confier la réalisation de vos projets informatiques vous permet de vous concentrer sur votre organisation et vos systèmes stratégiques.
+					</p>
+					</div>
+					<div class="animated hiding" data-animation="fadeInLeft" data-delay="2250">
+					<p class="big">
+					La plupart de nos clients souhaitent disposer d’une application qui corresponde exactement à leur besoin. Nous leur apportons l'expertise nécessaire à la conception, à la réalisation et au pilotage de leur projet.
+					</p>
+					</div>
+					<div class="animated hiding" data-animation="fadeInLeft" data-delay="2500">
+					<h8>Notre engagement</h8>
+					<p class="big">
+					En nous engageant principalement au forfait dans la réalisation des projets, nous nous engageons en terme de résultats tout en garantissant à nos clients la maîtrisant des coûts.  
+					</p>
+					</div>
+					<div class="animated hiding" data-animation="fadeInLeft" data-delay="2750">
+					<h8>Une offre transverse</h8>
+					<p class="big">
+					La réalisation de développements informatiques peut s'inscrire dans une offre plus globale de services avec notre convention de service TMA/TMMA, ainsi que notre convention de service MCO.
+					</p>
+					</div>
+				</article>
+			</div>
+			</div>
 		</div>
 	</section>
 </div>
 <div class="col-md-4">
-<section id="tmma" class="animated hiding" data-animation="fadeInDown" data-delay="1500">
+<section id="tmma" class="animated hiding" data-animation="fadeInDown" data-delay="1000">
 	<div class="w-content window-height tmma-color">
-		<h5 class="text-uppercase">Maintenance</h5>
-		<article class="article-big">
-			<div class="animated hiding" data-animation="fadeInLeft" data-delay="100">
-			<p class="big">
-			Chaque Client dispose d’un parc applicatif spécifique. La TM(M)A permet de prendre en considération ces spécificités en mobilisant des compétences variées.
-			L'enjeu est à la fois de maintenir et de développer les applications de l’entreprise, de mettre en place des méthodes d’intervention et de reporting, mais aussi de proposer une vision globale.
-			</p>
-			</div>
-			<div class="animated hiding" data-animation="fadeInLeft" data-delay="100">
-			<h8>Tarif unique</h8>
-			<p class="big">
-			<strong>Un tarif unique d’intervention</strong>  permet d’assurer une meilleure visibilité budgétaire pour nos clients.
-			Les petites prestations peuvent être traitées à part et font dans ce cas l’objet d’une facturation unique en fin de mois ou en fin de trimestre selon l’accord de la convention de services.
-			Ainsi, toutes les prestations sont traitées avec la même rigueur, indépendamment de la charge, laquelle peut dans certains cas être estimée en heures.
-			</p>
-			</div>
-		</article>
+		<div class="nano">
+		<div class="nano-content">
+			<h5 class="text-uppercase">Maintenance</h5>
+			<article class="article-big">
+				<div class="animated hiding" data-animation="fadeInDown" data-delay="3000">
+				<p class="big">
+				Chaque Client dispose d'un parc applicatif spécifique. La TM(M)A permet de prendre en considération ces spécificités en mobilisant des compétences variées.
+				L'enjeu est à la fois de maintenir et de développer les applications de l’entreprise, de mettre en place des méthodes d’intervention et de reporting, mais aussi de proposer une vision globale.
+				</p>
+				</div>
+				<div class="animated hiding" data-animation="fadeInDown" data-delay="3250">
+				<h8>Un tarif unique</h8>
+				<p class="big">
+				<strong>Un tarif unique d’intervention</strong>  permet d’assurer une meilleure visibilité budgétaire pour nos clients.
+				Les petites prestations peuvent être traitées à part et font dans ce cas l’objet d’une facturation unique en fin de mois ou en fin de trimestre selon l’accord de la convention de services.
+				Ainsi, toutes les prestations sont traitées avec la même rigueur, indépendamment de la charge, laquelle peut dans certains cas être estimée en heures.
+				</p>
+				</div>
+			</article>
+		</div>
+		</div>
 	</div>
 </section>
 </div>
 <div class="col-md-4">
-<section id="mco" class="animated hiding" data-animation="fadeInRight" data-delay="2000">
+<section id="mco" class="animated hiding" data-animation="fadeInRight" data-delay="1500">
 	<div class="w-content window-height mco-color">
-		<h5 class="text-uppercase">Hébergement</h5>
-		<article class="article-big">
-			<div class="animated hiding" data-animation="fadeInLeft">
-				<p class="big">
-				Certains de nos clients souhaitent disposer d’une application clé en main, depuis la conception jusqu’à la mise à disposition du service aux utilisateurs.
-				Cette demande émane d’un souhait de disposer rapidement d’un service dont la cohérence et la fiabilité seront assurés par les concepteurs de l’application elle-même. 
-				Notre offre d’hébergement et de MCO est une réponse à ces demandes.			
-				</p>
-			</div>
-			<div class="animated hiding" data-animation="fadeInLeft">
-				<h8>Une offre tout compris</h8>
-				<p class="big">
-				Nous prenons en charge les investissements nécessaires à l’hébergement des applications (ligne du fournisseur d’accès, achats des serveurs, local…), ce qui là encore tient à simplifier la mise en place des projets web.
-				En définissant un périmètre d’intervention dans le cadre d’hébergement et de MCO, nous nous engageons en termes de résultats pour un <strong>tarif tout compris</strong>.
-				</p>
-			</div>
-		</article>
+		<div class="nano">
+		<div class="nano-content">
+			<h5 class="text-uppercase">Hébergement</h5>
+			<article class="article-big">
+				<div class="animated hiding" data-animation="fadeInRight" data-delay="3500">
+					<p class="big">
+					Certains de nos clients souhaitent disposer d’une application clé en main, depuis la conception jusqu’à la mise à disposition du service aux utilisateurs.
+					Cette demande émane d’un souhait de disposer rapidement d’un service dont la cohérence et la fiabilité seront assurés par les concepteurs de l’application elle-même. 
+					Notre offre d’hébergement et de MCO est une réponse à ces demandes.			
+					</p>
+				</div>
+				<div class="animated hiding" data-animation="fadeInRight" data-delay="3750">
+					<h8>Une offre tout compris</h8>
+					<p class="big">
+					Nous prenons en charge les investissements nécessaires à l’hébergement des applications (ligne du fournisseur d’accès, achats des serveurs, local…), ce qui là encore tient à simplifier la mise en place des projets web.
+					En définissant un périmètre d’intervention dans le cadre d’hébergement et de MCO, nous nous engageons en termes de résultats pour un <strong>tarif tout compris</strong>.
+					</p>
+				</div>
+			</article>
+		</div>
+		</div>
 	</div>
 </section>
 </div>
@@ -177,11 +168,3 @@
 		</section>
 	</div>
 </section>
-
-<script>
-
-particlesJS.load('hero', 'assets/json/particlesjs-config.json', function() {
-  //console.log('callback - particles.js config loaded');
-});
-
-</script>
