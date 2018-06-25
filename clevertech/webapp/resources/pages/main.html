@@ -1,16 +1,35 @@
-<section id="hero" class="bg-home light bg-video">
-	<video autoplay loop muted>
+<section id="hero" class="window-height bg-home light bg-video">
+	<!-- <video autoplay loop muted>
     	<!-- Source vidéo -->
-    	<source type="video/mp4" src="{$host}assets/videos/sketch.mp4" media="(orientation: landscape)">
-	</video>
+    	<!-- <source type="video/mp4" src="{$host}assets/videos/sketch.mp4" media="(orientation: landscape)"> -->
+	<!--</video>-->
 	<div class="container">
 		<div class="home-bg">
 			<div class="hero-content">
-				<div class="hero-big text-center">
-					<span class="sublime-text">Clevertech</span>
+				<div class="hero-big">
+					<span class="sublime-text">Vos projets informatiques sont notre unique priorité</span>
 				</div>
-				<div class="hero-normal text-center">
-					<span class="sublime-text">Vous accompagne dans vos projets informatiques</span>
+				<div class="hero-normal">
+					<span class="sublime-text">Depuis 2013, Clevertech accompagne ses clients dans leurs projets informatiques, et se tient à leur côté pour formaliser, concevoir, réaliser et déployer des solutions adaptées à leurs besoins</span>
+				</div>
+				<div id="hero-actions">
+				<div class="row">
+					<div class="col-xs-12 col-sm-4 col-lg-offset-1 col-lg-3">
+						<div class="text-center">
+							<button data-delay="2000" data-animation="fadeIn" data-bind="click: function() { document.location = '#devops' }" class="btn-devops animated hiding full-width-xs">Développements</button>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4 col-lg-4">
+						<div class="text-center">
+							<button data-delay="2500" data-animation="fadeIn" data-bind="click: function() { document.location = '#tmma' }" class="btn-tmma animated hiding full-width-xs">Maintenance</button>
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4 col-lg-3">
+						<div class="text-center">
+							<button data-delay="3000" data-animation="fadeIn" data-bind="click: function() { document.location = '#mco' }" class="btn-mco animated hiding full-width-xs">Hébergement</button>
+						</div>
+					</div>
+				</div>
 				</div>
 			</div>
 		</div>
@@ -18,7 +37,7 @@
 </section>
 <!-- End Hero Section -->
 
-<!-- Header -->
+<!-- Header
 <header id="header" class="navigation-bar-header">
 	<div class="container">
 		<nav class="navigation">
@@ -36,156 +55,133 @@
 			</ul>
 		</nav>
 	</div>
-</header>
+</header> -->
 <!-- End Header -->
-<section id="competences" class="section">
-	<div class="container">
-		<div class="row">		
-			<div class="col-sm-4">
-				<div class="text-center card clickable" data-bind="click: function() { document.location = '#devops' }">
-					<div class="h8 text-center">Développements<br />Informatiques</div>
-					<hr />
-					<img src="{$host}assets/img/devops.jpg" alt="devops" class="img-responsive" />
-					<hr />
-					<a href="mailto:contact@clevertech-it.fr">Contactez-nous</a>
+<section class="section">
+<div class="row">
+<div class="col-md-4">
+	<section id="devops" class="animated hiding" data-animation="fadeInLeft" data-delay="1000">
+		<div class="w-content window-height devops-color">
+			<h5 class="text-uppercase">Développements</h5>
+			<article class="article-big">
+				<div class="animated hiding" data-animation="fadeInLeft" data-delay="100">
+				<p class="big">
+				Nous confier la réalisation de vos projets informatiques vous permet de vous concentrer sur votre organisation et vos systèmes stratégiques.
+				</p>
 				</div>
-			</div>
-			<div class="col-sm-4">
-				<div class="text-center card clickable" data-bind="click: function() { document.location = '#tmma' }">
-					<div class="h8 text-center">Maintenance<br />TM(M)A</div>
-					<hr />
-					<img src="{$host}assets/img/tma.png" alt="tma" class="img-responsive" />
-					<hr />
-					<a href="mailto:contact@clevertech-it.fr">Contactez-nous</a>
+				<div class="animated hiding" data-animation="fadeInLeft" data-delay="200">
+				<p class="big">
+				La plupart de nos clients souhaitent disposer d’une application qui corresponde exactement à leur besoin. Nous leur apportons l'expertise nécessaire à la conception, à la réalisation et au pilotage de leur projet.
+				</p>
 				</div>
-			</div>
-			<div class="col-sm-4">
-				<div class="text-center card clickable" data-bind="click: function() { document.location = '#mco' }">
-					<div class="h8 text-center">Hébergement<br />MCO</div>
-					<hr />
-					<img src="{$host}assets/img/mco.png" alt="mco" class="img-responsive" />
-					<hr />
-					<a href="mailto:contact@clevertech-it.fr">Contactez-nous</a>
+				<div class="animated hiding" data-animation="fadeInLeft" data-delay="300">
+				<h8>Notre engagement</h8>
+				<p class="big">
+				En nous engageant principalement au forfait dans la réalisation des projets, nous nous engageons en terme de résultats tout en garantissant à nos clients la maîtrisant des coûts.  
+				</p>
 				</div>
-			</div>
+				<div class="animated hiding" data-animation="fadeInLeft" data-delay="400">
+				<h8>Une offre transverse</h8>
+				<p class="big">
+				La réalisation de développements informatiques peut s'inscrire dans une offre plus globale de services avec notre convention de service TMA/TMMA, ainsi que notre convention de service MCO.
+				</p>
+				</div>
+			</article>
 		</div>
-	</div>
-</section>
-<section id="devops" class="section dark">
-	<div class="container">
-		<img src="{$host}assets/img/devops.jpg" alt="devops" class="img-responsive img-icon" />
-		<h5>Développements informatiques</h5>
-		<hr />
+	</section>
+</div>
+<div class="col-md-4">
+<section id="tmma" class="animated hiding" data-animation="fadeInDown" data-delay="1500">
+	<div class="w-content window-height tmma-color">
+		<h5 class="text-uppercase">Maintenance</h5>
 		<article class="article-big">
-			<h8>Une offre sur-mesure</h8>
+			<div class="animated hiding" data-animation="fadeInLeft" data-delay="100">
 			<p class="big">
-			La plupart de nos clients souhaitent disposer d’une application qui corresponde exactement à leur besoin. Clevertech leur apporte l'expertise nécessaire à la conception, à la réalisation et au pilotage de leur projet, le plus souvent avec un engagement de résultat au forfait.
+			Chaque Client dispose d’un parc applicatif spécifique. La TM(M)A permet de prendre en considération ces spécificités en mobilisant des compétences variées.
+			L'enjeu est à la fois de maintenir et de développer les applications de l’entreprise, de mettre en place des méthodes d’intervention et de reporting, mais aussi de proposer une vision globale.
 			</p>
-			<h8>Quels avantages pour l'entreprise ?</h8>
+			</div>
+			<div class="animated hiding" data-animation="fadeInLeft" data-delay="100">
+			<h8>Tarif unique</h8>
 			<p class="big">
-			Globalement, confier la réalisation de ses projets informatiques à Clevertech permet au Client de se concentrer sur son organisation et sur ses systèmes stratégiques. 
-			Les avantages pour le client se situent à plusieurs niveaux, notamment : 
-			<ul class="native"> 
-				<li>- Une expertise technique,</li>
-				<li>- L’adaptation à ses propres contraintes,</li>
-				<li>- L’apport d’une démarche qualité,</li>
-				<li>- La maîtrise des coûts informatiques</li>
-			</ul>
+			<strong>Un tarif unique d’intervention</strong>  permet d’assurer une meilleure visibilité budgétaire pour nos clients.
+			Les petites prestations peuvent être traitées à part et font dans ce cas l’objet d’une facturation unique en fin de mois ou en fin de trimestre selon l’accord de la convention de services.
+			Ainsi, toutes les prestations sont traitées avec la même rigueur, indépendamment de la charge, laquelle peut dans certains cas être estimée en heures.
 			</p>
-			<h8>L'argument économique</h8>
-			<p class="big">
-			En s'engageant principalement au forfait dans la réalisation des projets qui lui sont confiés, Clevertech s'engage en terme de résultats tout en garantissant au Client la maîtrisant des coûts.  
-			</p>
-			<h8>Une offre transverse</h8>
-			<p class="big">
-			La réalisation de développements informatiques peut s'inscrire dans une offre plus globale de services. Elle peut notamment se conjuguer avec notre convention de service TMA/TMMA, ainsi que notre convention de service MCO.
-			</p>
+			</div>
 		</article>
 	</div>
 </section>
-<section id="tmma" class="section dark">
-	<div class="container">
-		<img src="{$host}assets/img/tma.png" alt="tma" class="img-responsive img-icon" />
-		<h5>Tierce maintenance (multi) applicative</h5>
-		<hr />
+</div>
+<div class="col-md-4">
+<section id="mco" class="animated hiding" data-animation="fadeInRight" data-delay="2000">
+	<div class="w-content window-height mco-color">
+		<h5 class="text-uppercase">Hébergement</h5>
 		<article class="article-big">
-			<h8>Une offre globale</h8>
-			<p class="big">
-			Chaque Client dispose d’un parc applicatif spécifique. La TM(M)A permet de prendre en considération ces spécificités en mobilisant des compétences variées : environnements techniques spécifiques, intranet, bases de données, ERP...
-			L'enjeu est à la fois de maintenir et de développer les applications de l’entreprise, de mettre en place des méthodes d’intervention et de reporting, mais aussi de proposer une vision globale. De l'audit à la conception et rédaction des documentations en passant par l'ensemble des activités de maintenance et de gestion, elle offre des méthodes certifiées et des compétences précises. Mode de suivi au quotidien, la TMA se doit également d’anticiper sur le court et le long terme, et d’orienter les questionnements pour permettre d’industrialiser la prestation.
-			</p>
-			<h8>Quels avantages pour l'entreprise ?</h8>
-			<p class="big">
-			Globalement, la TM(M)A donne la possibilité à l'entreprise de se concentrer sur son organisation et sur ses systèmes stratégiques.
-			Les avantages pour le Client se situent à plusieurs niveaux, notamment :
-			<ul class="native"> 
-				<li>- L’adaptation à ses propres contraintes,</li>
-				<li>- L’apport d’une démarche qualité,</li>
-				<li>- La cohérence inter-applicative,</li>
-				<li>- La mutualisation des coûts informatiques</li>
-				<li>- Un accompagnement dans la durée</li>
-			</ul>
-			</p>
-			<h8>L'argument économique</h8>
-			<p class="big">
-			En définissant un périmètre d’intervention entrant dans le cadre de la TMA, Clevertech s’engage en termes de résultats.
-			<strong>Un tarif unique d’intervention</strong>  permet d’assurer une meilleure visibilité budgétaire pour le Client.
-			Les petites prestations peuvent être traitées à part et font dans ce cas l’objet d’une facturation unique en fin de mois ou en fin de trimestre selon l’accord de la convention de services. Ainsi, toutes les prestations sont traitées avec la même rigueur, indépendamment de la charge, laquelle peut dans certains cas être estimée en heures, à moins d’une demi-journée de travail !
-			</p>
+			<div class="animated hiding" data-animation="fadeInLeft">
+				<p class="big">
+				Certains de nos clients souhaitent disposer d’une application clé en main, depuis la conception jusqu’à la mise à disposition du service aux utilisateurs.
+				Cette demande émane d’un souhait de disposer rapidement d’un service dont la cohérence et la fiabilité seront assurés par les concepteurs de l’application elle-même. 
+				Notre offre d’hébergement et de MCO est une réponse à ces demandes.			
+				</p>
+			</div>
+			<div class="animated hiding" data-animation="fadeInLeft">
+				<h8>Une offre tout compris</h8>
+				<p class="big">
+				Nous prenons en charge les investissements nécessaires à l’hébergement des applications (ligne du fournisseur d’accès, achats des serveurs, local…), ce qui là encore tient à simplifier la mise en place des projets web.
+				En définissant un périmètre d’intervention dans le cadre d’hébergement et de MCO, nous nous engageons en termes de résultats pour un <strong>tarif tout compris</strong>.
+				</p>
+			</div>
 		</article>
 	</div>
 </section>
-<section id="mco" class="section dark">
-	<div class="container">
-		<img src="{$host}assets/img/mco.png" alt="mco" class="img-responsive img-icon" />
-		<h5>Maintien en conditions opérationnelles</h5>
-		<hr />
-		<article class="article-big">
-			<h8>Une offre globale</h8>
-			<p class="big">
-			Certains de nos clients souhaitent disposer d’une application clé en main. Ils souhaitent que Clevertech soit responsable du projet depuis la conception jusqu’à la mise à disposition du service aux utilisateurs dans le temps.
-			Cette demande émane la plupart du temps d’un souhait de disposer rapidement d’un service dont la cohérence et la fiabilité seront assurés par les concepteurs de l’application elle-même. 
-			Enfin, les investissements nécessaires à l’hébergement des applications (ligne du fournisseur d’accès, achats des serveurs, local…) sont pris en charge par Clevertech, ce qui là encore tient à simplifier la mise en place des projets web de ses clients.
-			Notre offre d’hébergement et de MCO est une réponse à ces demandes.			
-			</p>
-			<h8>Quels avantages pour l'entreprise ?</h8>
-			<p class="big">
-			Globalement, confier l’hébergement et le MCO à Clevertech permet au Client de se concentrer sur son organisation et sur ses systèmes stratégiques. 
-			Les avantages pour le client se situent à plusieurs niveaux, notamment : 
-			<ul class="native"> 
-				<li>- L’adaptation à ses propres contraintes,</li>
-				<li>- L’apport d’une démarche qualité,</li>
-				<li>- La mutualisation des coûts informatiques</li>
-			</ul>
-			</p>
-			<h8>L'argument économique</h8>
-			<p class="big">
-			En définissant un périmètre d’intervention entrant dans le cadre d’hébergement et de MCO, Clevertech s’engage en termes de résultats pour un <strong>tarif tout compris</strong>.
-			</p>
-			<h8>Une offre transverse</h8>
-			<p class="big">
-			La convention de services d’hébergement et de MCO Clevertech peut s’inscrire dans une offre plus globale de services. Elle peut notamment se conjuguer avec notre convention de service TMA/TMMA, par exemple dans le cadre de la réalisation d’un projet au forfait.
-			</p>
-		</article>
-	</div>
+</div>
+</div>
+
+<ul class="bg-bubbles">
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+</ul>
+
+
 </section>
 <section id="projects" class="speakers section light">
 	<div class="overlay"></div>
-	<div class="container">
+	<div class="container text-padding">
 		<h5>Rencontrons-nous</h5>
 		<br />
-		<section id="add">
+		<section id="add" class="big">
 			<p class="big">
 				Rencontrons-nous pour parlez de vos projets informatiques !
 			</p>
 			<div class="row">
 				<div class="col-xs-12 col-sm-6">
-					<label>Par téléphone : </label> <a href="tel:0622027374">06.22.02.73.74</a>
+					<div class="animated hiding" data-animation="fadeIn">
+						<label>Par téléphone : </label> <a href="tel:0622027374">06.22.02.73.74</a>
+					</div>
 				</div>
 				<div class="col-xs-12 col-sm-6">
-					<label>Par mail : </label> <a href="mailto:contact@clevertech-it.fr">contact@clevertech-it.fr</a>
+					<div class="animated hiding" data-animation="fadeIn">
+						<label>Par mail : </label> <a href="mailto:contact@clevertech-it.fr">contact@clevertech-it.fr</a>
+					</div>
 				</div>
 			</div>
 		</section>
 	</div>
 </section>
+
+<script>
+
+particlesJS.load('hero', 'assets/json/particlesjs-config.json', function() {
+  //console.log('callback - particles.js config loaded');
+});
+
+</script>

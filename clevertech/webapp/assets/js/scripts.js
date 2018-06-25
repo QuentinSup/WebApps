@@ -98,7 +98,7 @@
 
 		function heroInit() {
 						
-			var hero = jQuery('#hero'),
+			var hero = jQuery('.window-height'),
 				winHeight = jQuery(window).height(),
 				heroHeight = winHeight;
 

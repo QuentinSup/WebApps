@@ -8,6 +8,7 @@ use dw\classes\dwModel;
 use dw\classes\controllers\dwBasicController;
 
 /**
+ * @Mapping(value = 'clevertech/')
  * @Mapping(value = '/')
  */
 class main extends dwBasicController {
