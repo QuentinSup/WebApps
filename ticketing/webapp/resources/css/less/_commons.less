@@ -1,0 +1,169 @@
+
+body, input {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 100;
+	font-style: normal;
+	font-size: 14px;
+}
+
+strong, .strong {
+	font-weight: 600;
+	font-style: normal;
+	color: #007AB8;
+}
+
+ul {
+	padding: 0px;
+	margin: 0px;
+}
+
+p {
+	font-weight: 300;
+	text-align: justify;
+}
+
+h1 {
+	font-size: 4.5em;
+}
+
+h2 {
+	font-size: 4em;
+}
+
+h3 {
+	font-size: 3.5em;
+}
+
+h4 {
+	font-size: 3em;
+}
+
+h5 {
+	font-size: 2.5em;
+}
+
+h6 {
+	font-size: 2em;
+}
+
+h7, .h7 {
+	font-size: 1.5em !important;
+}
+
+h8, .h8 {
+	font-size: 1.3em;
+}
+
+h1, h2, h3, h4, h5, h6, h7, h8, .h7, .h8 {
+	font-weight: 600 !important;
+	display: block;
+	font-family: 'Montserrat', sans-serif !important;
+}
+
+h1, h2, h3 {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+h4, h5, h6 {
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+h7, .h7, h8, .h8 {
+	margin-top: 0;
+	margin-bottom: 5px;
+	text-align: left;
+}
+
+a {
+	color: #007AB8;
+	text-decoration: none;
+}
+
+a:hover, a:active, a:focus {
+	color: #007AB8;
+	text-decoration: underline;
+	outline: none;
+}
+
+::selection {
+	background-color: #FF714A;
+	color: #fff;
+}
+
+blockquote {
+	margin: 2.5em 1.1em;
+	position: relative;
+	z-index: 1;
+	border: 0px;
+	font-family: 'Open Sans', sans-serif;
+	text-align :center;
+}
+
+blockquote > p {
+	margin: 0 3em;
+	
+}
+
+blockquote { color: gray; background-color: #fefefe; font-size:1.2em; }
+blockquote:before {
+	font-family: 'Montserrat', sans-serif;
+    position: absolute;
+    content: '\201C';
+    color: #f5f5f5;
+    font-size: 12em;
+    line-height: .75em;
+    top: 0;
+    left: -5px;
+    z-index: -1;
+}
+
+blockquote:after {
+	font-family: 'Montserrat', sans-serif;
+    position: absolute;
+    content: '\201D';
+    color: #f5f5f5;
+    font-size: 12em;
+    line-height: 0em;
+	bottom: -50px;
+    z-index: -1;
+    right: 0px;
+}
+
+hr {
+	width: 100px;
+	border-top: 1px solid #E8E8E8;
+	margin-top: 2em;
+	margin-bottom: 2em;
+}
+
+hr.white {
+	border-color: #F3AE9B;
+}
+
+.transparent {
+	background: transparent !important;
+	color: #fff !important;
+	border: 0px !important;
+	position: relative;
+	z-index: 9999;
+}
+
+.transparent:after {
+	content: '';
+    display: block;
+    background-color: #fff;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 0px;
+    opacity: .05;
+    z-index: -1;
+}
+
+
+img[src=""], img:not([src]) {
+	visibility: hidden;
+}

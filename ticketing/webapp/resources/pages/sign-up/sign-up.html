@@ -1,0 +1,90 @@
+<!-- Header -->
+<header id="header" class="navigation-bar-header">
+	<div class="container">
+		<nav class="navigation">
+			<div class="col-sm-11 col-xs-10">
+				<a href="{$host}"><span class="fa fa-home"></span>&nbsp;Colaunch Flows</a>
+			</div>
+			<div class="col-sm-1 col-xs-2">
+				<a class="menu right">
+					<img data-bind="attr: { 'src': host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
+					<ul>
+						<li data-bind="click: function() { document.location.href = host + 'login' }" class="clickable"><span class="fa fa-sign-in"></span>&nbsp;Connexion</li>
+					</ul>
+				</a>
+			</div>
+		</nav>
+	</div>
+</header>
+
+<section id="hero" class="bg-color">
+	<div class="container">
+		<div class="hero-content">
+			<section class="col-sm-5 col-md-5 col-md-offset-3 col-sm-offset-3">
+				<section id="UserForm" class="slider">
+					<ul>
+						<li>
+							<div class="h7">Welcome</div>
+							<p class="help-block">Bienvenue ! Votre inscription sera effectuée en quelques cliques seulement.</p>
+							<p>
+								Merci de renseigner votre adresse email
+							</p>
+							<form data-role="form" class="form-register">
+								<div class="form-group has-feedback">
+									<input id="FormInputEmail" type="text" value="" class="form-control" title="Veuillez renseigner une adresse email valide" data-bind="value: email, valueUpdate: 'input'" placeholder="Email"
+										required />
+									<!-- ko if: $data.isCheckingEmail() -->
+									<img src="{$host}/assets/img/preloader.gif" class="form-control-feedback" aria-hidden="true" />
+									<!-- /ko -->
+									<!-- ko if: !$data.isCheckingEmail() && $data.isUserEmailUnique() -->
+									<span class="glyphicon glyphicon-ok form-control-feedback check" aria-hidden="true"></span>
+									<!-- /ko -->
+								</div>
+								<button data-bind="disable: !isUserEmailUnique() || isCheckingEmail(), click: function() { next(); }" class="btn btn-default">Commencer</button>
+							</form>
+						</li>
+						<li>
+							<form data-role="form" class="form-register">
+								<label for="FormInputEmail">Votre nom d'utilisateur</label>
+								<p>Il ne manque qu'un nom pour vous identifier sur le site : on vous avez dit que ce serait rapide ;)</p>
+								<div class="form-group has-feedback">
+									<input id="FormInputName" type="text" value="" class="form-control" data-bind="value: name, valueUpdate: 'input'"
+										placeholder="Nom d'utilisateur" required />
+									<!-- ko if: $data.isCheckingName() -->
+									<img src="{$host}/assets/img/preloader.gif" class="form-control-feedback" aria-hidden="true" />
+									<!-- /ko -->
+									<!-- ko if: !$data.isCheckingName() && $data.isUserNameUnique() -->
+									<span class="glyphicon glyphicon-ok form-control-feedback check" aria-hidden="true"></span>
+									<!-- /ko -->
+								</div>
+								<button data-bind="click: function() { prev(); }" class="btn blank"><< Retour</button>
+								<button data-bind="disable: !isUserNameUnique() || isCheckingName(), click: function() { submit(); }" class="btn btn-default">Terminer !</button>
+							</form>
+						</li>
+						<!-- 
+						<li>
+							<form data-role="form" class="form-register">
+								<label for="FormInputEmail">Votre mot de passe</label>
+								<p>On y est, il ne manque que votre mot de passe !</p>
+								<div class="form-group">
+									<input id="FormInputPassword" type="password" value="" class="form-control" data-bind="value: password, valueUpdate: 'input'"
+										placeholder="Mot de passe" required />
+								</div>
+								<div class="form-group">
+									<input id="FormInputConfirmPassword" type="password" value="" class="form-control" data-bind="value: password2, valueUpdate: 'input'"
+										placeholder="Confirmer le mot de passe" required />
+								</div>
+								<button data-bind="click: function() { prev(); }" class="btn blank"><< Retour</button>
+								<button data-bind="click: function() { submit(); }" class="btn btn-default">Terminer</button>
+							</form>
+						</li>
+						 -->
+					</ul>
+				</section>
+			</section>
+		</div>
+	</div>
+</section>
+<!-- End Hero Section -->
+
+<!-- End Header -->

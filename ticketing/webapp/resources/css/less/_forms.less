@@ -1,0 +1,106 @@
+input[type=text], 
+input[type=email], 
+input[type=password], 
+select.form-control {
+	font-size: 1.0em;
+	font-weight: 400;
+    line-height: normal;
+    padding: .5em .7em;
+    border: 1px solid #C5C5C5;
+    border-radius: .25em;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: 0;
+    color: #555459;
+    max-width: 100%;
+    font-variant-ligatures: none;
+    -webkit-transition: box-shadow 70ms ease-out,border-color 70ms ease-out;
+    -moz-transition: box-shadow 70ms ease-out,border-color 70ms ease-out;
+    transition: box-shadow 70ms ease-out,border-color 70ms ease-out;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    box-shadow: none;
+    height: auto;
+    font-family : 'Lato', sans-serif;
+}
+
+input[type=button], button, .btn {
+	font-family : 'MontSerrat', sans-serif;
+	padding: .5em 1em;
+    font-size: 1.1em;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.2rem;
+    font-weight: 600;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-decoration: none;
+    cursor: pointer;
+    text-shadow: 0 1px 1px rgba(0,0,0,.1);
+    border: none;
+    border-radius: .25rem;
+    box-shadow: none;
+    position: relative;
+    display: inline-block;
+    vertical-align: bottom;
+    text-align: center;
+    white-space: nowrap;
+    margin: 0;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    max-width: 100%;
+}
+
+input[type=button][disabled], button[disabled], .btn[disabled] {
+    background: #2ab27b  !important;
+    color: #fff !important;
+    opacity: .5 !important;
+}
+
+input[type=button].blank, button.blank, .btn.blank {
+    background: transparent;
+    color: #cccccc;
+    /* font-weight: 600; */
+    font-size: .9em;
+}
+
+input[type=button].white, button.white, .btn.white {
+    background: #fff;
+    color: #6d6d6d  !important;
+    /* font-weight: 600; */
+    font-size: .9em;
+    border: 2px solid #c5c5c5;
+    border-radius: 5px;
+    text-shadow: none;
+}
+
+.form-control-feedback {
+	position: absolute;
+    top: 5px !important;
+    right: 5px !important;
+    z-index: 1 !important;
+    display: block;
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    text-align: center;
+    color: #000 !important;
+    font-size: .9em !important;
+}
+
+.form-control-feedback.check {
+	border-radius: 20px;
+    border: 1px solid #8bbba8;
+    color: #fff !important;
+    background: #65c39d !important;
+}
+
+.input-group-addon {
+	background-color: #fff;
+}
+
+*::-webkit-input-placeholder { 
+    font-family: 'Lato', sans-serif !important;
+}

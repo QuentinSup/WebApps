@@ -1,0 +1,109 @@
+
+<!doctype html>
+<html lang="fr">
+<head>
+
+<meta charset="utf-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<title>Colaunch Flows</title>
+<meta name="description" content="Restez informés des nouveautés des Startups">
+<meta name="keywords" content="Startup,ideas,team building,feedback,freelance,tech,entrepreneur,meetup,pitch,technologie,innovation">
+<meta name="author" content="Quentin Supernant">
+
+<link rel="shortcut icon" href="{$host}assets/img/favicon.ico">
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900|Open+Sans:400,700,900|Lato:400,700,900" rel="stylesheet">
+
+<link rel="stylesheet" href="{$host}assets/css/bootstrap.min.css" type="text/css" media="all" />
+<link rel="stylesheet" href="{$host}assets/css/animate.css" type="text/css" media="all" />
+<link rel="stylesheet" href="{$host}assets/css/font-awesome.min.css" type="text/css" media="all" />
+<link rel="stylesheet" href="{$host}assets/css/font-lineicons.css" type="text/css" media="all" />
+<link rel="stylesheet" href="{$host}assets/css/jquery.fancybox.css" type="text/css" media="all" />
+<link rel="stylesheet" href="{$host}assets/css/formslider.css" type="text/css" media="all" />
+<link rel="stylesheet" href="{$host}assets/css/tooltipster-3.3.0.min.css" type="text/css" media="all" />
+<link rel="stylesheet" href="{$host}assets/css/sweetalert.css" type="text/css">
+<link rel="stylesheet" href="{$host}assets/css/izitoast.css" type="text/css">
+<link rel="stylesheet" href="{$host}resources/css/style.css" id="mainstyle" type="text/css" media="all" />
+<link rel="stylesheet" href="{$host}resources/pages/{$pageId}/css/{$pageId}.css" id="pagestyle" type="text/css" media="all" />
+
+<script type="text/javascript" src="{$host}assets/js/jquery-2.2.4.min.js"></script>
+<script type="text/javascript" src="{$host}assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{$host}assets/js/jquery.nav.js"></script>
+<script type="text/javascript" src="{$host}assets/js/jquery.appear.js"></script>
+<script type="text/javascript" src="{$host}assets/js/jquery.countTo.js"></script>
+<script type="text/javascript" src="{$host}assets/js/waypoints.min.js"></script>
+<script type="text/javascript" src="{$host}assets/js/waypoints-sticky.min.js"></script>
+<script type="text/javascript" src="{$host}assets/js/jquery.fancybox.js"></script>
+<script type="text/javascript" src="{$host}assets/js/jquery.tooltipster-3.3.0-fix.min.js"></script>
+<script type="text/javascript" src="{$host}assets/js/knockout-3.4.2.min.js"></script>
+<script type="text/javascript" src="{$host}assets/js/knockout-mapping.min.js"></script>
+<script type="text/javascript" src="{$host}assets/js/webkit-utils.js"></script>
+<script type="text/javascript" src="{$host}assets/js/formslider.js"></script>
+<script type="text/javascript" src="{$host}assets/js/sweetalert.min.js"></script>
+<script type="text/javascript" src="{$host}assets/js/izitoast.min.js"></script>
+<script type="text/javascript" src="{$host}assets/js/jquery.timeago-1.5.4.js"></script>
+<script type="text/javascript" src="{$host}resources/js/main.js"></script>
+<script type="text/javascript" src="{$host}resources/js/user.js"></script>
+
+
+<script type="text/javascript">
+	var host = '{$host}';
+</script>
+
+</head>
+<body id="index">
+	<!-- Preloader -->
+	<div id="mask">
+		<div id="loader">
+			<img src="{$host}assets/img/preloader.gif" alt="preloader" />
+		</div>
+	</div>
+
+	<div id="app">{include file="./pages/{$pageId}/{$pageId}.html"}</div>
+
+	<footer id="footer">
+		<div class="container">
+			<div class="col-sm-3 col-xs-6">{if isset($userName)} Bienvenue <strong>{$userName}</strong> {/if}</div>
+			<div class="col-sm-3 col-xs-6">
+				<ul>
+					<li><a href="{$host}">Accueil</a>
+					{if isset($userName)}
+					<li><a href="#" data-bind="click: function() { user.logout(); }">Déconnexion</a></li>
+					{/if}
+				</ul>
+			</div>
+			<div class="col-sm-3 col-xs-6">
+				<strong>startup</strong>
+				<ul>
+					<li><a href="{$host}get-started">Inscription</a>
+				</ul>
+			</div>
+			<div class="col-sm-3 col-xs-6">
+				<strong>Clevertech</strong><br />
+				8 avenue Jean Perrot<br />
+				38100 Grenoble
+			</div>
+		</div>
+	</footer>
+
+	<div class="back-to-top">
+		<i class="fa fa-angle-up fa-3x"></i>
+	</div>
+
+	<script type="text/javascript" src="{$host}resources/pages/{$pageId}/js/{$pageId}.js"></script>
+	<script>
+	
+		jQuery(document).ready(function($) {
+			$('#UserForm').formslider();
+		});
+	</script>
+
+	<script type="text/javascript" src="{$host}resources/js/scripts.js"></script>
+	<script type="text/javascript">
+		{if isset($userName)}
+		user.load();
+		{/if}
+	</script>
+
+</body>
+</html>

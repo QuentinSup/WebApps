@@ -1,0 +1,66 @@
+<!-- Header -->
+<header id="header" class="navigation-bar-header">
+	<div class="container">
+		<nav class="navigation">
+			<div class="col-sm-11 col-xs-10">
+				<a href="{$host}"><span class="fa fa-home"></span>&nbsp;Maintenance</a>
+			</div>
+			<div class="col-sm-1 col-xs-2">
+				<a class="clickable menu right">
+					<img data-bind="attr: { 'src': host + 'assets/img/avatars/user-avatar.png' }" class="img-responsive img-circle" alt="user" />
+					<ul>
+						<li data-bind="click: function() { document.location.href = host + 'login' }" class="clickable"><span class="fa fa-sign-in"></span>&nbsp;Connexion</li>
+					</ul>
+				</a>
+			</div>
+		</nav>
+	</div>
+</header>
+
+<section id="hero" class="bg-color fullscreen">
+	<div class="container">
+		<div class="hero-content">
+			<section id="form" class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-3 col-lg-offset-4">
+				<ul>
+					<li>
+						<form data-role="form" class="form">
+							<label for="FormInputName">Authentification</label>
+							<div class="form-group">
+								<input id="FormInputName" type="text" value="" class="form-control" data-bind="value: name, valueUpdate: 'input'" placeholder="Nom d'utilisateur" required />
+							</div>
+							<div class="form-group has-feedback">
+								<input id="FormInputPassword" type="password" value="" class="form-control" data-bind="value: password, valueUpdate: 'input'" placeholder="Mot de passe" required />
+								<!-- ko if: $data.isCheckingLogin() -->
+								<img src="{$host}/assets/img/preloader.gif" class="form-control-feedback" aria-hidden="true" />
+								<!-- /ko -->
+								<!-- ko ifnot: $data.isCheckingLogin() -->
+								<span class="form-control-feedback clickable" data-bind="click: function() { login(); }"><span class="fa fa-arrow-circle-right"></span></span>
+								<!-- /ko -->
+							</div>
+						</form>
+						<p>
+						<a class="clickable" data-bind="click: function() { showForgotPasswordForm(); }">Mot de passe oublié ?</a>
+						</p>
+					</li>
+					<li>
+						<form data-role="form" class="form">
+							<label for="FormInputName">Récupérer mon mot de passe</label>
+							<div class="form-group has-feedback">
+								<input id="FormInputEmail" type="text" value="" class="form-control" data-bind="value: email, valueUpdate: 'input'" placeholder="Email du compte" required />
+								<!-- ko if: $data.isCheckingPassword() -->
+								<img src="{$host}/assets/img/preloader.gif" class="form-control-feedback" aria-hidden="true" />
+								<!-- /ko -->
+								<!-- ko ifnot: $data.isCheckingPassword() -->
+								<span class="form-control-feedback clickable" data-bind="click: function() { retrievePassword(); }"><span class="fa fa-arrow-circle-right"></span></span>
+								<!-- /ko -->
+							</div>
+						</form>
+					</li>
+				</ul>
+			</section>
+		</div>
+	</div>
+</section>
+<!-- End Hero Section -->
+
+<!-- End Header -->
